@@ -1,0 +1,141 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86">
+    <script>
+        var jsonWishesList = JSON.parse(`[
+{"month": 1, "date": 3, "wish": "Rajaraman ji and Srinath ji appa Birthday"},
+{"month": 1, "date": 5, "wish": "Rajaraman ji and Srinath ji amma Birthday"},
+{"month": 1, "date": 7, "wish": "Archana Vijay ji Birthday"},
+{"month": 1, "date": 11, "wish": "Mahadevan ji Birthday"},
+{"month": 1, "date": 12, "wish": "Visaka Mukundan Birthday"},
+{"month": 1, "date": 13, "wish": "Sujatha Ramanathan ji Birthday"},
+{"month": 1, "date": 18, "wish": "Vasu Prasad Muniraj Birthday"},
+{"month": 1, "date": 26, "wish": "Ghanesh ji Birthday"},
+{"month": 1, "date": 27, "wish": "Viji Karthik ji Birthday"},
+{"month": 1, "date": 28, "wish": "Ghanesh ji and Uma ji Wedding Anniversary"},
+{"month": 1, "date": 31, "wish": "Mythili Girish ji Birthday"},
+{"month": 2, "date": 1, "wish": "Chudamani Ghanesh Birthday"},
+{"month": 2, "date": 1, "wish": "Shyam ji and Gayathri ji Wedding Anniversary"},
+{"month": 2, "date": 10, "wish": "Ramas ji Birthday"},
+{"month": 2, "date": 17, "wish": "Ashvitha Ramanathan Birthday"},
+{"month": 2, "date": 23, "wish": "Srinivasa Muniraj Birthday"},
+{"month": 2, "date": 25, "wish": "Rajagopal Rajaraman Birthday"},
+{"month": 2, "date": 26, "wish": "Vijay ji and Archana ji Wedding Anniversary"},
+{"month": 2, "date": 27, "wish": "Arana mamma Birthday"},
+{"month": 3, "date": 2, "wish": "Jhanavi Padmanabhan Birthday"},
+{"month": 3, "date": 8, "wish": "Sudha ji Birthday"},
+{"month": 3, "date": 12, "wish": "Surabi Vijay Birthday"},
+{"month": 3, "date": 19, "wish": "Prahalad ji and Aarthi ji Wedding Anniversary"},
+{"month": 4, "date": 1, "wish": "Narayanan ji and Padmaja ji Wedding Anniversary"},
+{"month": 4, "date": 4, "wish": "Parvathy Shyam Birthday"},
+{"month": 4, "date": 6, "wish": "Ragavan ji Birthday"},
+{"month": 4, "date": 8, "wish": "Shankar Prahalad Birthday"},
+{"month": 4, "date": 8, "wish": "Krishnamoorthi ji Birthday"},
+{"month": 4, "date": 10, "wish": "Subha Mahadevan ji Birthday"},
+{"month": 4, "date": 10, "wish": "Narayanan ji (bishan) Birthday"},
+{"month": 4, "date": 20, "wish": "Subadra ji and Siva ji Wedding Anniversary"},
+{"month": 4, "date": 21, "wish": "Gurusmaran Aranaprasad Birthday"},
+{"month": 4, "date": 22, "wish": "Sujatha ji and Ramanathan ji Wedding Anniversary"},
+{"month": 4, "date": 22, "wish": "Hema ji Birthday"},
+{"month": 5, "date": 6, "wish": "Rohini ji and Srinath ji Wedding Anniversary"},
+{"month": 5, "date": 6, "wish": "Padmanja ji Birthday"},
+{"month": 5, "date": 9, "wish": "Suddha ji and Muni ji Wedding Anniversary "},
+{"month": 5, "date": 13, "wish": "Aparajitha Ragavan Birthday"},
+{"month": 5, "date": 14, "wish": "Rama Mammi Birthday"},
+{"month": 5, "date": 18, "wish": "Muni ji Happy Birthday"},
+{"month": 5, "date": 20, "wish": "Sivaraman Srinath Birthday"},
+{"month": 5, "date": 22, "wish": "Subha ji and Mahadevan ji Wedding Anniversary"},
+{"month": 5, "date": 26, "wish": "Ramanathan ji Birthday"},
+{"month": 5, "date": 29, "wish": "Vengat Narayanan Birthday"},
+{"month": 5, "date": 29, "wish": "Mithun Mukunthan Birthday"},
+{"month": 5, "date": 30, "wish": "Srinath ji Birthday"},
+{"month": 6, "date": 2, "wish": "Vijay ji Birthday"},
+{"month": 6, "date": 4, "wish": "Mahesh ji and Anuradha ji Wedding Anniversary"},
+{"month": 6, "date": 6, "wish": "Anandhi ji and Narayanan ji Wedding Anniversary"},
+{"month": 6, "date": 8, "wish": "Mythili Rajaraman ji Birthday"},
+{"month": 6, "date": 9, "wish": "Bagya ji and Krishnamoorthi ji Wedding Anniversary "},
+{"month": 6, "date": 12, "wish": "Siva ji Birthday"},
+{"month": 6, "date": 17, "wish": "Vignesh (Ranju brother) Birthday"},
+{"month": 6, "date": 24, "wish": "Ramanathan ji parents Wedding Anniversary"},
+{"month": 6, "date": 26, "wish": "Kylash Birthday"},
+{"month": 6, "date": 27, "wish": "Sahana Siva Birthday"},
+{"month": 6, "date": 29, "wish": "Prahalad ji Birthday"},
+{"month": 6, "date": 30, "wish": "Vidya ji Birthday"},
+{"month": 7, "date": 3, "wish": "Vaishnavi Ramanathan Birthday"},
+{"month": 7, "date": 3, "wish": "Sheela ji and Raghavan ji Wedding Anniversary"},
+{"month": 7, "date": 3, "wish": "Srinath Siva Birthday"},
+{"month": 7, "date": 4, "wish": "Rajaraman ji and Mythili ji Wedding Anniversary"},
+{"month": 7, "date": 7, "wish": "Rajaraman ji and Srinath ji parents Wedding Anniversary"},
+{"month": 7, "date": 14, "wish": "Adithya Raghavan Birthday"},
+{"month": 7, "date": 14, "wish": "Rukmini Srinath Birthday"},
+{"month": 7, "date": 20, "wish": "Padmanaban ji Birthday"},
+{"month": 7, "date": 29, "wish": "Sriranjani Birthday"},
+{"month": 7, "date": 31, "wish": "Rohini ji Birthday"},
+{"month": 7, "date": 31, "wish": "Rajaraman ji Birthday"},
+{"month": 8, "date": 14, "wish": "Anuradha Rajaraman Birthday"},
+{"month": 8, "date": 15, "wish": "Bharathi Karthik Birthday"},
+{"month": 8, "date": 15, "wish": "Keerthana Ramas Birthday"},
+{"month": 8, "date": 18, "wish": "Mathura Narayanan ji Birthday"},
+{"month": 8, "date": 24, "wish": "Vidya ji and Padmanaban ji Wedding Anniversary"},
+{"month": 8, "date": 24, "wish": "Karthik ji Birthday"},
+{"month": 8, "date": 25, "wish": "Sai Tejsawi Krishnamoorthi Birthday"},
+{"month": 8, "date": 27, "wish": "Bagya ji Birthday"},
+{"month": 9, "date": 1, "wish": "Mukundan ji Birthday"},
+{"month": 9, "date": 4, "wish": "Subadra Siva ji Birthday"},
+{"month": 9, "date": 5, "wish": "Mythili ji and Girish ji Wedding Anniversary"},
+{"month": 9, "date": 5, "wish": "Aarthi Prahlad ji Birthday"},
+{"month": 9, "date": 8, "wish": "Arana mamma and Ramma mammi Wedding Anniversary"},
+{"month": 9, "date": 14, "wish": "Jaya suddha mukundan Birthday"},
+{"month": 9, "date": 15, "wish": "Muthu ji and Hema ji Wedding Anniversary"},
+{"month": 9, "date": 15, "wish": "Anandhi ji Birthday"},
+{"month": 9, "date": 16, "wish": "Sheela Raghavan ji Birthday"},
+{"month": 9, "date": 17, "wish": "Aparna Girish Birthday"},
+{"month": 9, "date": 20, "wish": "Sankara Narayanan ji Birthday"},
+{"month": 10, "date": 9, "wish": "Uma Ghanesh ji Birthday"},
+{"month": 10, "date": 11, "wish": "Gayathri Ramas Birthday"},
+{"month": 10, "date": 26, "wish": "Ramakrishnan Girish Birthday "},
+{"month": 10, "date": 27, "wish": "Mahesh ji (Anuradha) Birthday"},
+{"month": 11, "date": 7, "wish": "Karthik ji and Viji ji Wedding Anniversary"},
+{"month": 11, "date": 10, "wish": "Janani Birthday"},
+{"month": 11, "date": 20, "wish": "Kolahalan Shyam Birthday"},
+{"month": 11, "date": 23, "wish": "Girish ji Birthday"},
+{"month": 11, "date": 25, "wish": "Rukmini Narayanan Birthday"},
+{"month": 11, "date": 29, "wish": "Malathi ji Birthday"},
+{"month": 12, "date": 1, "wish": "Shyam ji Birthday"},
+{"month": 12, "date": 5, "wish": "Muthu ji Birthday"},
+{"month": 12, "date": 6, "wish": "Muthu ji Birthday"},
+{"month": 12, "date": 7, "wish": "Narayanan Muthu Birthday"},
+{"month": 12, "date": 8, "wish": "Gayathri Shyam Ji Birthday"},
+{"month": 12, "date": 20, "wish": "Anuradha Mahesh ji Birthday"},
+{"month": 12, "date": 28, "wish": "Narayanan ji (Sengkang) Birthday"}
+]`);
+        var currentDate = new Date();
+        var todayAgenda = null;
+        for (i = 0; i < jsonWishesList.length; ++i) {
+            if (jsonWishesList[i].month == currentDate.getMonth() + 1 && jsonWishesList[i].date == currentDate.getDate()) {
+                if (todayAgenda == null) {
+                    todayAgenda = "";
+                } else {
+                    todayAgenda += "; ";
+                }
+                todayAgenda += jsonWishesList[i].wish
+            }
+        }
+        if (todayAgenda != null) {
+            document.write("<a href='https://wa.me/?text=Radhekrishna! Today is " + todayAgenda + "'>Today is " + todayAgenda + "</a>");
+        } else {
+            document.write("Today no wishes to be made");
+        }
+        document.write("<table style='font-size: 2vw'><tr><th>On (mm/dd)</th><th>Celebrate</th></tr>")
+        for (i = 0; i < jsonWishesList.length; ++i) {
+            document.write("<tr><td>" + jsonWishesList[i].month + "/" + jsonWishesList[i].date + "</td><td>" + jsonWishesList[i].wish + "</td></tr>")
+        }
+        document.write("</table>")
+    </script>
+</head>
+
+<body style="font-family: Arial; font-size: 6vw">
+</body>
+
+</html>
