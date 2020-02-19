@@ -30,6 +30,7 @@
 {"month": 3, "date": 19, "wish": "Prahalad ji and Aarthi ji Wedding Anniversary"},
 {"month": 4, "date": 1, "wish": "Narayanan ji and Padmaja ji Wedding Anniversary"},
 {"month": 4, "date": 4, "wish": "Parvathy Shyam Birthday"},
+{"month": 4, "date": 4, "wish": "Mahesh ji and Sujatha ji Wedding Anniversary"},
 {"month": 4, "date": 6, "wish": "Ragavan ji Birthday"},
 {"month": 4, "date": 8, "wish": "Shankar Prahalad Birthday"},
 {"month": 4, "date": 8, "wish": "Krishnamoorthi ji Birthday"},
@@ -74,6 +75,7 @@
 {"month": 7, "date": 29, "wish": "Sriranjani Birthday"},
 {"month": 7, "date": 31, "wish": "Rohini ji Birthday"},
 {"month": 7, "date": 31, "wish": "Rajaraman ji Birthday"},
+{"month": 8, "date": 12, "wish": "Sujatha Mahesh ji Birthday"},
 {"month": 8, "date": 14, "wish": "Anuradha Rajaraman Birthday"},
 {"month": 8, "date": 15, "wish": "Bharathi Karthik Birthday"},
 {"month": 8, "date": 15, "wish": "Keerthana Ramas Birthday"},
@@ -94,11 +96,14 @@
 {"month": 9, "date": 15, "wish": "Anandhi ji Birthday"},
 {"month": 9, "date": 16, "wish": "Sheela Raghavan ji Birthday"},
 {"month": 9, "date": 17, "wish": "Aparna Girish Birthday"},
+{"month": 9, "date": 19, "wish": "Aadhya Mahesh Birthday"},
 {"month": 9, "date": 20, "wish": "Sankara Narayanan ji Birthday"},
 {"month": 10, "date": 9, "wish": "Uma Ghanesh ji Birthday"},
 {"month": 10, "date": 11, "wish": "Gayathri Ramas Birthday"},
+{"month": 10, "date": 18, "wish": "Anjana Mahesh Birthday"},
 {"month": 10, "date": 26, "wish": "Ramakrishnan Girish Birthday "},
 {"month": 10, "date": 27, "wish": "Mahesh ji (Anuradha) Birthday"},
+{"month": 11, "date": 3, "wish": "Achyutha Mahesh Birthday"},
 {"month": 11, "date": 7, "wish": "Karthik ji and Viji ji Wedding Anniversary"},
 {"month": 11, "date": 10, "wish": "Janani Birthday"},
 {"month": 11, "date": 20, "wish": "Kolahalan Shyam Birthday"},
@@ -124,6 +129,7 @@
                 todayAgenda += jsonWishesList[i].wish
             }
         }
+        var nextFour = -1;
         if (todayAgenda != null) {
             document.write("<a href='https://wa.me/?text=Radhekrishna! Today is " + todayAgenda + "'>Today is " + todayAgenda + "</a>");
         } else {
@@ -131,7 +137,15 @@
         }
         document.write("<table style='font-size: 2vw'><tr><th>On (mm/dd)</th><th>Celebrate</th></tr>")
         for (i = 0; i < jsonWishesList.length; ++i) {
-            document.write("<tr><td>" + jsonWishesList[i].month + "/" + jsonWishesList[i].date + "</td><td>" + jsonWishesList[i].wish + "</td></tr>")
+            var color="white"
+            if (nextFour == -1 && jsonWishesList[i].month == currentDate.getMonth() + 1 && jsonWishesList[i].date >= currentDate.getDate()) {
+                nextFour=0;
+            }
+            if ( nextFour != -1 && nextFour < 4 ) {
+                color="#00EB00";
+                ++nextFour;
+            }
+            document.write("<tr bgcolor='"+color+"'><td>" + jsonWishesList[i].month + "/" + jsonWishesList[i].date + "</td><td>" + jsonWishesList[i].wish + "</td></tr>")
         }
         document.write("</table>")
     </script>
