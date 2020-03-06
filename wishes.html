@@ -24,7 +24,9 @@
 {"month": 2, "date": 26, "wish": "Vijay ji and Archana ji Wedding Anniversary"},
 {"month": 2, "date": 27, "wish": "Arana mamma Birthday"},
 {"month": 3, "date": 2, "wish": "Jhanavi Padmanabhan Birthday"},
+{"month": 3, "date": 4, "wish": "Mahadevan's Twins Birthday"},
 {"month": 3, "date": 5, "wish": "Shambhavi Vijay Birthday"},
+{"month": 3, "date": 6, "wish": "Priya Raman ji Birthday"},
 {"month": 3, "date": 8, "wish": "Sudha ji Birthday"},
 {"month": 3, "date": 12, "wish": "Surabi Vijay Birthday"},
 {"month": 3, "date": 19, "wish": "Prahalad ji and Aarthi ji Wedding Anniversary"},
@@ -126,19 +128,19 @@
                 } else {
                     todayAgenda += "; ";
                 }
-                todayAgenda += jsonWishesList[i].wish
+                todayAgenda += jsonWishesList[i].wish.replace("Birthday", "Happy Birthday").replace("Wedding", "Happy Wedding")
             }
         }
         var nextFour = -1;
         if (todayAgenda != null) {
-            document.write("<a href='https://wa.me/?text=Radhekrishna! Today is " + todayAgenda + "'>Today is " + todayAgenda + "</a>");
+            document.write("<a href='https://wa.me/?text=Radhekrishna! " + todayAgenda + "'>" + todayAgenda + "</a>");
         } else {
             document.write("Today no wishes to be made");
         }
         document.write("<table style='font-size: 2vw'><tr><th>On (mm/dd)</th><th>Celebrate</th></tr>")
         for (i = 0; i < jsonWishesList.length; ++i) {
             var color="white"
-            if (nextFour == -1 && jsonWishesList[i].month == currentDate.getMonth() + 1 && jsonWishesList[i].date >= currentDate.getDate()) {
+            if (nextFour == -1 && jsonWishesList[i].month >= currentDate.getMonth() + 1 && jsonWishesList[i].date >= currentDate.getDate()) {
                 nextFour=0;
             }
             if ( nextFour != -1 && nextFour < 4 ) {
