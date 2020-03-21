@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86">
+    <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86" />
     <script>
         var jsonWishesList = JSON.parse(`[
 {"month": 1, "date": 3, "wish": "Rajaraman ji and Srinath ji appa Birthday"},
@@ -122,38 +122,65 @@
         var currentDate = new Date();
         var todayAgenda = null;
         for (i = 0; i < jsonWishesList.length; ++i) {
-            if (jsonWishesList[i].month == currentDate.getMonth() + 1 && jsonWishesList[i].date == currentDate.getDate()) {
+            if (
+                jsonWishesList[i].month == currentDate.getMonth() + 1 &&
+                jsonWishesList[i].date == currentDate.getDate()
+            ) {
                 if (todayAgenda == null) {
                     todayAgenda = "";
                 } else {
                     todayAgenda += "; ";
                 }
-                todayAgenda += jsonWishesList[i].wish.replace("Birthday", "Happy Birthday").replace("Wedding", "Happy Wedding")
+                todayAgenda += jsonWishesList[i].wish
+                    .replace("Birthday", "Happy Birthday")
+                    .replace("Wedding", "Happy Wedding");
             }
         }
-        var nextFour = -1;
         if (todayAgenda != null) {
-            document.write("<a href='https://wa.me/?text=Radhekrishna! " + todayAgenda + "'>" + todayAgenda + "</a>");
+            document.write(
+                "<a href='https://wa.me/?text=Radhekrishna! " +
+                todayAgenda +
+                "'>" +
+                todayAgenda +
+                "</a>"
+            );
         } else {
             document.write("Today no wishes to be made");
         }
-        document.write("<table style='font-size: 2vw'><tr><th>On (mm/dd)</th><th>Celebrate</th></tr>")
+
+        var nextFour = -1;
+        document.write(
+            "<table style='font-size: 2vw'><tr><th>On (mm/dd)</th><th>Celebrate</th></tr>"
+        );
         for (i = 0; i < jsonWishesList.length; ++i) {
-            var color="white"
-            if (nextFour == -1 && jsonWishesList[i].month >= currentDate.getMonth() + 1 && jsonWishesList[i].date >= currentDate.getDate()) {
-                nextFour=0;
+            var color = "white";
+            if (
+                nextFour == -1 &&
+                (jsonWishesList[i].month > currentDate.getMonth() + 1) ||
+                (jsonWishesList[i].month == currentDate.getMonth() + 1 && jsonWishesList[i].date >= currentDate.getDate())
+            ) {
+                nextFour = 0;
             }
-            if ( nextFour != -1 && nextFour < 4 ) {
-                color="#00EB00";
+            if (nextFour != -1 && nextFour < 4) {
+                color = "#00EB00";
                 ++nextFour;
             }
-            document.write("<tr bgcolor='"+color+"'><td>" + jsonWishesList[i].month + "/" + jsonWishesList[i].date + "</td><td>" + jsonWishesList[i].wish + "</td></tr>")
+            document.write(
+                "<tr bgcolor='" +
+                color +
+                "'><td>" +
+                jsonWishesList[i].month +
+                "/" +
+                jsonWishesList[i].date +
+                "</td><td>" +
+                jsonWishesList[i].wish +
+                "</td></tr>"
+            );
         }
-        document.write("</table>")
+        document.write("</table>");
     </script>
 </head>
 
-<body style="font-family: Arial; font-size: 6vw">
-</body>
+<body style="font-family: Arial; font-size: 6vw"></body>
 
 </html>
