@@ -72,6 +72,7 @@
         var sticky = null;
 
         var incrementBy = 9;
+        var fontSize = 4;
         var scrollSpeed = 6000;
         var current = incrementBy;
         function autoScroll() {
@@ -102,6 +103,14 @@
             }
         }
 
+        function changeFontSize(direction) {
+            fontSize += direction;
+            document.getElementById("content").style.fontSize = fontSize + "vw";
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("vishnu_namam_tamil.fontSize", fontSize);
+            }
+        }
+
         function pageOnLoad() {
             if (typeof (Storage) !== "undefined") {
                 if (localStorage.getItem("vishnu_namam_tamil.lines") != null) {
@@ -110,11 +119,16 @@
                 if (localStorage.getItem("vishnu_namam_tamil.speed") != null) {
                     scrollSpeed = parseInt(localStorage.getItem("vishnu_namam_tamil.speed"));
                 }
+                if (localStorage.getItem("vishnu_namam_tamil.fontSize") != null) {
+                    fontSize = parseInt(localStorage.getItem("vishnu_namam_tamil.fontSize"));
+                }
             }
             var lines = document.getElementById('lines');
             lines.value = incrementBy;
             var speed = document.getElementById('speed');
             speed.value = scrollSpeed;
+
+            changeFontSize(0);
 
             navbar = document.getElementById("navbar");
             sticky = navbar.offsetTop;
@@ -122,10 +136,10 @@
     </script>
 </head>
 
-<body style="font-family: Arial; font-size: 4vw" onload="pageOnLoad()">
+<body onload="pageOnLoad()" style="font-family: Arial">
     <div id="navbar">
         <table>
-            <tr style="border: 1px solid white">
+            <tr>
                 <td>
                     <div>Scroll Lines</div>
                 </td>
@@ -135,15 +149,20 @@
                 <td>
                     <div>Auto Scroll</div>
                 </td>
+                <td colspan=2>
+                    <div>Font Size</div>
+                </td>
             </tr>
             <tr>
                 <td><input type="text" value="6" id="lines" size=2 /></td>
                 <td><input type="text" value="6000" id="speed" size=5 /></td>
                 <td><input type="button" value="Start" id="startScroll" onclick="startAutoScroll()" /></td>
+                <td><input type="button" value="+" id="increaseSize" onclick="changeFontSize(1)" /></td>
+                <td><input type="button" value="-" id="decreaseSize" onclick="changeFontSize(-1)" /></td>
             </tr>
         </table>
     </div>
-    <div class="content">
+    <div class="content" id="content">
         <a id='1' href='#1'>1) ॐ विश्वस्मै नमः</a><br />
         <a id='2' href='#2'>2) ॐ विष्णवे नमः</a><br />
         <a id='3' href='#3'>3) ॐ वषट्काराय नमः</a><br />
