@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html>
 
@@ -48,9 +46,7 @@
             context = null;
 
         var audioBuffer = null;
-        var gainNode = aCtx.createGain();
-        gainNode.gain.value = 0.3; // setting it to 30%
-        gainNode.connect(aCtx.destination);
+        var gainNode = null;
 
         var sourceNodes = new Array();
         var keyboardMap = {
@@ -165,6 +161,10 @@
 
         function load() {
             context = new AudioContext();
+
+            gainNode = context.createGain();
+            gainNode.gain.value = 0.3; // setting it to 30%
+            gainNode.connect(context.destination);
 
             // Fetch the sample
             var request = new XMLHttpRequest();
