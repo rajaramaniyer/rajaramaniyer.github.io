@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html>
 
@@ -40,13 +41,16 @@
     </style>
     <title>Web Audio API - Sample Player</title>
     <script>
-        var sampleURL = '/harmonium-kannan-orig.wav';
+        var sampleURL = 'harmonium-kannan-orig.wav';
         var debug = false;
 
         var AudioContext = AudioContext || webkitAudioContext,
             context = null;
 
         var audioBuffer = null;
+        var gainNode = aCtx.createGain();
+        gainNode.gain.value = 0.3; // setting it to 30%
+        gainNode.connect(aCtx.destination);
 
         var sourceNodes = new Array();
         var keyboardMap = {
@@ -110,6 +114,7 @@
                 sourceNodes[i].loop = loop;
                 sourceNodes[i].loopStart = loopStart;
                 sourceNodes[i].loopEnd = loopEnd;
+                sourceNodes[i].connect(gainNode);
                 if (keyMap[i] != 0)
                     sourceNodes[i].detune.value = keyMap[i] * 100;
             }
@@ -152,6 +157,7 @@
                 sourceNodes[i].loop = loop;
                 sourceNodes[i].loopStart = loopStart;
                 sourceNodes[i].loopEnd = loopEnd;
+                sourceNodes[i].connec(gainNode);
                 if (keyMap[i] != 0)
                     sourceNodes[i].detune.value = keyMap[i] * 100;
             }
