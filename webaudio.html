@@ -105,12 +105,11 @@
                 if (debug) console.log("Building keySound", i, "keyMap", keyMap[i])
                 sourceNodes[i] = null
                 sourceNodes[i] = context.createBufferSource();
-                sourceNodes[i].connect(context.destination);
+                sourceNodes[i].connect(gainNode).connect(context.destination);
                 sourceNodes[i].buffer = audioBuffer;
                 sourceNodes[i].loop = loop;
                 sourceNodes[i].loopStart = loopStart;
                 sourceNodes[i].loopEnd = loopEnd;
-                sourceNodes[i].connect(gainNode);
                 if (keyMap[i] != 0)
                     sourceNodes[i].detune.value = keyMap[i] * 100;
             }
@@ -148,12 +147,11 @@
             if (i < sourceNodes.length) {
                 sourceNodes[i].stop(0);
                 sourceNodes[i] = context.createBufferSource();
-                sourceNodes[i].connect(context.destination);
+                sourceNodes[i].connect(gainNode).connect(context.destination);
                 sourceNodes[i].buffer = audioBuffer;
                 sourceNodes[i].loop = loop;
                 sourceNodes[i].loopStart = loopStart;
                 sourceNodes[i].loopEnd = loopEnd;
-                sourceNodes[i].connec(gainNode);
                 if (keyMap[i] != 0)
                     sourceNodes[i].detune.value = keyMap[i] * 100;
             }
