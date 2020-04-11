@@ -36,6 +36,63 @@
             stroke-width: 1;
 
         }
+
+        .slidecontainer {
+            width: 100%;
+            /* Width of the outside container */
+        }
+
+        /* The slider itself */
+        .slider {
+            -webkit-appearance: none;
+            /* Override default CSS styles */
+            appearance: none;
+            width: 100%;
+            /* Full-width */
+            height: 25px;
+            /* Specified height */
+            background: #d3d3d3;
+            /* Grey background */
+            outline: none;
+            /* Remove outline */
+            opacity: 0.7;
+            /* Set transparency (for mouse-over effects on hover) */
+            -webkit-transition: .2s;
+            /* 0.2 seconds transition on hover */
+            transition: opacity .2s;
+        }
+
+        /* Mouse-over effects */
+        .slider:hover {
+            opacity: 1;
+            /* Fully shown on mouse-over */
+        }
+
+        /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            /* Override default look */
+            appearance: none;
+            width: 25px;
+            /* Set a specific slider handle width */
+            height: 25px;
+            /* Slider handle height */
+            background: #4CAF50;
+            /* Green background */
+            cursor: pointer;
+            /* Cursor on hover */
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            /* Set a specific slider handle width */
+            height: 25px;
+            /* Slider handle height */
+            background: #4CAF50;
+            /* Green background */
+            cursor: pointer;
+            /* Cursor on hover */
+        }
     </style>
     <title>Web Audio API - Sample Player</title>
     <script>
@@ -108,8 +165,8 @@
                 sourceNodes[i].connect(gainNode).connect(context.destination);
                 sourceNodes[i].buffer = audioBuffer;
                 sourceNodes[i].loop = loop;
-                sourceNodes[i].loopStart = loopStart;
-                sourceNodes[i].loopEnd = loopEnd;
+                //sourceNodes[i].loopStart = loopStart;
+                //sourceNodes[i].loopEnd = loopEnd;
                 if (keyMap[i] != 0)
                     sourceNodes[i].detune.value = keyMap[i] * 100;
             }
@@ -150,8 +207,8 @@
                 sourceNodes[i].connect(gainNode).connect(context.destination);
                 sourceNodes[i].buffer = audioBuffer;
                 sourceNodes[i].loop = loop;
-                sourceNodes[i].loopStart = loopStart;
-                sourceNodes[i].loopEnd = loopEnd;
+                //sourceNodes[i].loopStart = loopStart;
+                //sourceNodes[i].loopEnd = loopEnd;
                 if (keyMap[i] != 0)
                     sourceNodes[i].detune.value = keyMap[i] * 100;
             }
@@ -261,13 +318,21 @@
         }
 
         var notePlaying = 0;
-        function play(polygon){
-            notePlaying=keyboardMap[polygon.getAttribute('key')];
+        function play(polygon) {
+            notePlaying = keyboardMap[polygon.getAttribute('key')];
             noteOn(notePlaying)
         }
 
-        function stop(polygon){
+        function stop(polygon) {
             noteOff(notePlaying)
+        }
+
+        function onGainChange() {
+            if (debug) console.log("Inside onGainChange");
+            document.getElementById('volumeLevel').innerText = document.getElementById("myRange").value + "%";
+            if (gainNode != null) {
+                gainNode.gain.value = document.getElementById("myRange").value / 100
+            }
         }
     </script>
 </head>
@@ -283,38 +348,114 @@
             Module</button>
     </div>
     <div id="mainScreen" style="display: none;">
+        <div class="w3-container w3-card">
+            <h3 class="w3-color w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
+            <div class="slidecontainer">
+                <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
+            </div>
+        </div>
+        <hr>
         <center>
             <svg width=294 height=110>
-                <polygon points="0,0 14,0 14,50 21,50 21,100 0,100 0,0 " class="white"                          key="`" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="14,0 28,0 28,50 14,50 14,0 " class="black"                                     key="1" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="21,50 28,50 28,0 35,0 35,50 42,50 42,100 21,100 21,50 " class="white"          key="q" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="35,0 49,0 49,50 35,50 35,0 " class="black"                                     key="2" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="42,50 49,50 49,0 63,0 63,100 42,100 42,50 " class="white"                      key="w" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="63,0 77,0 77,50 84,50 84,100 63,100 63,0 " class="white"                       key="e" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="77,0 91,0 91,50 77,50 77,0 " class="black"                                     key="4" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="84,50 91,50 91,0 98,0 98,50 105,50 105,100 84,100 84,50 " class="white"        key="r" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="98,0 112,0 112,50 98,50 98,0 " class="black"                                   key="5" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="105,50 112,50 112,0 126,0 126,100 105,100 105,50 " class="white"               key="t" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="126,0 140,0 140,50 147,50 147,100 126,100 126,0 " class="white"                key="y" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="140,0 154,0 154,50 140,50 140,0 " class="black"                                key="7" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="147,50 154,50 154,0 161,0 161,50 168,50 168,100 147,100 147,50 " class="white" key="u" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="161,0 175,0 175,50 161,50 161,0 " class="black"                                key="8" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="168,50 175,50 175,0 182,0 182,50 189,50 189,100 168,100 168,50 " class="white" key="i" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="182,0 196,0 196,50 182,50 182,0 " class="black"                                key="9" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="189,50 196,50 196,0 210,0 210,100 189,100 189,50 " class="white"               key="o" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="210,0 224,0 224,50 231,50 231,100 210,100 210,0 " class="white"                key="p" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="224,0 238,0 238,50 224,50 224,0 " class="black"                                key="-" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="231,50 238,50 238,0 245,0 245,50 252,50 252,100 231,100 231,50 " class="white" key="[" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="245,0 259,0 259,50 245,50 245,0 " class="black"                                key="=" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="252,50 259,50 259,0 273,0 273,100 252,100 252,50 " class="white"               key="]" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="273,0 294,0 294,100 273,100 273,0 " class="white"                              key="\" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))" ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="0,0 14,0 14,50 21,50 21,100 0,100 0,0 " class="white" key="`" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="14,0 28,0 28,50 14,50 14,0 " class="black" key="1" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="21,50 28,50 28,0 35,0 35,50 42,50 42,100 21,100 21,50 " class="white" key="q"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="35,0 49,0 49,50 35,50 35,0 " class="black" key="2" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="42,50 49,50 49,0 63,0 63,100 42,100 42,50 " class="white" key="w"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="63,0 77,0 77,50 84,50 84,100 63,100 63,0 " class="white" key="e"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="77,0 91,0 91,50 77,50 77,0 " class="black" key="4" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="84,50 91,50 91,0 98,0 98,50 105,50 105,100 84,100 84,50 " class="white" key="r"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="98,0 112,0 112,50 98,50 98,0 " class="black" key="5" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="105,50 112,50 112,0 126,0 126,100 105,100 105,50 " class="white" key="t"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="126,0 140,0 140,50 147,50 147,100 126,100 126,0 " class="white" key="y"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="140,0 154,0 154,50 140,50 140,0 " class="black" key="7" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="147,50 154,50 154,0 161,0 161,50 168,50 168,100 147,100 147,50 " class="white" key="u"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="161,0 175,0 175,50 161,50 161,0 " class="black" key="8" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="168,50 175,50 175,0 182,0 182,50 189,50 189,100 168,100 168,50 " class="white" key="i"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="182,0 196,0 196,50 182,50 182,0 " class="black" key="9" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="189,50 196,50 196,0 210,0 210,100 189,100 189,50 " class="white" key="o"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="210,0 224,0 224,50 231,50 231,100 210,100 210,0 " class="white" key="p"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="224,0 238,0 238,50 224,50 224,0 " class="black" key="-" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="231,50 238,50 238,0 245,0 245,50 252,50 252,100 231,100 231,50 " class="white" key="["
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="245,0 259,0 259,50 245,50 245,0 " class="black" key="=" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="252,50 259,50 259,0 273,0 273,100 252,100 252,50 " class="white" key="]"
+                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                <polygon points="273,0 294,0 294,100 273,100 273,0 " class="white" key="\" onmousedown="play(this)"
+                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
 
                 <!--white keys-->
-                <text x="7"   y="65" fill="black" font-family="courier new" font-size="14">`</text>
-                <text x="28"  y="65" fill="black" font-family="courier new" font-size="14">q</text>
-                <text x="49"  y="65" fill="black" font-family="courier new" font-size="14">w</text>
-                <text x="70"  y="65" fill="black" font-family="courier new" font-size="14">e</text>
-                <text x="91"  y="65" fill="black" font-family="courier new" font-size="14">r</text>
+                <text x="7" y="65" fill="black" font-family="courier new" font-size="14">`</text>
+                <text x="28" y="65" fill="black" font-family="courier new" font-size="14">q</text>
+                <text x="49" y="65" fill="black" font-family="courier new" font-size="14">w</text>
+                <text x="70" y="65" fill="black" font-family="courier new" font-size="14">e</text>
+                <text x="91" y="65" fill="black" font-family="courier new" font-size="14">r</text>
                 <text x="112" y="65" fill="black" font-family="courier new" font-size="14">t</text>
                 <text x="133" y="65" fill="black" font-family="courier new" font-size="14">y</text>
                 <text x="154" y="65" fill="black" font-family="courier new" font-size="14">u</text>
@@ -326,9 +467,9 @@
                 <text x="280" y="65" fill="black" font-family="courier new" font-size="14">\</text>
 
                 <!--black keys-->
-                <text x="16"  y="30" fill="white" font-family="courier new" font-size="14">1</text>
-                <text x="37"  y="30" fill="white" font-family="courier new" font-size="14">2</text>
-                <text x="79"  y="30" fill="white" font-family="courier new" font-size="14">4</text>
+                <text x="16" y="30" fill="white" font-family="courier new" font-size="14">1</text>
+                <text x="37" y="30" fill="white" font-family="courier new" font-size="14">2</text>
+                <text x="79" y="30" fill="white" font-family="courier new" font-size="14">4</text>
                 <text x="100" y="30" fill="white" font-family="courier new" font-size="14">5</text>
                 <text x="142" y="30" fill="white" font-family="courier new" font-size="14">7</text>
                 <text x="163" y="30" fill="white" font-family="courier new" font-size="14">8</text>
@@ -336,14 +477,14 @@
                 <text x="226" y="30" fill="white" font-family="courier new" font-size="14">-</text>
                 <text x="247" y="30" fill="white" font-family="courier new" font-size="14">=</text>
 
-                <text x="70"  y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">C</text>
-                <text x="91"  y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">D</text>
+                <text x="70" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">C</text>
+                <text x="91" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">D</text>
                 <text x="112" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">E</text>
                 <text x="133" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">F</text>
                 <text x="154" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">G</text>
                 <text x="175" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">A</text>
                 <text x="196" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">B</text>
-                
+
             </svg>
         </center>
 
@@ -397,13 +538,14 @@
             <hr>
             <div class="w3-container w3-card">
                 <div id="load" class="w3-panel">
-                    <button class="w3-button w3-block w3-blue-gray"
-                    onclick="requestMIDIAccess()" width="100%">MIDI Devices</button>
+                    <button class="w3-button w3-block w3-blue-gray" onclick="requestMIDIAccess()" width="100%">MIDI
+                        Devices</button>
                 </div>
                 <div class="w3-center" width="100%">
                     <select id="midiInputDevices" width="100%" />
                 </div>
             </div>
+
         </div>
     </div>
 </body>
