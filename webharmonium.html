@@ -209,7 +209,9 @@
             var i = note + octaveMap[currentOctave]
             if (debug) console.log("noteOff", note, "currentOctave", currentOctave, "i", i)
             if (i < sourceNodes.length) {
+                gainNode.gain.value = 0;
                 sourceNodes[i].stop(0);
+                gainNode.gain.value = document.getElementById("myRange").value / 100;
                 sourceNodes[i] = context.createBufferSource();
                 sourceNodes[i].connect(gainNode).connect(context.destination);
                 sourceNodes[i].buffer = audioBuffer;
@@ -338,7 +340,7 @@
             if (debug) console.log("Inside onGainChange");
             document.getElementById('volumeLevel').innerText = document.getElementById("myRange").value + "%";
             if (gainNode != null) {
-                gainNode.gain.value = document.getElementById("myRange").value / 100
+                gainNode.gain.value = document.getElementById("myRange").value / 100;
             }
         }
     </script>
