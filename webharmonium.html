@@ -165,7 +165,7 @@
                 sourceNodes[i].connect(gainNode).connect(context.destination);
                 sourceNodes[i].buffer = audioBuffer;
                 sourceNodes[i].loop = loop;
-                //sourceNodes[i].loopStart = loopStart;
+                sourceNodes[i].loopStart = loopStart;
                 //sourceNodes[i].loopEnd = loopEnd;
                 if (keyMap[i] != 0)
                     sourceNodes[i].detune.value = keyMap[i] * 100;
@@ -207,7 +207,7 @@
                 sourceNodes[i].connect(gainNode).connect(context.destination);
                 sourceNodes[i].buffer = audioBuffer;
                 sourceNodes[i].loop = loop;
-                //sourceNodes[i].loopStart = loopStart;
+                sourceNodes[i].loopStart = loopStart;
                 //sourceNodes[i].loopEnd = loopEnd;
                 if (keyMap[i] != 0)
                     sourceNodes[i].detune.value = keyMap[i] * 100;
