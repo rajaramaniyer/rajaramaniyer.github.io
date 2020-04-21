@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Web Tambura</title>
+    <style>
+        .slidecontainer {
+            width: 100%;
+            /* Width of the outside container */
+        }
+
+        /* The slider itself */
+        .slider {
+            -webkit-appearance: none;
+            /* Override default CSS styles */
+            appearance: none;
+            width: 100%;
+            /* Full-width */
+            height: 25px;
+            /* Specified height */
+            background: #d3d3d3;
+            /* Grey background */
+            outline: none;
+            /* Remove outline */
+            opacity: 0.7;
+            /* Set transparency (for mouse-over effects on hover) */
+            -webkit-transition: .2s;
+            /* 0.2 seconds transition on hover */
+            transition: opacity .2s;
+        }
+
+        /* Mouse-over effects */
+        .slider:hover {
+            opacity: 1;
+            /* Fully shown on mouse-over */
+        }
+
+        /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            /* Override default look */
+            appearance: none;
+            width: 25px;
+            /* Set a specific slider handle width */
+            height: 25px;
+            /* Slider handle height */
+            background: #4CAF50;
+            /* Green background */
+            cursor: pointer;
+            /* Cursor on hover */
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            /* Set a specific slider handle width */
+            height: 25px;
+            /* Slider handle height */
+            background: #4CAF50;
+            /* Green background */
+            cursor: pointer;
+            /* Cursor on hover */
+        }
+
+        /* *******************Check Box****************** */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .fancycheckbox {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .fancycheckbox:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.fancycheckbox {
+            background-color: #2196F3;
+        }
+
+        input:focus+.fancycheckbox {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.fancycheckbox:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded fancycheckboxs */
+        .fancycheckbox.round {
+            border-radius: 34px;
+        }
+
+        .fancycheckbox.round:before {
+            border-radius: 50%;
+        }
+
+        /* ***************Radio Button*************** */
+        /* The container */
+        .container input {
+            display: none;
+        }
+
+        .container .checkmark {
+            background-color: #EBEBEB;
+            color: black;
+        }
+
+        .container input:checked~.checkmark {
+            background-color: teal;
+            color: white;
+        }
+    </style>
+    <script>
+        var debug = false;
+
+        function onPageLoad() {
+            if (typeof (Storage) !== "undefined") {
+                if (localStorage.getItem("webtambura.pitch") != null) {
+                    pitch = localStorage.getItem("webtambura.pitch");
+                    document.querySelector('input[value="' + pitch + '"]').checked = true;
+                }
+                if (localStorage.getItem("webtambura.volume") != null) {
+                    document.getElementById("myRange").value = localStorage.getItem("webtambura.volume");
+                    onGainChange();
+                }
+                if (localStorage.getItem("webtambura.madhyam") != null) {
+                    if (localStorage.getItem("webtambura.madhyam") == "m") {
+                        document.getElementById("madhyam").checked = true;
+                    }
+                }
+            }
+        }
+
+        var AudioContext = AudioContext || webkitAudioContext,
+            context = null,
+            sourceNode = null,
+            gainNode = null,
+            audioBuffer = null;
+
+        function resetSound() {
+            if (sourceNode != null) {
+                sourceNode.stop(0);
+                sourceNode = null;
+            }
+            sourceNode = context.createBufferSource();
+            gainNode.gain.value = document.getElementById("myRange").value / 100;
+            sourceNode.connect(gainNode).connect(context.destination);
+            sourceNode.buffer = audioBuffer;
+            sourceNode.loop = true;
+            sourceNode.start(0);
+        }
+
+        function changePitch() {
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("webtambura.pitch", document.querySelector('input[name="pitch"]:checked').value);
+                localStorage.setItem("webtambura.madhyam", ((document.getElementById("madhyam").checked) ? "m" : ""));
+            }
+
+            var button = document.getElementById("PlayStop");
+            if (button.innerText == "Stop") {
+                onClickPlay();
+                onClickPlay();
+            }
+
+            document.getElementById("PlayStop").focus();
+        }
+
+        function onClickPlay() {
+            if (debug) console.log("Inside onClickPlay")
+            var button = document.getElementById("PlayStop");
+
+            if (button.innerText == "Play") {
+                if (context == null) {
+                    context = new AudioContext();
+                    gainNode = context.createGain();
+                }
+
+                var pitchSelected = document.querySelector('input[name="pitch"]:checked').value;
+                var madhyamSruthi = (document.getElementById("madhyam").checked) ? "m" : "";
+
+                // Fetch the sample
+                var request = new XMLHttpRequest();
+                request.open('GET', madhyamSruthi + pitchSelected + ".wav", true);
+                request.responseType = 'arraybuffer';
+
+                request.addEventListener('load', function () {
+                    context.decodeAudioData(
+                        request.response,
+                        function (buffer) {
+                            if (debug) console.log("Got sample. Size ", buffer.length);
+                            audioBuffer = buffer;
+                            resetSound();
+                        },
+                        function (e) {
+                            console.error('ERROR: context.decodeAudioData:', e);
+                        }
+                    );
+                });
+
+                request.send();
+
+                button.innerText = "Stop"
+            } else {
+                if (sourceNode != null) {
+                    sourceNode.stop(0);
+                    sourceNode = null;
+                }
+                button.innerText = "Play"
+            }
+        }
+        function onGainChange() {
+            if (debug) console.log("Inside onGainChange");
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("webtambura.volume", document.getElementById("myRange").value);
+            }
+            document.getElementById('volumeLevel').innerText = document.getElementById("myRange").value + "%";
+            if (gainNode != null) {
+                gainNode.gain.value = document.getElementById("myRange").value / 100
+            }
+
+            document.getElementById("PlayStop").focus();
+        }
+    </script>
+</head>
+
+<body onload="onPageLoad()">
+    <div class="w3-container w3-teal">
+        <h3>Web Tambura</h3>
+    </div>
+    <div id="mainScreen">
+        <h3>Volume: <span id="volumeLevel"></span></h3>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
+        </div>
+
+        <h3>Madhyam Shruthi</h3>
+        <label class="switch">
+            <input type="checkbox" value="m" id="madhyam" onclick="changePitch()">
+            <span class="fancycheckbox round"></span>
+        </label>
+
+        <h3>Select Pitch</h3>
+
+        <table width="100%" style="border: 1px solid teal">
+            <tr width="100%">
+                <td width="25%">
+                    <center>
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="b">
+                            <div class="checkmark w3-button w3-block">B</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="c"
+                                checked="checked">
+                            <div class="checkmark w3-button w3-block">C</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="cs">
+                            <div class="checkmark w3-button w3-block">C#</div>
+                        </label>
+                    </center>
+                </td>
+                <td width="25%">
+                    <center>
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="d">
+                            <div class="checkmark w3-button w3-block">D</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="ds">
+                            <div class="checkmark w3-button w3-block">D#</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="e">
+                            <div class="checkmark w3-button w3-block">E</div>
+                        </label>
+                    </center>
+                </td>
+                <td width="25%">
+                    <center>
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="f">
+                            <div class="checkmark w3-button w3-block">F</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="fs">
+                            <div class="checkmark w3-button w3-block">F#</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="g">
+                            <div class="checkmark w3-button w3-block">G</div>
+                        </label>
+                    </center>
+                </td>
+                <td width="25%">
+                    <center>
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="gs">
+                            <div class="checkmark w3-button w3-block">G#</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="a">
+                            <div class="checkmark w3-button w3-block">A</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="as">
+                            <div class="checkmark w3-button w3-block">A#</div>
+                        </label>
+                    </center>
+                </td>
+            </tr>
+        </table>
+
+        <center>
+            <p><button class="w3-button w3-green" id="PlayStop" onclick="onClickPlay()">Play</button></p>
+        </center>
+    </div>
+
+</body>
+
+</html>
