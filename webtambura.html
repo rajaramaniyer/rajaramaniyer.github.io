@@ -4,46 +4,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <meta property="og:title" content="Web Harmonium" />
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="Play Harmonium using your normal computer keyboard or attach a MIDI keyboard to play" />
-    <meta property="og:image" content="https://rajaramaniyer.github.io/webharmonium.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="675" />
-    <meta property="og:url" content="https://rajaramaniyer.github.io/webharmonium.html" />
-
+    <title>Web Tambura</title>
     <style>
-        .white {
-            fill: white;
-            stroke: black;
-            stroke-width: 1;
-            cursor: pointer;
-            margin: 2px;
-        }
-
-        .black {
-            fill: black;
-            stroke: black;
-            stroke-width: 1;
-            cursor: pointer;
-            margin: 2px;
-        }
-
-        .white1:hover {
-            fill: #9e9e9e;
-            stroke: lightblue;
-            cursor: pointer;
-            stroke-width: 1;
-
-        }
-
-        .black1:hover {
-            fill: #515151;
-            stroke: lightblue;
-            stroke-width: 1;
-
-        }
-
         .slidecontainer {
             width: 100%;
             /* Width of the outside container */
@@ -100,488 +62,298 @@
             cursor: pointer;
             /* Cursor on hover */
         }
+
+        /* *******************Check Box****************** */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .fancycheckbox {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .fancycheckbox:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.fancycheckbox {
+            background-color: #2196F3;
+        }
+
+        input:focus+.fancycheckbox {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.fancycheckbox:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded fancycheckboxs */
+        .fancycheckbox.round {
+            border-radius: 34px;
+        }
+
+        .fancycheckbox.round:before {
+            border-radius: 50%;
+        }
+
+        /* ***************Radio Button*************** */
+        /* The container */
+        .container input {
+            display: none;
+        }
+
+        .container .checkmark {
+            background-color: #EBEBEB;
+            color: black;
+        }
+
+        .container input:checked~.checkmark {
+            background-color: teal;
+            color: white;
+        }
     </style>
-    <title>Web Harmonium - developed by Rajaraman Iyer</title>
     <script>
-        var sampleURL = 'harmonium-kannan-orig.wav';
         var debug = false;
 
-        var AudioContext = AudioContext || webkitAudioContext,
-            context = null;
-
-        var audioBuffer = null;
-        var gainNode = null;
-
-        var sourceNodes = new Array();
-        var keyboardMap = {
-            "`": 55,
-            "1": 56,
-            "q": 57,
-            "2": 58,
-            "w": 59,
-            "e": 60,
-            "4": 61,
-            "r": 62,
-            "5": 63,
-            "t": 64,
-            "y": 65,
-            "7": 66,
-            "u": 67,
-            "8": 68,
-            "i": 69,
-            "9": 70,
-            "o": 71,
-            "p": 72,
-            "-": 73,
-            "[": 74,
-            "=": 75,
-            "]": 76,
-            "\\": 77
-        }
-
-        var loopStart = 0.5,
-            loopEnd = 7.5,
-            loop = true;
-
-        var keyMap = new Array();
-        var baseKeyMap = new Array();
-        var middleC = 60;
-        var rootKey = 62;
-        var currentOctave = 3; //0-3 i.e. 4
-        var octaveMap = [-36, -24, -12, 0, 12, 24, 36]
-        var baseKeyNames = [
-            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
-        ];
-        var keyNames = new Array();
-
-        function init() {
-            var transpose = parseInt(document.getElementById('transpose').innerText)
-
-            var startKey = (middleC - 124) + (rootKey - middleC);
-            for (i = 0; i < 128; ++i) {
-                baseKeyMap[i] = startKey++;
-                keyMap[i] = baseKeyMap[i] + transpose
-            }
-            if (debug) console.log(baseKeyMap)
-            if (debug) console.log(keyMap)
-
-            for (i = 0; i < keyMap.length; ++i) {
-                if (debug) console.log("Building keySound", i, "keyMap", keyMap[i])
-                sourceNodes[i] = null
-                sourceNodes[i] = context.createBufferSource();
-                sourceNodes[i].connect(gainNode).connect(context.destination);
-                sourceNodes[i].buffer = audioBuffer;
-                sourceNodes[i].loop = loop;
-                sourceNodes[i].loopStart = loopStart;
-                //sourceNodes[i].loopEnd = loopEnd;
-                if (keyMap[i] != 0)
-                    sourceNodes[i].detune.value = keyMap[i] * 100;
-            }
-
-            document.getElementById('mainScreen').style.display = 'block'
-        }
-
-        window.onkeydown = function (event) {
-            if (!event.repeat) {
-                if (debug) console.log("keyDown", event.key, "keyboardMap", keyboardMap[event.key]);
-                if (typeof (keyboardMap[event.key]) != "undefined") {
-                    noteOn(keyboardMap[event.key]);
-                }
-            }
-        }
-
-        window.onkeyup = function (event) {
-            if (debug) console.log("keyUp", event.key, "keyboardMap", keyboardMap[event.key]);
-            if (typeof (keyboardMap[event.key]) != "undefined") {
-                noteOff(keyboardMap[event.key]);
-            }
-        }
-
-        function noteOn(note) {
-            var i = note + octaveMap[currentOctave]
-            if (debug) console.log("noteOn", note, "currentOctave", currentOctave, "i", i)
-            if (i < sourceNodes.length) {
-                sourceNodes[i].start(0);
-            }
-        }
-
-        function noteOff(note) {
-            var i = note + octaveMap[currentOctave]
-            if (debug) console.log("noteOff", note, "currentOctave", currentOctave, "i", i)
-            if (i < sourceNodes.length) {
-                sourceNodes[i].stop(0);
-                sourceNodes[i] = context.createBufferSource();
-                sourceNodes[i].connect(gainNode).connect(context.destination);
-                sourceNodes[i].buffer = audioBuffer;
-                sourceNodes[i].loop = loop;
-                sourceNodes[i].loopStart = loopStart;
-                //sourceNodes[i].loopEnd = loopEnd;
-                if (keyMap[i] != 0)
-                    sourceNodes[i].detune.value = keyMap[i] * 100;
-            }
-        }
-
-        function load() {
-            context = new AudioContext();
-
-            gainNode = context.createGain();
-            gainNode.gain.value = 0.3; // setting it to 30%
-            gainNode.connect(context.destination);
-
+        function onPageLoad() {
             if (typeof (Storage) !== "undefined") {
-                if (localStorage.getItem("webharmonium.volume") != null) {
-                    document.getElementById("myRange").value = localStorage.getItem("webharmonium.volume");
+                if (localStorage.getItem("webtambura.pitch") != null) {
+                    pitch = localStorage.getItem("webtambura.pitch");
+                    document.querySelector('input[value="' + pitch + '"]').checked = true;
+                }
+                if (localStorage.getItem("webtambura.volume") != null) {
+                    document.getElementById("myRange").value = localStorage.getItem("webtambura.volume");
                     onGainChange();
                 }
-                if (localStorage.getItem("webharmonium.octave") != null) {
-                    document.getElementById('octave').innerText = localStorage.getItem("webharmonium.octave");
-                }
-                if (localStorage.getItem("webharmonium.transpose") != null) {
-                    document.getElementById('transpose').innerText = localStorage.getItem("webharmonium.transpose");
-                }
-            }
-
-            // Fetch the sample
-            var request = new XMLHttpRequest();
-            request.open('GET', sampleURL, true);
-            request.responseType = 'arraybuffer';
-
-            request.addEventListener('load', function () {
-                context.decodeAudioData(
-                    request.response,
-                    function (buffer) {
-                        if (debug) console.log("Got sample. Size", buffer.length)
-                        audioBuffer = buffer;
-                        init();
-                    },
-                    function (e) {
-                        console.error('ERROR: context.decodeAudioData:', e);
+                if (localStorage.getItem("webtambura.madhyam") != null) {
+                    if (localStorage.getItem("webtambura.madhyam") == "m") {
+                        document.getElementById("madhyam").checked = true;
                     }
-                );
-            });
-
-            request.send();
-            requestMIDIAccess();
-        }
-        //End of Fetch the sample
-
-        function requestMIDIAccess() {
-            // Start of MIDI
-            if (navigator.requestMIDIAccess) {
-                if (debug) console.log('This browser supports WebMIDI!');
-                navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-            } else {
-                if (debug) console.log('WebMIDI is not supported in this browser.');
-            }
-        }
-
-        var midiAccess = null;
-        function onMIDISuccess(midiAccessReceived) {
-            if (debug) console.log("onMIDISuccess", midiAccessReceived);
-            midiAccess = midiAccessReceived;
-            var midiInputDevices = document.getElementById("midiInputDevices");
-            for ( i = 0; i < midiInputDevices.length; ++i ) {
-                midiInputDevices.remove(i);
-            }
-            for (var input of midiAccess.inputs.values()) {
-                if (debug) console.log("Input port [type:'" + input.type + "'] id:'" + input.id + "' manufacturer:'" + input.manufacturer + "' name:'" + input.name + "' version:'" + input.version + "'");
-                var option = document.createElement("option");
-                option.id = input.id;
-                option.text = input.name + " by " + input.manufacturer;
-                midiInputDevices.add(option);
-                input.onmidimessage = getMIDIMessage;
-            }
-        }
-
-        function getMIDIMessage(message) {
-            if (debug) console.log(message)
-            var command = message.data[0];
-            var note = message.data[1];
-            var velocity = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
-
-            var midiInputDevices = document.getElementById("midiInputDevices");
-            if (debug) console.log("midiDeviceId", message.target.id)
-            if (debug) console.log("selectedMidi", midiInputDevices.options[midiInputDevices.selectedIndex].id)
-            if (message.target.id == midiInputDevices.options[midiInputDevices.selectedIndex].id) {
-                if (debug) console.log("command", command, "note", note, "velocity", velocity);
-                switch (command) {
-                    case 144: // noteOn
-                        if (velocity > 0) {
-                            noteOn(note, velocity);
-                        } else {
-                            noteOff(note);
-                        }
-                        break;
-                    case 128: // noteOff
-                        noteOff(note);
-                        break;
-                    // we could easily expand this switch statement to cover other types of commands such as controllers or sysex
                 }
             }
         }
 
-        function onMIDIFailure() {
-            if (debug) console.log('Could not access your MIDI devices.');
+        var AudioContext = AudioContext || webkitAudioContext,
+            context = null,
+            sourceNode = null,
+            gainNode = null,
+            audioBuffer = null;
+
+        function resetSound() {
+            if (sourceNode != null) {
+                sourceNode.stop(0);
+                sourceNode = null;
+            }
+            sourceNode = context.createBufferSource();
+            gainNode.gain.value = document.getElementById("myRange").value / 100;
+            sourceNode.connect(gainNode).connect(context.destination);
+            sourceNode.buffer = audioBuffer;
+            sourceNode.loop = true;
+            sourceNode.start(0);
         }
 
-        // End of MIDI
-
-        function shiftOctave(octave) {
-            if (currentOctave + octave >= 0 && currentOctave + octave <= 6) {
-                currentOctave += octave;
-                document.getElementById('octave').innerText = parseInt(document.getElementById('octave').innerText) + octave
-
-                if (typeof (Storage) !== "undefined") {
-                    localStorage.setItem("webharmonium.octave", document.getElementById('octave').innerText);
-                }
-            }
-        }
-
-        function shiftSemitone(semitone) {
-            var currentSemitone = parseInt(document.getElementById('transpose').innerText);
-            if (currentSemitone + semitone >= -11 && currentSemitone + semitone <= 11) {
-                document.getElementById('transpose').innerText = currentSemitone + semitone
-            }
+        function changePitch() {
             if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("webharmonium.transpose", document.getElementById('transpose').innerText);
+                localStorage.setItem("webtambura.pitch", document.querySelector('input[name="pitch"]:checked').value);
+                localStorage.setItem("webtambura.madhyam", ((document.getElementById("madhyam").checked) ? "m" : ""));
             }
-            init()
+
+            var button = document.getElementById("PlayStop");
+            if (button.innerText == "Stop") {
+                onClickPlay();
+                onClickPlay();
+            }
+
+            document.getElementById("PlayStop").focus();
         }
 
-        var notePlaying = 0;
-        function play(polygon) {
-            notePlaying = keyboardMap[polygon.getAttribute('key')];
-            noteOn(notePlaying)
-        }
+        function onClickPlay() {
+            if (debug) console.log("Inside onClickPlay")
+            var button = document.getElementById("PlayStop");
 
-        function stop(polygon) {
-            noteOff(notePlaying)
-        }
+            if (button.innerText == "Play") {
+                if (context == null) {
+                    context = new AudioContext();
+                    gainNode = context.createGain();
+                }
 
+                var pitchSelected = document.querySelector('input[name="pitch"]:checked').value;
+                var madhyamSruthi = (document.getElementById("madhyam").checked) ? "m" : "";
+
+                // Fetch the sample
+                var request = new XMLHttpRequest();
+                request.open('GET', madhyamSruthi + pitchSelected + ".wav", true);
+                request.responseType = 'arraybuffer';
+
+                request.addEventListener('load', function () {
+                    context.decodeAudioData(
+                        request.response,
+                        function (buffer) {
+                            if (debug) console.log("Got sample. Size ", buffer.length);
+                            audioBuffer = buffer;
+                            resetSound();
+                        },
+                        function (e) {
+                            console.error('ERROR: context.decodeAudioData:', e);
+                        }
+                    );
+                });
+
+                request.send();
+
+                button.innerText = "Stop"
+            } else {
+                if (sourceNode != null) {
+                    sourceNode.stop(0);
+                    sourceNode = null;
+                }
+                button.innerText = "Play"
+            }
+        }
         function onGainChange() {
             if (debug) console.log("Inside onGainChange");
             if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("webharmonium.volume", document.getElementById("myRange").value);
+                localStorage.setItem("webtambura.volume", document.getElementById("myRange").value);
             }
             document.getElementById('volumeLevel').innerText = document.getElementById("myRange").value + "%";
             if (gainNode != null) {
-                gainNode.gain.value = document.getElementById("myRange").value / 100;
+                gainNode.gain.value = document.getElementById("myRange").value / 100
             }
+
+            document.getElementById("PlayStop").focus();
         }
     </script>
 </head>
 
-<body>
+<body onload="onPageLoad()">
     <div class="w3-container w3-teal">
-        <h3>Web Harmonium</h3>
+        <h3>Web Tambura</h3>
     </div>
-
-    <div id="load" class="w3-container w3-panel">
-        <button class="w3-button w3-block w3-blue-gray"
-            onclick="document.getElementById('load').style.display='none'; load();">Load
-            Module</button>
-    </div>
-    <div id="mainScreen" style="display: none;">
-        <div class="w3-container w3-card">
-            <h3 class="w3-color w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
-            <div class="slidecontainer">
-                <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
-            </div>
+    <div id="mainScreen">
+        <h3>Volume: <span id="volumeLevel"></span></h3>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
         </div>
-        <hr>
+
+        <h3>Madhyam Shruthi</h3>
+        <label class="switch">
+            <input type="checkbox" value="m" id="madhyam" onclick="changePitch()">
+            <span class="fancycheckbox round"></span>
+        </label>
+
+        <h3>Select Pitch</h3>
+
+        <table width="100%" style="border: 1px solid teal">
+            <tr width="100%">
+                <td width="25%">
+                    <center>
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="b">
+                            <div class="checkmark w3-button w3-block">B</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="c"
+                                checked="checked">
+                            <div class="checkmark w3-button w3-block">C</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="cs">
+                            <div class="checkmark w3-button w3-block">C#</div>
+                        </label>
+                    </center>
+                </td>
+                <td width="25%">
+                    <center>
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="d">
+                            <div class="checkmark w3-button w3-block">D</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="ds">
+                            <div class="checkmark w3-button w3-block">D#</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="e">
+                            <div class="checkmark w3-button w3-block">E</div>
+                        </label>
+                    </center>
+                </td>
+                <td width="25%">
+                    <center>
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="f">
+                            <div class="checkmark w3-button w3-block">F</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="fs">
+                            <div class="checkmark w3-button w3-block">F#</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="g">
+                            <div class="checkmark w3-button w3-block">G</div>
+                        </label>
+                    </center>
+                </td>
+                <td width="25%">
+                    <center>
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="gs">
+                            <div class="checkmark w3-button w3-block">G#</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="a">
+                            <div class="checkmark w3-button w3-block">A</div>
+                        </label>
+                        <br />
+                        <label class="container">
+                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="as">
+                            <div class="checkmark w3-button w3-block">A#</div>
+                        </label>
+                    </center>
+                </td>
+            </tr>
+        </table>
+
         <center>
-            <svg width=294 height=110>
-                <polygon points="0,0 14,0 14,50 21,50 21,100 0,100 0,0 " class="white" key="`" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="14,0 28,0 28,50 14,50 14,0 " class="black" key="1" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="21,50 28,50 28,0 35,0 35,50 42,50 42,100 21,100 21,50 " class="white" key="q"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="35,0 49,0 49,50 35,50 35,0 " class="black" key="2" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="42,50 49,50 49,0 63,0 63,100 42,100 42,50 " class="white" key="w"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="63,0 77,0 77,50 84,50 84,100 63,100 63,0 " class="white" key="e"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="77,0 91,0 91,50 77,50 77,0 " class="black" key="4" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="84,50 91,50 91,0 98,0 98,50 105,50 105,100 84,100 84,50 " class="white" key="r"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="98,0 112,0 112,50 98,50 98,0 " class="black" key="5" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="105,50 112,50 112,0 126,0 126,100 105,100 105,50 " class="white" key="t"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="126,0 140,0 140,50 147,50 147,100 126,100 126,0 " class="white" key="y"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="140,0 154,0 154,50 140,50 140,0 " class="black" key="7" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="147,50 154,50 154,0 161,0 161,50 168,50 168,100 147,100 147,50 " class="white" key="u"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="161,0 175,0 175,50 161,50 161,0 " class="black" key="8" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="168,50 175,50 175,0 182,0 182,50 189,50 189,100 168,100 168,50 " class="white" key="i"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="182,0 196,0 196,50 182,50 182,0 " class="black" key="9" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="189,50 196,50 196,0 210,0 210,100 189,100 189,50 " class="white" key="o"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="210,0 224,0 224,50 231,50 231,100 210,100 210,0 " class="white" key="p"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="224,0 238,0 238,50 224,50 224,0 " class="black" key="-" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="231,50 238,50 238,0 245,0 245,50 252,50 252,100 231,100 231,50 " class="white" key="["
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="245,0 259,0 259,50 245,50 245,0 " class="black" key="=" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="252,50 259,50 259,0 273,0 273,100 252,100 252,50 " class="white" key="]"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="273,0 294,0 294,100 273,100 273,0 " class="white" key="\" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-
-                <!--white keys-->
-                <text x="7" y="65" fill="black" font-family="courier new" font-size="14">`</text>
-                <text x="28" y="65" fill="black" font-family="courier new" font-size="14">q</text>
-                <text x="49" y="65" fill="black" font-family="courier new" font-size="14">w</text>
-                <text x="70" y="65" fill="black" font-family="courier new" font-size="14">e</text>
-                <text x="91" y="65" fill="black" font-family="courier new" font-size="14">r</text>
-                <text x="112" y="65" fill="black" font-family="courier new" font-size="14">t</text>
-                <text x="133" y="65" fill="black" font-family="courier new" font-size="14">y</text>
-                <text x="154" y="65" fill="black" font-family="courier new" font-size="14">u</text>
-                <text x="175" y="65" fill="black" font-family="courier new" font-size="14">i</text>
-                <text x="196" y="65" fill="black" font-family="courier new" font-size="14">o</text>
-                <text x="217" y="65" fill="black" font-family="courier new" font-size="14">p</text>
-                <text x="238" y="65" fill="black" font-family="courier new" font-size="14">[</text>
-                <text x="259" y="65" fill="black" font-family="courier new" font-size="14">]</text>
-                <text x="280" y="65" fill="black" font-family="courier new" font-size="14">\</text>
-
-                <!--black keys-->
-                <text x="16" y="30" fill="white" font-family="courier new" font-size="14">1</text>
-                <text x="37" y="30" fill="white" font-family="courier new" font-size="14">2</text>
-                <text x="79" y="30" fill="white" font-family="courier new" font-size="14">4</text>
-                <text x="100" y="30" fill="white" font-family="courier new" font-size="14">5</text>
-                <text x="142" y="30" fill="white" font-family="courier new" font-size="14">7</text>
-                <text x="163" y="30" fill="white" font-family="courier new" font-size="14">8</text>
-                <text x="184" y="30" fill="white" font-family="courier new" font-size="14">9</text>
-                <text x="226" y="30" fill="white" font-family="courier new" font-size="14">-</text>
-                <text x="247" y="30" fill="white" font-family="courier new" font-size="14">=</text>
-
-                <text x="70" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">C</text>
-                <text x="91" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">D</text>
-                <text x="112" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">E</text>
-                <text x="133" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">F</text>
-                <text x="154" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">G</text>
-                <text x="175" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">A</text>
-                <text x="196" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">B</text>
-
-            </svg>
+            <p><button class="w3-button w3-green" id="PlayStop" onclick="onClickPlay()">Play</button></p>
         </center>
-
-        <div class="w3-container">
-
-            <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">Middle Octave</h3>
-
-                <table width="100%">
-                    <tbody>
-                        <tr>
-                            <td class="w3-center" width="20%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftOctave(-1)">-</a>
-                            </td>
-                            <td class="w3-center" width="60%">
-                                <h4 id=octave>4</h4>
-                            </td>
-                            <td class="w3-center" width="20%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftOctave(1)">+</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <hr>
-            <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">Transpose</h3>
-
-                <table width="100%">
-                    <tbody>
-                        <tr>
-                            <td class="w3-center" width="20%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftSemitone(-1)">-</a>
-                            </td>
-                            <td class="w3-center" width="60%">
-                                <h4 id=transpose>0</h4>
-                            </td>
-                            <td class="w3-center" width="20%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftSemitone(1)">+</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <hr>
-            <div class="w3-container w3-card">
-                <div id="load" class="w3-panel">
-                    <button class="w3-button w3-block w3-blue-gray" onclick="requestMIDIAccess()" width="100%">MIDI
-                        Devices</button>
-                </div>
-                <div class="w3-center" width="100%">
-                    <select id="midiInputDevices" width="100%" />
-                </div>
-            </div>
-
-        </div>
     </div>
+
 </body>
 
 </html>
