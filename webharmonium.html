@@ -4,9 +4,11 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta property="og:title" content="Web Harmonium" />
     <meta property="og:type" content="website" />
-    <meta property="og:description" content="Play Harmonium using your normal computer keyboard or attach a MIDI keyboard to play" />
+    <meta property="og:description"
+        content="Play Harmonium using your normal computer keyboard or attach a MIDI keyboard to play" />
     <meta property="og:image" content="https://rajaramaniyer.github.io/webharmonium.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="675" />
@@ -100,6 +102,67 @@
             cursor: pointer;
             /* Cursor on hover */
         }
+
+        /* CSS for toggle button */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .toggle:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.toggle {
+            background-color: #2196F3;
+        }
+
+        input:focus+.toggle {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.toggle:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .toggle.round {
+            border-radius: 34px;
+        }
+
+        .toggle.round:before {
+            border-radius: 50%;
+        }
     </style>
     <title>Web Harmonium - developed by Rajaraman Iyer</title>
     <script>
@@ -111,8 +174,10 @@
 
         var audioBuffer = null;
         var gainNode = null;
-
+        var reverbNode = null;
+        var useReverb = false;
         var sourceNodes = new Array();
+        var sourceNodeState = new Array();
         var keyboardMap = {
             "`": 55,
             "1": 56,
@@ -147,7 +212,8 @@
         var baseKeyMap = new Array();
         var middleC = 60;
         var rootKey = 62;
-        var currentOctave = 3; //0-3 i.e. 4
+        var currentOctave = 3;
+        var stackCount = 0;
         var octaveMap = [-36, -24, -12, 0, 12, 24, 36]
         var baseKeyNames = [
             "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
@@ -168,17 +234,56 @@
             for (i = 0; i < keyMap.length; ++i) {
                 if (debug) console.log("Building keySound", i, "keyMap", keyMap[i])
                 sourceNodes[i] = null
-                sourceNodes[i] = context.createBufferSource();
-                sourceNodes[i].connect(gainNode).connect(context.destination);
-                sourceNodes[i].buffer = audioBuffer;
-                sourceNodes[i].loop = loop;
-                sourceNodes[i].loopStart = loopStart;
-                //sourceNodes[i].loopEnd = loopEnd;
-                if (keyMap[i] != 0)
-                    sourceNodes[i].detune.value = keyMap[i] * 100;
+                setSourceNode(i)
             }
 
             document.getElementById('mainScreen').style.display = 'block'
+        }
+
+        function setSourceNode(i) {
+            if (sourceNodes[i] != null && sourceNodeState[i] == 1) {
+                sourceNodes[i].stop(0);
+            }
+            sourceNodeState[i] = 0
+            sourceNodes[i] = null
+            sourceNodes[i] = context.createBufferSource();
+            sourceNodes[i].connect(gainNode).connect(context.destination);
+            sourceNodes[i].buffer = audioBuffer;
+            sourceNodes[i].loop = loop;
+            sourceNodes[i].loopStart = loopStart;
+            //sourceNodes[i].loopEnd = loopEnd;
+            if (keyMap[i] != 0)
+                sourceNodes[i].detune.value = keyMap[i] * 100;
+        }
+
+        function noteOff(note) {
+            var i = note + octaveMap[currentOctave]
+            if (debug) console.log("noteOff", note, "currentOctave", currentOctave, "i", i)
+            if (i < sourceNodes.length) {
+                setSourceNode(i)
+            }
+            for (c = 1; c <= stackCount; ++c) {
+                i = note + octaveMap[currentOctave + c]
+                if (i < sourceNodes.length) {
+                    setSourceNode(i)
+                }
+            }
+        }
+
+        function noteOn(note) {
+            var i = note + octaveMap[currentOctave]
+            if (debug) console.log("noteOn", note, "currentOctave", currentOctave, "i", i)
+            if (i < sourceNodes.length && sourceNodeState[i] == 0) {
+                sourceNodes[i].start(0);
+                sourceNodeState[i] = 1
+            }
+            for (c = 1; c <= stackCount; ++c) {
+                i = note + octaveMap[currentOctave + c]
+                if (i < sourceNodes.length && sourceNodeState[i] == 0) {
+                    sourceNodes[i].start(0);
+                    sourceNodeState[i] = 1
+                }
+            }
         }
 
         window.onkeydown = function (event) {
@@ -197,30 +302,30 @@
             }
         }
 
-        function noteOn(note) {
-            var i = note + octaveMap[currentOctave]
-            if (debug) console.log("noteOn", note, "currentOctave", currentOctave, "i", i)
-            if (i < sourceNodes.length) {
-                sourceNodes[i].start(0);
-            }
-        }
+        function initReverbNode() {
+            reverbNode = context.createConvolver();
 
-        function noteOff(note) {
-            var i = note + octaveMap[currentOctave]
-            if (debug) console.log("noteOff", note, "currentOctave", currentOctave, "i", i)
-            if (i < sourceNodes.length) {
-                sourceNodes[i].stop(0);
-                sourceNodes[i] = context.createBufferSource();
-                sourceNodes[i].connect(gainNode).connect(context.destination);
-                sourceNodes[i].buffer = audioBuffer;
-                sourceNodes[i].loop = loop;
-                sourceNodes[i].loopStart = loopStart;
-                //sourceNodes[i].loopEnd = loopEnd;
-                if (keyMap[i] != 0)
-                    sourceNodes[i].detune.value = keyMap[i] * 100;
-            }
-        }
+            var request1 = new XMLHttpRequest();
+            request1.open('GET', "reverb.wav", true);
+            request1.responseType = 'arraybuffer';
 
+            request1.addEventListener('load', function () {
+                context.decodeAudioData(
+                    request1.response,
+                    function (buffer) {
+                        if (debug) console.log("Got sample. Size", buffer.length)
+                        reverbNode.buffer = buffer;
+                        reverbNode.connect(context.destination);
+                        updateReverbState(useReverb)
+                    },
+                    function (e) {
+                        console.error('ERROR: context.decodeAudioData:', e);
+                    }
+                );
+            });
+
+            request1.send();
+        }
         function load() {
             context = new AudioContext();
 
@@ -233,13 +338,36 @@
                     document.getElementById("myRange").value = localStorage.getItem("webharmonium.volume");
                     onGainChange();
                 }
-                if (localStorage.getItem("webharmonium.octave") != null) {
-                    document.getElementById('octave').innerText = localStorage.getItem("webharmonium.octave");
+                if (localStorage.getItem("webharmonium.useReverb") != null) {
+                    useReverb = localStorage.getItem("webharmonium.useReverb")=="true";
+                    document.getElementById("useReverb").checked = useReverb
                 }
+                if (localStorage.getItem("webharmonium.octave") != null) {
+                    currentOctave = localStorage.getItem("webharmonium.octave")
+                    try {
+                        currentOctave = parseInt(currentOctave)
+                    } catch (err) {
+                        currentOctave = 0
+                    }
+                }
+                document.getElementById('octave').innerText = currentOctave;
                 if (localStorage.getItem("webharmonium.transpose") != null) {
                     document.getElementById('transpose').innerText = localStorage.getItem("webharmonium.transpose");
+                    let currentSemitone = parseInt(document.getElementById('transpose').innerText);
+                    document.getElementById('rootNote').innerText = baseKeyNames[(currentSemitone >= 0) ? currentSemitone % 12 : currentSemitone + 12];
                 }
+                if (localStorage.getItem("webharmonium.stack") != null) {
+                    stackCount = localStorage.getItem("webharmonium.stack")
+                    try {
+                        stackCount = parseInt(stackCount)
+                    } catch (err) {
+                        stackCount = 0
+                    }
+                }
+                document.getElementById('stack').innerText = stackCount;
             }
+
+            initReverbNode()
 
             // Fetch the sample
             var request = new XMLHttpRequest();
@@ -280,7 +408,7 @@
             if (debug) console.log("onMIDISuccess", midiAccessReceived);
             midiAccess = midiAccessReceived;
             var midiInputDevices = document.getElementById("midiInputDevices");
-            for ( i = 0; i < midiInputDevices.length; ++i ) {
+            for (i = 0; i < midiInputDevices.length; ++i) {
                 midiInputDevices.remove(i);
             }
             for (var input of midiAccess.inputs.values()) {
@@ -327,20 +455,38 @@
         // End of MIDI
 
         function shiftOctave(octave) {
+            if (debug) console.log('currencOctave', currentOctave, 'octave', octave)
             if (currentOctave + octave >= 0 && currentOctave + octave <= 6) {
                 currentOctave += octave;
-                document.getElementById('octave').innerText = parseInt(document.getElementById('octave').innerText) + octave
+                if (debug) console.log('currencOctave changed as ', currentOctave)
 
                 if (typeof (Storage) !== "undefined") {
-                    localStorage.setItem("webharmonium.octave", document.getElementById('octave').innerText);
+                    localStorage.setItem("webharmonium.octave", currentOctave);
                 }
+            }
+            document.getElementById('octave').innerText = currentOctave
+        }
+
+        function changeStack(stack) {
+            stackCount += stack
+            if (stackCount < 0) {
+                stackCount = 0;
+            } else if (currentOctave + stackCount > 6) {
+                stackCount = 6 - currentOctave
+            }
+            document.getElementById('stack').innerText = stackCount
+
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("webharmonium.stack", stackCount);
             }
         }
 
         function shiftSemitone(semitone) {
             var currentSemitone = parseInt(document.getElementById('transpose').innerText);
             if (currentSemitone + semitone >= -11 && currentSemitone + semitone <= 11) {
-                document.getElementById('transpose').innerText = currentSemitone + semitone
+                currentSemitone += semitone
+                document.getElementById('transpose').innerText = currentSemitone
+                document.getElementById('rootNote').innerText = baseKeyNames[(currentSemitone >= 0) ? currentSemitone % 12 : currentSemitone + 12];
             }
             if (typeof (Storage) !== "undefined") {
                 localStorage.setItem("webharmonium.transpose", document.getElementById('transpose').innerText);
@@ -368,6 +514,22 @@
                 gainNode.gain.value = document.getElementById("myRange").value / 100;
             }
         }
+
+        function updateReverbState(stateValue){
+            useReverb = stateValue
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("webharmonium.useReverb", (useReverb?"true":"false"));
+            }
+            if (useReverb) {
+                gainNode.connect(reverbNode)
+            } else {
+                try {
+                    gainNode.disconnect(reverbNode)
+                } catch(err) {
+
+                }
+            }
+        }
     </script>
 </head>
 
@@ -382,13 +544,6 @@
             Module</button>
     </div>
     <div id="mainScreen" style="display: none;">
-        <div class="w3-container w3-card">
-            <h3 class="w3-color w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
-            <div class="slidecontainer">
-                <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
-            </div>
-        </div>
-        <hr>
         <center>
             <svg width=294 height=110>
                 <polygon points="0,0 14,0 14,50 21,50 21,100 0,100 0,0 " class="white" key="`" onmousedown="play(this)"
@@ -525,42 +680,60 @@
         <div class="w3-container">
 
             <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">Middle Octave</h3>
-
-                <table width="100%">
-                    <tbody>
-                        <tr>
-                            <td class="w3-center" width="20%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftOctave(-1)">-</a>
-                            </td>
-                            <td class="w3-center" width="60%">
-                                <h4 id=octave>4</h4>
-                            </td>
-                            <td class="w3-center" width="20%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftOctave(1)">+</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <h3 class="w3-color w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="100" value="30" class="slider" id="myRange"
+                        onchange="onGainChange()">
+                </div>
             </div>
-
             <hr>
+
             <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">Transpose</h3>
+                <h3 class="w3-color w3-blue-gray w3-center">
+                    <span class="w3-left-align">Reverb</span>
+                    <span class="w3-right-align">
+                        <label class="switch">
+                            <input id="useReverb" type="checkbox" onclick="updateReverbState(this.checked)">
+                            <span class="toggle round"></span>
+                        </label>
+                    </span>
+                </h3>
+            </div>
+            <hr>
+
+            <div class="w3-container w3-card">
+                <h3 class="w3-color w3-blue-gray w3-center">
+                    <table width="100%">
+                        <tbody>
+                            <tr>
+                                <td width="10%">&nbsp;</td>
+                                <td width="80%">MIDI Keyboard</td>
+                                <td align=right width="10%"><button onclick="requestMIDIAccess()"><i
+                                            class="fa fa-refresh" style="font-size:36px;"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </h3>
+                <div class="w3-center" width="100%">
+                    <select id="midiInputDevices" width="100%"></select>
+                </div>
+            </div>
+            <hr>
+
+            <div class="w3-container w3-card">
+                <h3 class="w3-color w3-blue-gray w3-center">Transpose - <span id='rootNote'>C</span></h3>
 
                 <table width="100%">
                     <tbody>
                         <tr>
-                            <td class="w3-center" width="20%">
+                            <td class="w3-center" width="10%">
                                 <a class="w3-btn w3-grey w3-round" style="width:75px"
                                     onclick="javascript:shiftSemitone(-1)">-</a>
                             </td>
-                            <td class="w3-center" width="60%">
-                                <h4 id=transpose>0</h4>
+                            <td class="w3-center" width="80%">
+                                <h4><span id='transpose'>0</span></h4>
                             </td>
-                            <td class="w3-center" width="20%">
+                            <td class="w3-center" width="10%">
                                 <a class="w3-btn w3-grey w3-round" style="width:75px"
                                     onclick="javascript:shiftSemitone(1)">+</a>
                             </td>
@@ -568,16 +741,51 @@
                     </tbody>
                 </table>
             </div>
-
             <hr>
+
             <div class="w3-container w3-card">
-                <div id="load" class="w3-panel">
-                    <button class="w3-button w3-block w3-blue-gray" onclick="requestMIDIAccess()" width="100%">MIDI
-                        Devices</button>
-                </div>
-                <div class="w3-center" width="100%">
-                    <select id="midiInputDevices" width="100%" />
-                </div>
+                <h3 class="w3-color w3-blue-gray w3-center">Current Octave</h3>
+
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <td class="w3-center" width="10%">
+                                <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                    onclick="javascript:shiftOctave(-1)">-</a>
+                            </td>
+                            <td class="w3-center" width="80%">
+                                <h4 id='octave'>4</h4>
+                            </td>
+                            <td class="w3-center" width="10%">
+                                <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                    onclick="javascript:shiftOctave(1)">+</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+
+            <div class="w3-container w3-card">
+                <h3 class="w3-color w3-blue-gray w3-center">Additional Reeds</h3>
+
+                <table width="100%">
+                    <tbody>
+                        <tr>
+                            <td class="w3-center" width="10%">
+                                <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                    onclick="javascript:changeStack(-1)">-</a>
+                            </td>
+                            <td class="w3-center" width="80%">
+                                <h4 id='stack'>0</h4>
+                            </td>
+                            <td class="w3-center" width="10%">
+                                <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                    onclick="javascript:changeStack(1)">+</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
         </div>
