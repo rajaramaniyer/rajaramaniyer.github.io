@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+<TITLE> Date and Time Zone </TITLE>
+<META NAME="Rajaraman" CONTENT="">
+<META NAME="time zone GMT" CONTENT="">
+
+<STYLE TYPE="text/css">
+    .TIMECELL
+    {
+        font-family: Calibri;
+        font-size: 12pt;
+        background-color: #004E98;
+        color: silver;
+        text-align: center;
+        width: 77px;
+    }
+
+    .CALCELL
+    {
+        font-family: Calibri;
+        font-size: 12pt;
+        background-color: #004E98;
+        color: silver;
+        text-align: center;
+        width:33.5px;
+        padding: 5px
+    }
+
+    .Heading
+    {
+        font-family: Calibri;
+        font-size: 12pt;
+        background-color: #004E98;
+        color: silver;
+        text-align: center;
+        cursor: pointer;
+        padding: 5px
+    }
+</STYLE>
+
+<SCRIPT LANGUAGE="JavaScript">
+function getFirstSunday(year, month){
+    var octFirstday = new Date(year, month - 1, 1);
+    var octFirstdayWeek = octFirstday.getDay();
+    var firstSunday = new Date(year, month - 1, (7 - octFirstdayWeek)%7 +1);
+    return firstSunday;
+}
+
+function getSecondSunday(year, month){
+    var secondSunday = getFirstSunday(year,month);
+    secondSunday.setDate(secondSunday.getDate() + 7);
+    return secondSunday;
+}
+
+function getLastSunday(year, month){
+    var firstSunday = getFirstSunday(year,month);
+    firstSunday.setDate(firstSunday.getDate() + 21);
+    var d = new Date(firstSunday);
+    d.setDate(d.getDate() + 7);
+    if ( d.getMonth() == firstSunday.getMonth() )
+        return d;
+    else
+        return firstSunday;
+}
+
+function setTimeZone(strRefreshType)
+{
+    if ( strRefreshType == null ) strRefreshType = "Refreshed";
+
+    if ( strRefreshType == "Loaded" ) {
+        var timezoneSelect = document.getElementById("TIMEZONEOFFSET");
+        var iHour = -20;
+        var iMinute = 0;
+        while ( iHour < 21 ) {
+            timezoneSelect.options[timezoneSelect.options.length] = new Option(((iHour*60)+iMinute)/60, (iHour*60)+iMinute);
+            if ( ((iHour*60)+iMinute)/60 == 0 ) {
+                timezoneSelect.selectedIndex = timezoneSelect.options.length - 1;
+            }
+            iMinute += 30;
+            if ( iMinute == 60 ) {
+                ++iHour;
+                iMinute = 0;
+            }
+        }
+    }
+	var days = document.all.TIMEZONE;
+
+    var currentTime = new Date();
+    var iLDNOffSet = -420;
+    var iNYKOffSet = -720;
+    var iCustomOffSet = parseInt(document.getElementById("TIMEZONEOFFSET").options[document.getElementById("TIMEZONEOFFSET").selectedIndex].value);
+    var m = currentTime.getMonth()+1;
+    if ( m >= 4 && m <= 9 ) 
+    {
+        // Day light savings
+        iLDNOffSet = -420;
+        iNYKOffSet = -720;
+    }
+    else if ( m == 1 || m == 2 || m == 12 )
+    {
+        iLDNOffSet = -480;
+        iNYKOffSet = -780;
+    }
+    else {
+        if ( m == 11 || ( m == 10 && currentTime >= getLastSunday(currentTime.getFullYear(),m) ) || ( m == 3 && currentTime < getLastSunday(currentTime.getFullYear(),m) ) )
+        {
+            iLDNOffSet = -480;
+        }
+        else
+        {
+            iLDNOffSet = -420; //Day light savings
+        }
+
+        if ( m == 10 ) iNYKOffSet = -720;
+        
+        if ( (m == 11 && currentTime >= getFirstSunday(currentTime.getFullYear(),m)) || (m == 3 && currentTime < getSecondSunday(currentTime.getFullYear(),m)) ) 
+        {
+            iNYKOffSet = -780;
+        }
+        else
+        {
+            iNYKOffSet = -720;
+        }
+    }
+    
+    var iLocationTimeZoneOffset = new Array(0,-150,iLDNOffSet,iNYKOffSet,iCustomOffSet);
+    
+//	var iLocationTimeZoneOffset = new Array(0,-150,-420,-720); // LDN +1 and Newyork +1
+//	var iLocationTimeZoneOffset = new Array(0,-150,-480,-720); // LDN GMT and Newyork +1
+//	var iLocationTimeZoneOffset = new Array(0,-150,-480,-780); // LDN GMT and Newyork GMT
+	var iInterval = 30;
+
+    var currentHH = currentTime.getHours();
+    var currentMM = currentTime.getMinutes();
+    var currentSS = currentTime.getSeconds();
+
+	var mm = 0;
+	for ( i = 0; i < days.length; )
+	{
+	    var backgroundColor = "#004E98";
+	    for ( j = 0; j < iLocationTimeZoneOffset.length && i < days.length; ++j,++i )
+	    {
+    		iLocationLocalTime = mm + iLocationTimeZoneOffset[j];
+    		if ( iLocationLocalTime < 0 )
+    		{
+    		    iLocationLocalTime += 1440;
+    		}
+    		var h = Math.floor(iLocationLocalTime/60);
+    		var m = (iLocationLocalTime % 60);
+
+    		if ( h > 6 && h < 21 )
+        		days[i].style.color = "silver";
+    		else  // sleeping hours
+        		days[i].style.color = "#808080";
+
+            if ( j == 0 )
+            {
+                if ( currentHH == h && ( (currentMM >= m && m == 30) || (currentMM >= m && currentMM < iInterval && m == 0) ) )
+                    backgroundColor = "teal";
+                else
+                    backgroundColor = "#004E98";
+            }
+ 
+            displayM = m;
+            if ( backgroundColor == "teal" )
+            {
+                if ( m == 0 ) 
+                {
+                    if ( currentMM < iInterval )
+                        displayM = currentMM; 
+                    else
+                        displayM = currentMM - iInterval;
+                }
+                else if ( m == iInterval )
+                {
+                    if ( currentMM < iInterval )
+                        displayM = iInterval + currentMM;
+                    else
+                        displayM = currentMM;
+                }
+            }
+
+            days[i].style.backgroundColor = backgroundColor;
+    		if ( h < 10 ) h = "0" + h;
+    		if ( displayM < 10 ) displayM = "0" + displayM;
+    		days[i].innerText = h + ":" + displayM;
+    		days[i].style.border = "0px";
+        }
+        
+        mm += iInterval;
+	}
+
+        var iLimit = 30;
+	if ( currentMM >= 0 && currentMM < 30 )
+	{
+	    iLimit = 29;
+	}
+	else if ( currentMM >= 30 )
+	{
+	    iLimit = 59;
+	}
+
+	//setTimeout("setTimeZone()", (60000 * (iLimit - currentMM)) + (1000 * (59 - currentSS)));
+	setTimeout("setTimeZone()", 60000 - (currentSS*1000));
+}
+
+var Months = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+var MonthDays = new Array(31,28,31,30,31,30,31,31,30,31,30,31);
+var todayDate = new Date();
+
+function setCalendar()
+{
+    var days = document.all.DAY;
+    var firstDate = new Date();
+    firstDate.setFullYear(todayDate.getFullYear(), todayDate.getMonth(), 1);
+    startDay = firstDate.getDay();
+    
+    // This it to Start the week with monday.
+    if ( startDay == 0 )
+        startDay = 6;
+    else
+        startDay--;
+
+    if ( todayDate.getYear() % 4 == 0 )
+        MonthDays[1] = 29;
+    else
+        MonthDays[1] = 28;
+
+    document.all.Calendar.innerText = Months[todayDate.getMonth()] + " " + todayDate.getFullYear();
+
+    strWeekend = ",5,6,12,13,19,20,26,27,33,34,40,41,";
+    for ( i = 0; i < days.length; ++i )
+    {
+        days[i].style.backgroundColor = "#004E98";
+        if ( strWeekend.indexOf(","+i+",") != -1 ) days[i].style.backgroundColor = "teal";
+        days[i].style.color = "silver";
+        days[i].innerText = i;
+        days[i].style.border = "0px";
+    }
+
+    var iDate = 1;
+    if ( todayDate.getMonth() - 1 >= 0 )
+    {
+        iDate = MonthDays[todayDate.getMonth() - 1] - startDay + 1;
+    }
+    else
+    {
+        iDate = MonthDays[MonthDays.length - 1] - startDay + 1;
+    }
+    
+    for ( i = 0; i < startDay; ++i )
+    {
+        days[i].style.color = "#808080";
+        days[i].innerText = iDate++;
+    }
+
+    iDate = 1;
+    for ( i = 0; startDay + i < days.length; ++i )
+    {
+        days[startDay + i].innerText = iDate;
+
+        firstDate.setFullYear(todayDate.getFullYear(), todayDate.getMonth(), i + 1);
+        if ( firstDate.getDay() == 0 || firstDate.getDay() == 6 ) days[startDay + i].style.color = "silver";
+
+        if ( i + 1 == todayDate.getDate() )
+        {
+            days[startDay + i].style.backgroundColor = "white";
+            days[startDay + i].style.color = "black";
+        }
+        
+        if ( i + 1 > iDate )
+        {
+            // Moved to next month
+            days[startDay + i].style.color = "#808080";
+        }
+
+        if ( MonthDays[todayDate.getMonth()] == iDate )
+            iDate = 1;
+        else
+            ++iDate;
+    }
+}
+
+function moveMonth(moveBy)
+{
+    var y = todayDate.getFullYear();
+    var m = todayDate.getMonth();
+    var d = (new Date()).getDate();
+
+    m += moveBy;
+    if ( m == 12 )
+    {
+        m = 0;
+        y++;
+    }
+    else if ( m == -1 )
+    {
+        m = 11;
+        --y;
+    }
+
+    if ( d == 31 && (m == 1 || m == 3 || m == 5 || m == 8 || m == 10) )
+    {
+        d -= 1;
+    }
+
+    if ( m == 1 )
+    {
+        if ( y % 4 == 0 )
+        {
+            if ( d > 29 ) d = 29;
+        }
+        else
+        {
+            if ( d > 28 ) d = 28;
+        }    
+    }
+
+    todayDate.setFullYear(y,m,d);
+    setCalendar();
+}
+</SCRIPT>
+</HEAD>
+<BODY onLoad="setCalendar();setTimeZone('Loaded');" BGCOLOR="#004E98" TOPMARGIN=0 LEFTMARGIN=0 MARGINWIDTH=0 MARGINHEIGHT=0>
+<TABLE WIDTH=100% CELLSPACING=0 CELLPADDING=0 BORDER=0><TR><TD ALIGN="left">
+<TABLE CELLSPACING=1 CELLPADDING=0 BORDER=0 BGCOLOR="#0080ff" STYLE="border: 3px solid darkblue">
+    <TR>
+        <TH ONCLICK="moveMonth(-12)"><DIV CLASS=CALCELL STYLE="cursor: pointer;" TITLE="Previous Year">&lt;&lt;</DIV></TH>
+        <TH ONCLICK="moveMonth(-1)"><DIV CLASS=CALCELL STYLE="cursor: pointer;" TITLE="Previous Month">&lt;</DIV></TH>
+        <TH COLSPAN=3 ONCLICK="todayDate=new Date();setCalendar()"><DIV ID="Calendar" CLASS=Heading TITLE="Current Month">Jan 2010</DIV></TH>
+        <TH ONCLICK="moveMonth(1)"><DIV CLASS=CALCELL STYLE="cursor: pointer;" TITLE="Next Month">&gt;</DIV></TH>
+        <TH ONCLICK="moveMonth(12)"><DIV CLASS=CALCELL STYLE="cursor: pointer;" TITLE="Next Year">&gt;&gt;</DIV></TH>
+    </TR>
+    <TR>
+        <TD><DIV CLASS=CALCELL>Mo</DIV></TD>
+        <TD><DIV CLASS=CALCELL>Tu</DIV></TD>
+        <TD><DIV CLASS=CALCELL>We</DIV></TD>
+        <TD><DIV CLASS=CALCELL>Th</DIV></TD>
+        <TD><DIV CLASS=CALCELL>Fr</DIV></TD>
+        <TD><DIV CLASS=CALCELL>Sa</DIV></TD>
+        <TD><DIV CLASS=CALCELL>Su</DIV></TD>
+    </TR>
+    <TR>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+    </TR>
+    <TR>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+    </TR>
+    <TR>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+    </TR>
+    <TR>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+    </TR>
+    <TR>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+    </TR>
+    <TR>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+        <TD><DIV ID="DAY" CLASS=CALCELL>&nbsp;</DIV></TD>
+    </TR>
+</TABLE>
+</TD></TR>
+<TR><TD ALIGN="left">
+<TABLE CELLSPACING=1 CELLPADDING=0 BORDER=0 BGCOLOR="#0080ff" STYLE="border: 3px solid darkblue">
+	<TR>
+		<TD><DIV CLASS=TIMECELL>SGP</DIV></TD>
+		<TD><DIV CLASS=TIMECELL>BOM</DIV></TD>
+		<TD><DIV CLASS=TIMECELL>LDN</DIV></TD>
+        <TD><DIV CLASS=TIMECELL>NYK</DIV></TD>
+        <TD><DIV CLASS=TIMECELL>
+            <SELECT ID=TIMEZONEOFFSET onchange="setTimeZone()">
+            </SELECT>
+        </DIV></TD>
+	</TR>
+</TABLE>
+</TD></TR>
+<TR><TD ALIGN="left">
+<div style="overflow-y: scroll; height:798px">
+<TABLE CELLSPACING=1 CELLPADDING=0 BORDER=0 BGCOLOR="#0080ff" STYLE="border: 3px solid darkblue">
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+	<TR>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+		<TD><DIV ID="TIMEZONE" CLASS=TIMECELL>&nbsp;</DIV></TD>
+	</TR>
+</TABLE>
+</div>
+</TD></TR></TABLE>
+</BODY>
+</HTML>
