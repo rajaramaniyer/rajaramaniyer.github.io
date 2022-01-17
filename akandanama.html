@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         table {
-            font-size:3vw;
             width: 100%;
         }
 
@@ -23,6 +22,14 @@
         .header {
             position: sticky;
             top: 0;
+        }
+
+        .footer {
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+            background-color: silver;
+            color: "#808080";
         }
     </style>
     <title>24/7 Akanda Nama Schedule - Brahma Sabha</title>
@@ -177,9 +184,13 @@
 
         function onLoad() {
             var scheduleTable = document.getElementById("schedule")
+
+            //document.getElementById("footer").innerText = Intl.DateTimeFormat().resolvedOptions().timeZone
             
             // dt is in localTimeZone
             let dt = new Date()
+
+            document.getElementById("footer").innerText = dt.toString().split(" ").slice(5).join(" ")
             //UTC
             var hour = 0
             var mins = 30
@@ -260,6 +271,10 @@
                     
                 </tbody>
             </table>
+        </div>
+
+        <div id="footer" class="w3-container footer">
+
         </div>
     </div>
 </body>
