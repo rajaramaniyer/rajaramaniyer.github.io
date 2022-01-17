@@ -19,6 +19,11 @@
         html {
             scroll-behavior: smooth;
         }
+
+        .header {
+            position: sticky;
+            top: 0;
+        }
     </style>
     <title>24/7 Akanda Nama Schedule - Brahma Sabha</title>
     <script>
@@ -225,8 +230,10 @@
             let mins = Math.floor(dt.getMinutes()/10)*10
             let currentTimeRow = document.getElementById(zeroPad(hour,2) + ":" + zeroPad(mins,2))
             if ( currentTimeRow != null ) {
-                currentTimeRow.scrollIntoView(true)
                 currentTimeRow.classList.add("currentTime");
+                if (currentTimeRow.rowIndex>4){
+                    currentTimeRow.parentNode.rows[ currentTimeRow.rowIndex - 5 ].scrollIntoView(true);
+                }
             }
 
             timeOutMM = (9-(dt.getMinutes()%10))*60 //convertedToSeconds
@@ -237,7 +244,7 @@
 </head>
 
 <body onload="onLoad()">
-    <div class="w3-container w3-teal">
+    <div class="w3-container w3-teal header">
         <h3>24/7 Akanda Nama Schedule - Brahma Sabha</h3>
     </div>
     <div id="mainScreen">
