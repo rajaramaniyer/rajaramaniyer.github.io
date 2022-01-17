@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        table {
+            font-size:3vw;
+            width: 100%;
+        }
+
+        .currentTime {
+            background: teal;
+            color: white
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+    <title>24/7 Akanda Nama Schedule - Brahma Sabha</title>
+    <script>
+        const zeroPad = (num, places) => String(num).padStart(places, '0')
+        let volunteers = [
+            "Kannan - Philadelphia USA",
+            "Murthi - Philadelphia USA",
+            "Radhika - Philadelphia USA",
+            "Mythili - Philadelphia USA",
+            "Raj - Philadelphia USA ",
+            "Naren Washington D.C. USA",
+            "SubadhraNarendar - VA, USA",
+            "Chitra Suryanarayanan Chennai",
+            "Latha Ramani ",
+            "Kalvathy Chennai",
+            "Aravindha",
+            "Rajalakshmi",
+            "Revathi Sundaresan, Portland,OR,USA",
+            "Umasundaram ",
+            "Vasudevan",
+            "Srividhya Krishna and family, Portland OR",
+            "Appanna, Mylapore",
+            "Radha Mohan",
+            "Bharathrajan Iyer,IST",
+            "Bharathrajan Iyer,IST",
+            "SARATHA RK,DELHI",
+            "Anu Karthik, PDX",
+            "REVATHY DHARMAMBHAL ,BLR",
+            "Meena ganesan",
+            "Sridhar, Buffalo, NY",
+            "Sridhar, Buffalo, NY",
+            "Santha sekar",
+            "Santha sekar",
+            "Santha sekar",
+            "Ramya",
+            "Raji Viswanathan",
+            "Aarthi Swaminathan ",
+            "Abirami, CA, USA",
+            "harini",
+            "Sriramajayam family",
+            "Sriramajayam family",
+            "Sumathi Rajagopalan -UK",
+            "Geetha",
+            "Radha Sridharan, Srirangam",
+            "Yamuna, Mel",
+            "Krithika Nandalal,Qatar",
+            "Krithika Nandalal,Qatar",
+            "Srinath  Family Mumbai",
+            "Srinath  Family Mumbai",
+            "Srinath  Family Mumbai",
+            "Radhakrishnan, Mel, AUS",
+            "Radhakrishnan, Mel, AUS",
+            "Periyanayagi chennai ",
+            "Periyanayagi chennai ",
+            "Thailambal Chennai",
+            "kritika",
+            "Radhika",
+            "Sara",
+            "Meenakshi Magizhnan Chennai",
+            "Arthi Ramanan",
+            "Kalyani Ramamirtham mami, Govindapuram",
+            "Jayshree Venkatesan",
+            "Devi Ravikumar",
+            "Jayshree venkatesan",
+            "Devi Ravikumar",
+            "Jayshree venkatesan",
+            "Devi Ravikumar",
+            "Jayshree Venkatesan",
+            "Devi Ravikumar",
+            "Rohit ",
+            "Renuga Devi, GA",
+            "Renuga Devi, GA",
+            "Shanthi NJ",
+            "Radhika Prakash",
+            "Subbulakshmi",
+            "kalyani Ramarathnam",
+            "Preethi Jaisankar",
+            "Radha,chennai",
+            "Appanna, Mylapore",
+            "Ramas Singapore",
+            "Subha M",
+            "venkatesh",
+            "Kousalya",
+            "Brahmasabha Chicago SaroRaju ",
+            "Alamelu ",
+            "Alamelu , Trichy",
+            "Gopal Srinivasan, Trichy",
+            "Aravindha",
+            "Rajalakshmi",
+            "Nkramaesh&Family",
+            "Padma, Milwaukee,WI",
+            "S. Jeyalakshmi, Chennai",
+            "sowmiya. m",
+            "Nandalal",
+            "kolahalan",
+            "Kritika sekar",
+            "Ravindran and family ",
+            "Radhika Prakash",
+            "BrahmaSabha Chicago - Rajesh Family",
+            "Prabha S, CA",
+            "kamakshi",
+            "Perundevi Kannan ",
+            "Padmanaban, Madurai",
+            "Padmanaban, Madurai",
+            "Padmanaban, Madurai",
+            "vallabh Ramani ",
+            "vallabh Ramani ",
+            "",
+            "geethasethuraman ",
+            "Srividhya Ganesan, Milwaukee ",
+            "PriyaG,UK",
+            "PriyaG,UK",
+            "shobha s",
+            "shobha s",
+            "shobha s",
+            "padma mami",
+            "",
+            "Viji Deiva UK",
+            "Thaila Akka, DC",
+            "Sudha",
+            "",
+            "",
+            "Padmanabhan ",
+            "Sankari",
+            "Radha Srinath ",
+            "Narayanan ",
+            "Uma Venkatesh ",
+            "Uma Venkatesh ",
+            "Santharamani Pallassana ",
+            "Lakshmi Srikanth Wisconsin",
+            "gomathi ravi,az",
+            "gomathi ravi,az",
+            "gomathi ravi,az",
+            "charumathi ",
+            "Lakshmi Balijepalli Wisconsin",
+            "venkatesh",
+            "venkatesh",
+            "Mahesh Vishwanathan,SGT",
+            "Rohini Suresh,EST",
+            "Pavithra Kalyanaraman WI",
+            "Roopa Sharath-Chicago ",
+            "",
+            "Subha Kumar",
+            "Krupa NJ",
+            "Renuga Devi, GA",
+            "Meenu NJ",
+            "Ashmitha NJ",
+            "Archana NJ",
+            "Lakshmi "
+        ];
+
+        function onLoad() {
+            var scheduleTable = document.getElementById("schedule")
+            
+            // dt is in localTimeZone
+            let dt = new Date()
+            //UTC
+            var hour = 0
+            var mins = 30
+
+            localMins = mins + dt.getTimezoneOffset()*-1;
+    		if ( localMins < 0 )
+    		{
+    		    localMins += 1440;
+    		}
+    		hour = Math.floor(localMins/60);
+    		mins = (localMins % 60);
+
+            for (i=0;i<volunteers.length;++i) {
+                // Create an empty <tr> element and add it to the 1st position of the table:
+                var row = scheduleTable.insertRow(-1);
+
+                // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+
+                // Add some text to the new cells:
+                cell1.innerText = zeroPad(hour,2) + ":" + zeroPad(mins,2);
+                cell2.innerHTML = "&nbsp;" + volunteers[i];
+                row.id = cell1.innerText
+
+                mins += 10
+                if ( mins == 60 ) {
+                    hour += 1
+                    mins = 0
+                    if ( hour == 24 ) {
+                        hour = 0
+                    }
+                }
+            }
+
+            indicateCurrentTime()
+        }
+
+        function indicateCurrentTime() {
+            var tealList = document.getElementsByClassName("currentTime")
+            for (i=0;i<tealList.length;++i){
+                tealList[i].classList.remove("currentTime")
+            }
+
+            // dt is in localTimeZone
+            let dt = new Date()
+            let hour = dt.getHours()
+            let mins = Math.floor(dt.getMinutes()/10)*10
+            let currentTimeRow = document.getElementById(zeroPad(hour,2) + ":" + zeroPad(mins,2))
+            if ( currentTimeRow != null ) {
+                currentTimeRow.scrollIntoView(true)
+                currentTimeRow.classList.add("currentTime");
+            }
+
+            timeOutMM = (9-(dt.getMinutes()%10))*60 //convertedToSeconds
+            timeOutSS = (60-dt.getSeconds())
+            setTimeout(indicateCurrentTime, (timeOutMM+timeOutSS)*1000)
+        }
+    </script>
+</head>
+
+<body onload="onLoad()">
+    <div class="w3-container w3-teal">
+        <h3>24/7 Akanda Nama Schedule - Brahma Sabha</h3>
+    </div>
+    <div id="mainScreen">
+        <div class="w3-container w3-card">
+            <div class="w3-center" width="100%" id="timeZone">
+                
+            </div>
+        </div>
+
+        <div class="w3-container w3-card">
+            <table>
+                <tbody id="schedule">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
