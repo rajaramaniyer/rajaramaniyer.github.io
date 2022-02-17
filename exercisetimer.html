@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        input[type=text],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+
+        input[type=submit] {
+            background-color: #04AA6D;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .col-25 {
+            float: left;
+            width: 25%;
+            margin-top: 6px;
+        }
+
+        .col-75 {
+            float: left;
+            width: 75%;
+            margin-top: 6px;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 600px) {
+
+            .col-25,
+            .col-75,
+            input[type=submit] {
+                width: 100%;
+                margin-top: 0;
+            }
+        }
+
+        .start {
+            display: block;
+            width: 100%;
+            border: none;
+            background-color: #04AA6D;
+            color: white;
+            padding: 14px 28px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .stop {
+            display: block;
+            width: 100%;
+            border: none;
+            background-color: #AA046D;
+            color: white;
+            padding: 14px 28px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
+    <script>
+        const zeroPad = (num, places) => String(num).padStart(places, '0')
+
+        // Restricts input for the given textbox to the given inputFilter.
+        function setInputFilter(textbox, inputFilter) {
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+                textbox.addEventListener(event, function () {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    } else {
+                        this.value = "";
+                    }
+                });
+            });
+        }
+
+        var ss = 0
+        var gapss = 0
+        var isRunning = false
+        let bell = new Audio("bell.wav")
+        let tick = new Audio("tick.wav")
+        let displayTimer, ctrlButton, interval, gap
+
+        function onload() {
+            displayTimer = document.getElementById("displayTimer")
+            ctrlButton = document.getElementById("ctrlButton")
+            interval = document.getElementById("interval")
+            gap = document.getElementById("gap")
+
+            setInputFilter(interval, function (value) { return /^-?\d*$/.test(value); });
+            setInputFilter(gap, function (value) { return /^-?\d*$/.test(value); });
+
+            if (typeof (Storage) !== "undefined") {
+                if (localStorage.getItem("exercisetimer.interval") != null) {
+                    interval.value = localStorage.getItem("exercisetimer.interval");
+                }
+                if (localStorage.getItem("exercisetimer.gap") != null) {
+                    gap.value = localStorage.getItem("exercisetimer.gap");
+                }
+            }
+        }
+
+        function storevalues() {
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("exercisetimer.interval", interval.value);
+                localStorage.setItem("exercisetimer.gap", gap.value);
+            }
+        }
+
+        function startTimer(userClicked) {
+            if (userClicked) {
+                isRunning = !isRunning
+
+                if (isRunning) {
+                    ctrlButton.innerText = "Stop"
+                    ctrlButton.classList.remove("start")
+                    ctrlButton.classList.add("stop")
+                } else {
+                    ctrlButton.innerText = "Start"
+                    ctrlButton.classList.remove("stop")
+                    ctrlButton.classList.add("start")
+                }
+            }
+
+            if (isRunning) {
+                if (userClicked) {
+                    ss = 0
+                    gapss = 0
+                    tick.play()
+                } else {
+                    if (gapss > 0) {
+                        gapss -= 1
+                        if (gapss % 3 == 0) {
+                            if (gapss > 0)
+                                bell.play()
+                            else
+                                tick.play()
+                        }
+                    } else {
+                        ss += 1
+                        tick.play()
+                    }
+                }
+                if (ss == 0 && gapss == 0) {
+                    displayTimer.classList.remove("w3-orange")
+                    displayTimer.classList.add("w3-cyan")
+                }
+
+                displayTimer.innerText = gapss > 0 ? gapss : ss
+
+                if (parseInt(interval.value) == ss) {
+                    gapss = parseInt(gap.value)
+                    ss = 0
+                    bell.play()
+                    displayTimer.classList.remove("w3-cyan")
+                    displayTimer.classList.add("w3-orange")
+                }
+                setTimeout(startTimer, 1000)
+            }
+        }
+    </script>
+</head>
+
+<body onload="onload()">
+    <div class="container">
+        <center>
+            <div id="displayTimer" class="w3-padding-32 w3-cyan w3-circle w3-center w3-jumbo" style="width:45%">
+                0
+            </div>
+        </center>
+
+        <div class="row">
+            <div class="col-25">
+                <label for="interval">Timer Seconds</label>
+            </div>
+            <div class="col-75">
+                <input type="text" name="interval" id="interval" onblur="storevalues()" value="30">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="gap">Gap between restarts (seconds)</label>
+            </div>
+            <div class="col-75">
+                <input type="text" name="gap" id="gap" onblur="storevalues()" value="15">
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <button id="ctrlButton" onclick="startTimer(true)" class="start">Start</button>
+        </div>
+    </div>
+</body>
+
+</html>
