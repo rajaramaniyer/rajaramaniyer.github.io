@@ -203,6 +203,33 @@
             "]": 76,
             "\\": 77
         }
+        var swaramMap = {
+            "`": "P̣",
+            "1": "Ḍ",
+            "q": "Ḍ",
+            "2": "Ṇ",
+            "w": "Ṇ",
+            "e": "S",
+            "4": "R",
+            "r": "R",
+            "5": "G",
+            "t": "G",
+            "y": "M",
+            "7": "M",
+            "u": "P",
+            "8": "D",
+            "i": "D",
+            "9": "N",
+            "o": "N",
+            "p": "Ṡ",
+            "-": "Ṙ",
+            "[": "Ṙ",
+            "=": "Ġ",
+            "]": "Ġ",
+            "\\": "Ṁ",
+            ",": ","
+        }
+        var notation=""
 
         var loopStart = 0.5,
             loopEnd = 7.5,
@@ -219,6 +246,12 @@
             "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
         ];
         var keyNames = new Array();
+
+        function getCharLength (str) {
+            // The string iterator that is used here iterates over characters,
+            //  not mere code units
+            return [...str].length;
+        }
 
         function init() {
             var transpose = parseInt(document.getElementById('transpose').innerText)
@@ -296,9 +329,23 @@
         }
 
         window.onkeyup = function (event) {
-            if (debug) console.log("keyUp", event.key, "keyboardMap", keyboardMap[event.key]);
-            if (typeof (keyboardMap[event.key]) != "undefined") {
-                noteOff(keyboardMap[event.key]);
+            const key = event.key
+            if (debug) console.log("keyUp", key, "keyboardMap", keyboardMap[key]);
+            if (typeof (keyboardMap[key]) != "undefined") {
+                noteOff(keyboardMap[key]);
+            }
+
+            if (key === "Backspace" && getCharLength(notation) > 0) {
+                notation=notation.substring(0, getCharLength(notation)-1)
+            } else if (key === "Delete") {
+                notation=""
+            } else if (key === "Enter") {
+                console.log(notation)
+                notation=""
+            } else if (key === "Tab") {
+                notation += ","
+            } else if (typeof (swaramMap[key]) != "undefined") {
+                notation += swaramMap[key]
             }
         }
 
@@ -339,7 +386,7 @@
                     onGainChange();
                 }
                 if (localStorage.getItem("webharmonium.useReverb") != null) {
-                    useReverb = localStorage.getItem("webharmonium.useReverb")=="true";
+                    useReverb = localStorage.getItem("webharmonium.useReverb") == "true";
                     document.getElementById("useReverb").checked = useReverb
                 }
                 if (localStorage.getItem("webharmonium.octave") != null) {
@@ -515,17 +562,17 @@
             }
         }
 
-        function updateReverbState(stateValue){
+        function updateReverbState(stateValue) {
             useReverb = stateValue
             if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("webharmonium.useReverb", (useReverb?"true":"false"));
+                localStorage.setItem("webharmonium.useReverb", (useReverb ? "true" : "false"));
             }
             if (useReverb) {
                 gainNode.connect(reverbNode)
             } else {
                 try {
                     gainNode.disconnect(reverbNode)
-                } catch(err) {
+                } catch (err) {
 
                 }
             }
