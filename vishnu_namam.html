@@ -4,6 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3.0, minimum-scale=1" />
     <title>Vishnu Sahasranama Archanai</title>
     <style>
+        td {
+            border: 1px solid white
+        }
         /* Style the navbar */
         #navbar {
             overflow: hidden;
@@ -22,8 +25,7 @@
             width: 100%;
         }
 
-        #navbar div {
-            float: left;
+        #navbar div, span {
             display: block;
             color: #f2f2f2;
             background-color: #333;
@@ -2075,16 +2077,24 @@
         var fontSize = 4;
         var scrollSpeed = 60;
         var currentPage = 0;
-        var currentLine = 1002;
+        var currentLine = incrementBy;
         var tick = new Audio('tick.wav');
-        var namavali = namavaliSanskrit
+        var namavali = namavaliSanskrit;
+        var contentHtml = null;
+        var lang = null
+        var playTick = null
 
         function showPage() {
-            currentLine = 0;
+            currentLine = -1;
             var lines = document.getElementById('lines');
             incrementBy = parseInt(lines.value);
             var speed = document.getElementById('speed');
             scrollSpeed = parseInt(speed.value);
+            if (lang.selectedIndex == 0) {
+                namavali = namavaliSanskrit
+            } else if (lang.selectedIndex == 1) {
+                namavali = namavaliTamil
+            }
 
             if (typeof (Storage) !== "undefined") {
                 localStorage.setItem("vishnu_namam.lines", incrementBy);
@@ -2092,25 +2102,31 @@
             }
 
             let content = document.getElementById("content");
-            var contentHtml = "<div class='numRange'>" + (currentPage + 1) + " to " + (currentPage + incrementBy) + "</div>";
+            contentHtml = "<div class='numRange'>" + (currentPage + 1) + " to " + (currentPage + incrementBy) + "</div>";
             for (i = 0; i < incrementBy && currentPage + i < namavali.length; ++i) {
-                contentHtml += "<div id='a" + i + "'>" + namavali[currentPage + i] + "</div>"
+                if (lang.selectedIndex == 2) {
+                    contentHtml += "<div id='a" + i + "'>" + namavaliSanskrit[currentPage + i] + " - " + namavaliTamil[currentPage + i] + "</div>"
+                } else {
+                    contentHtml += "<div id='a" + i + "'>" + namavali[currentPage + i] + "</div>"
+                }
             }
 
             content.innerHTML = contentHtml
         }
         function autoScroll() {
-            console.log("autoScroll: currentPage = ", currentPage, "incrementBy", incrementBy);
             if (currentPage < 1001 && document.getElementById('startScroll').value == "Stop") {
-                if (currentPage > 0 && currentLine < incrementBy) {
-                    ++currentLine;
-                } else {
-                    showPage();
+                if (currentLine + 1 == incrementBy) {
                     currentPage += incrementBy;
+                    showPage();
+                    currentLine = -1;
                 }
-                tick.pause();
-                tick.currentTime = 0
-                tick.play();
+                ++currentLine;
+                content.innerHTML = contentHtml.replace("id='a" + currentLine + "'", " style='background-color: cyan' id='a" + currentLine + "'");
+                if (playTick.checked) {
+                    tick.pause();
+                    tick.currentTime = 0;
+                    tick.play();
+                }
                 setTimeout(autoScroll, (60000 / scrollSpeed));
             } else if (currentPage >= 1001 && document.getElementById('startScroll').value == "Stop") {
                 resetScroll()
@@ -2119,6 +2135,7 @@
         function startAutoScroll() {
             if (document.getElementById('startScroll').value == "Start") {
                 document.getElementById('startScroll').value = "Stop";
+                currentLine = -1
                 autoScroll();
             } else {
                 document.getElementById('startScroll').value = "Start";
@@ -2139,6 +2156,8 @@
         }
 
         function pageOnLoad() {
+            lang = document.getElementById("lang");
+            playTick = document.getElementById("playTick");
             if (typeof (Storage) !== "undefined") {
                 if (localStorage.getItem("vishnu_namam.lines") != null) {
                     incrementBy = parseInt(localStorage.getItem("vishnu_namam.lines"));
@@ -2150,9 +2169,8 @@
                     fontSize = parseInt(localStorage.getItem("vishnu_namam.fontSize"));
                 }
                 if (localStorage.getItem("vishnu_namam.lang") != null) {
-                    let lang = parseInt(localStorage.getItem("vishnu_namam.lang"));
-                    document.getElementById("lang").selectedIndex = lang
-                    setlang()
+                    let langIndex = parseInt(localStorage.getItem("vishnu_namam.lang"));
+                    lang.selectedIndex = langIndex
                 }
             }
             var lines = document.getElementById('lines');
@@ -2167,55 +2185,76 @@
             showPage();
         }
 
-        function setlang(){
-            let lang=document.getElementById("lang")
-            console.log("lang selected", lang.selectedIndex)
-            if ( lang.selectedIndex == 0 ) {
-                namavali = namavaliSanskrit
-            } else {
-                namavali = namavaliTamil
-            }
-            showPage();
-
+        function setlang() {
             if (typeof (Storage) !== "undefined") {
                 localStorage.setItem("vishnu_namam.lang", lang.selectedIndex);
             }
+            showPage()
+        }
+
+        function movePage(direction) {
+            currentPage += incrementBy * direction
+            if (currentPage >= namavaliSanskrit.length) {
+                currentPage = namavaliSanskrit.length / incrementBy
+            } else if (currentPage < 0) {
+                currentPage = 0
+            }
+
+            showPage()
         }
     </script>
 </head>
 
 <body onload="pageOnLoad()" style="font-family: Arial; white-space: nowrap;">
     <div id="navbar">
-        <table>
+        <table cellspacing="0" width="100%">
             <tr>
-                <td>
+                <td width="20%">
                     <div>Lines</div>
                 </td>
-                <td>
+                <td width="20%">
                     <div>BPM</div>
                 </td>
-                <td>
+                <td width="20%">
                     <input type="button" value="Reset" id="resetScroll" onclick="resetScroll()" />
                 </td>
-                <td colspan="2">
-                    <div>Font Size</div>
+                <td width="20%">
+                    <div>Langauge</div>
                 </td>
-                <td>
-                    <div>lang</div>
+                <td width="20%">
+                    <div>Audio</div>
                 </td>
             </tr>
             <tr>
                 <td><input type="text" value="6" id="lines" size="2" /></td>
                 <td><input type="text" value="6000" id="speed" size="5" /></td>
                 <td><input type="button" value="Start" id="startScroll" onclick="startAutoScroll()" /></td>
-                <td><input type="button" value="+" id="increaseSize" onclick="changeFontSize(1)" /></td>
-                <td><input type="button" value="-" id="decreaseSize" onclick="changeFontSize(-1)" /></td>
-                <td><select id="lang" onchange="setlang()"><option id="Sanskrit">Sanskrit</option><option id="Tamil">Tamil</option></select></td>
+                <td align="center">
+                    <select id="lang" onchange="setlang()">
+                        <option id="Sanskrit">Sanskrit</option>
+                        <option id="Tamil">Tamil</option>
+                        <option id="Both">Both</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" checked id="playTick" />
+                </td>
             </tr>
         </table>
     </div>
     <div class="content" id="content">
 
+    </div>
+    <div id="navbar">
+        <table width="100%">
+            <tr>
+                <td width="20%"><input type="button" value="↓" onclick="movePage(1)" /></td>
+                <td width="20%"><input type="button" value="↑" onclick="movePage(-1)" /></td>
+                <td width="20%">&nbsp;</td>
+                <td width="20%"><input type="button" value="+" onclick="changeFontSize(1)" /></td>
+                <td width="20%"><input type="button" value="-" onclick="changeFontSize(-1)" /></td>
+            </tr>
+        </table>
     </div>
 </body>
 
