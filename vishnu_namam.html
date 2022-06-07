@@ -2083,6 +2083,7 @@
         var contentHtml = null;
         var lang = null
         var playTick = null
+        var scrollState = false
 
         function showPage() {
             currentLine = -1;
@@ -2114,7 +2115,8 @@
             content.innerHTML = contentHtml
         }
         function autoScroll() {
-            if (currentPage < 1001 && document.getElementById('startScroll').value == "Stop") {
+            if (currentPage < 1001 && scrollState) {
+                setTimeout(autoScroll, (60000 / scrollSpeed));
                 if (currentLine + 1 == incrementBy) {
                     currentPage += incrementBy;
                     showPage();
@@ -2127,23 +2129,25 @@
                     tick.currentTime = 0;
                     tick.play();
                 }
-                setTimeout(autoScroll, (60000 / scrollSpeed));
-            } else if (currentPage >= 1001 && document.getElementById('startScroll').value == "Stop") {
+            } else if (currentPage >= 1001 && scrollState) {
                 resetScroll()
             }
         }
         function startAutoScroll() {
             if (document.getElementById('startScroll').value == "Start") {
                 document.getElementById('startScroll').value = "Stop";
+                scrollState=true
                 currentLine = -1
                 autoScroll();
             } else {
                 document.getElementById('startScroll').value = "Start";
+                scrollState=false
             }
         }
         function resetScroll() {
             document.getElementById('startScroll').value = "Start";
             currentPage = 0
+            scrollState=false
             showPage();
         }
 
