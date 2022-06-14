@@ -2084,6 +2084,7 @@
         var lang = null
         var playTick = null
         var scrollState = false
+        var maxNamaLength = 0
 
         function showPage() {
             currentLine = -1;
@@ -2116,13 +2117,14 @@
         }
         function autoScroll() {
             if (currentPage < 1001 && scrollState) {
-                setTimeout(autoScroll, (60000 / scrollSpeed));
                 if (currentLine + 1 == incrementBy) {
                     currentPage += incrementBy;
                     showPage();
                     currentLine = -1;
                 }
                 ++currentLine;
+                //console.log(namavali[currentPage+currentLine],maxNamaLength, "=", scrollSpeed, "so for", namavaliSanskrit[currentPage+currentLine].length, "=", (scrollSpeed/namavaliSanskrit[currentPage+currentLine].length*maxNamaLength))
+                setTimeout(autoScroll, (60000 / ((scrollSpeed/namavaliSanskrit[currentPage+currentLine].length*maxNamaLength))));
                 content.innerHTML = contentHtml.replace("id='a" + currentLine + "'", " style='background-color: cyan' id='a" + currentLine + "'");
                 if (playTick.checked) {
                     tick.pause();
@@ -2181,6 +2183,14 @@
             lines.value = incrementBy;
             var speed = document.getElementById('speed');
             speed.value = scrollSpeed;
+
+            for ( i = 0; i < namavaliSanskrit.length; ++i ) {
+                if ( i == 0 ) maxNamaLength=namavaliSanskrit[i].length
+                if ( maxNamaLength > namavaliSanskrit[i].length ) {
+                    maxNamaLength = namavaliSanskrit[i].length
+                }
+            }
+            console.log("maxNamaLength = {}",maxNamaLength)
 
             changeFontSize(0);
 
