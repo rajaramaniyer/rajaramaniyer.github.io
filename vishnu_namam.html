@@ -2123,8 +2123,9 @@
                     currentLine = -1;
                 }
                 ++currentLine;
-                //console.log(namavali[currentPage+currentLine],maxNamaLength, "=", scrollSpeed, "so for", namavaliSanskrit[currentPage+currentLine].length, "=", (scrollSpeed/namavaliSanskrit[currentPage+currentLine].length*maxNamaLength))
-                setTimeout(autoScroll, (60000 / ((scrollSpeed/namavaliSanskrit[currentPage+currentLine].length*maxNamaLength))));
+                if ( currentPage+currentLine < namavaliSanskrit.length ) {
+                    setTimeout(autoScroll, (60000 / ((scrollSpeed/namavaliSanskrit[currentPage+currentLine].length*maxNamaLength))));
+                }
                 content.innerHTML = contentHtml.replace("id='a" + currentLine + "'", " style='background-color: cyan' id='a" + currentLine + "'");
                 if (playTick.checked) {
                     tick.pause();
