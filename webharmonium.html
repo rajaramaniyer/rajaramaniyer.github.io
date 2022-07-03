@@ -507,6 +507,12 @@
                     case 128: // noteOff
                         noteOff(note);
                         break;
+                    case 176: // control
+                        if ( note == 7 ) { // volume
+                            document.getElementById("myRange").value = (100 * velocity)/127;
+                            onGainChange();
+                        }
+                        break;
                     // we could easily expand this switch statement to cover other types of commands such as controllers or sysex
                 }
             }
