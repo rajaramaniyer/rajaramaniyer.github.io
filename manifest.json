@@ -4,7 +4,7 @@
   "start_url": "webharmonium.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#db4938",
+  "theme_color": "#008080",
   "orientation": "portrait-primary",
   "icons": [
     {
