@@ -47,12 +47,6 @@
     <script>
         const zeroPad = (num, places) => String(num).padStart(places, '0')
         let volunteers = [
-            "Kannan - Philadelphia USA",
-            "Murthi - Philadelphia USA",
-            "Radhika - Philadelphia USA",
-            "Mythili - Philadelphia USA",
-            "Raj - Philadelphia USA ",
-            "Naren Washington D.C. USA",
             "SubadhraNarendar - VA, USA",
             "Gurumurthi, CA, USA",
             "",
@@ -191,6 +185,12 @@
             "Ashmitha",
             "venkatesh",
             "Lakshmi",
+            "Kannan - Philadelphia USA",
+            "Murthi - Philadelphia USA",
+            "Radhika - Philadelphia USA",
+            "Mythili - Philadelphia USA",
+            "Raj - Philadelphia USA ",
+            "Naren Washington D.C. USA",
         ];
 
         function onLoad() {
@@ -203,7 +203,7 @@
 
             document.getElementById("footer").innerText = dt.toString().split(" ").slice(5).join(" ")
             //UTC
-            var hour = 0
+            var hour = 1
             var mins = 30
 
             localMins = mins + dt.getTimezoneOffset() * -1;
