@@ -41,6 +41,7 @@
             width: 100%;
             background-color: silver;
             color: "#808080";
+            font-size: 4em;
         }
     </style>
     <title>24/7 Akanda Nama Schedule - Brahma Sabha</title>
@@ -196,38 +197,17 @@
         function onLoad() {
             var scheduleTable = document.getElementById("schedule")
 
-            //document.getElementById("footer").innerText = Intl.DateTimeFormat().resolvedOptions().timeZone
-
             // dt is in localTimeZone
             let dt = new Date()
+            console.log("dt = ", dt)
+            dt = changeTimeZone(dt, 'Asia/Kolkata');
+            console.log("dt = ", dt)
 
-            document.getElementById("footer").innerText = dt.toString().split(" ").slice(5).join(" ")
+            //document.getElementById("footer").innerText = dt.toString().split(" ").slice(5).join(" ")
             //UTC
-            var hour = 1
-            var mins = 30
-
-            localMins = mins + dt.getTimezoneOffset() * -1;
-            if (localMins < 0) {
-                localMins += 1440;
-            }
-            hour = Math.floor(localMins / 60);
-            mins = (localMins % 60);
+            var hour = 6
+            var mins = 0
             var iStart = 0;
-            for (i = 0; i < volunteers.length; ++i) {
-                if (hour == 6 && mins == 0) {
-                    break
-                }
-                mins += 10
-                if (mins == 60) {
-                    hour += 1
-                    mins = 0
-                    if (hour == 24) {
-                        hour = 0
-                    }
-                }
-                iStart += 1
-            }
-
             for (i = 0; i < volunteers.length; ++i) {
                 // Create an empty <tr> element and add it to the 1st position of the table:
                 var row = scheduleTable.insertRow(-1);
@@ -277,15 +257,13 @@
 
             // dt is in localTimeZone
             let dt = new Date()
-            //let dt = changeTimeZone(new Date(), 'Asia/Kolkata');
+            dt = changeTimeZone(dt, 'Asia/Kolkata');
             let hour = dt.getHours()
             let mins = Math.floor(dt.getMinutes() / 10) * 10
             let currentTimeRow = document.getElementById(zeroPad(hour, 2) + ":" + zeroPad(mins, 2))
             if (currentTimeRow != null) {
                 currentTimeRow.classList.add("currentTime");
-                if (currentTimeRow.rowIndex > 4) {
-                    currentTimeRow.parentNode.rows[currentTimeRow.rowIndex - 5].scrollIntoView(true);
-                }
+                currentTimeRow.scrollIntoView(true);
             }
 
             timeOutMM = (9 - (dt.getMinutes() % 10)) * 60 //convertedToSeconds
@@ -312,20 +290,16 @@
 </head>
 
 <body onload="onLoad()">
-    <div class="w3-container w3-teal header">
-        <h3>24/7 Akanda Nama Schedule - Brahma Sabha</h3>
-    </div>
-    <div id="mainScreen">
+    <div style="font-size: 8em; background-color: white" id="mainScreen">
         <table>
             <tbody id="schedule">
 
             </tbody>
         </table>
-
-        <div id="footer" class="w3-container footer">
-
-        </div>
     </div>
+    <!--div id="footer" class="w3-container footer">
+        Who is next (Showing India Time)
+    </div-->
 </body>
 
 </html>
