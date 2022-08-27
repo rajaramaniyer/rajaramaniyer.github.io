@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <style type="text/css">
             td {
                 text-align: center;
@@ -28,6 +29,10 @@
                     for ( j = 0; j < colCount; ++j ) {
                         var cell = row.insertCell();
                         cell.style.width=(100/colCount)+"%"
+
+                        if ( i == 0 && j == 0 ) {
+                            cell.innerHTML="<button onclick='window.print();return false;'>&#9997;</button>"
+                        }
                         if ( i > 0 ) {
                             if ( j == 0 ) {
                                 cell.innerText = i;
