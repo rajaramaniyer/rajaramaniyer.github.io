@@ -4,16 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <style type="text/css">
-        @media print {
-            @page {
-                size: 210mm 297mm;
-                /* you can also specify margins here: */
-                margin: 5mm;
-                margin-right: 5mm;
-                /* for compatibility with both A4 and Letter */
-            }
-        }
-
         td {
             text-align: center;
         }
@@ -34,9 +24,38 @@
         }
     </style>
     <script>
+        function parseQuery(queryString) {
+            var query = {};
+            var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split('=');
+                query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+            }
+            return query;
+        }
+
         function buildGrid() {
+            let params = parseQuery(location.search);
             var namaTable = document.getElementById("namaTable");
-            let colCount = 21, rowCount = (1000 / (colCount - 1)) + 1;
+            var colCount = 21, rowCount = (1000 / (colCount - 1)) + 1;
+            var header = true
+            if (params.header !== undefined) {
+                header = (params.header == 'true')
+            }
+
+            if (params.row !== undefined) {
+                rowCount = parseInt(params.row)
+                if (header == true) {
+                    ++rowCount;
+                }
+            }
+
+            if (params.col !== undefined) {
+                colCount = parseInt(params.col)
+                if (header == true) {
+                    ++colCount;
+                }
+            }
 
             for (i = 0; i < rowCount; ++i) {
                 var row = namaTable.insertRow();
@@ -44,25 +63,34 @@
                     var cell = row.insertCell();
                     cell.style.width = (100 / colCount) + "%"
 
-                    if (i == 0 && j == 0) {
+                    if (header && i == 0 && j == 0) {
                         cell.innerHTML = "<button onclick='window.print();return false;'>&#9997;</button>"
                     }
-                    if (i > 0) {
-                        if (j == 0) {
-                            cell.innerText = i;
-                        } else {
-                            cell.classList.add("namaCell")
-                        }
+                    if (!header) {
+                        cell.classList.add("namaCell")
+                        cell.innerHTML = "&nbsp;"
                     } else {
-                        if (j > 0) {
-                            cell.innerText = j;
+                        if (i > 0) {
+                            if (j == 0) {
+                                cell.innerText = i;
+                            } else {
+                                cell.classList.add("namaCell")
+                            }
+                        } else {
+                            if (j > 0) {
+                                cell.innerText = j;
+                            }
                         }
                     }
-                    if (i > 0 && j + 1 == colCount) {
-                        cell.classList.add("namaCellLastColumn")
+                    if (j + 1 == colCount) {
+                        if (!header || (header && i > 0)) {
+                            cell.classList.add("namaCellLastColumn")
+                        }
                     }
-                    if (j > 0 && i + 1 == rowCount) {
-                        cell.classList.add("namaCellLastRow")
+                    if (i + 1 == rowCount) {
+                        if (!header || (header && j > 0)) {
+                            cell.classList.add("namaCellLastRow")
+                        }
                     }
                 }
             }
