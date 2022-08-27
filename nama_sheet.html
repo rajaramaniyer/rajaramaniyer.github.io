@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <style type="text/css">
-        @page {
-            size: 21cm 29.7cm;
-            
-            /* change the margins as you want them to be. */
-        }
-
-        table {
-            page-break-after: always;
+        @media print {
+            @page {
+                size: 210mm 297mm;
+                /* you can also specify margins here: */
+                margin: 5mm;
+                margin-right: 5mm;
+                /* for compatibility with both A4 and Letter */
+            }
         }
 
         td {
