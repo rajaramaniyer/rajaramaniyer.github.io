@@ -1,67 +1,83 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <style type="text/css">
-            td {
-                text-align: center;
-            }
-            .namaCell {
-                border-top: 1px solid grey;
-                border-left: 1px solid grey;
-                font-size: 15px;
-                font-family: Arial, Helvetica, sans-serif;
-            }
-            .namaCellLastColumn {
-                border-right: 1px solid grey; 
-            }
-            .namaCellLastRow {
-                border-bottom: 1px solid grey;
-            }
-        </style>
-        <script>
-            function buildGrid() {
-                var namaTable = document.getElementById("namaTable");
-                let colCount=21, rowCount=(1000/(colCount-1))+1;
 
-                for ( i = 0; i < rowCount; ++i ){
-                    var row = namaTable.insertRow();
-                    for ( j = 0; j < colCount; ++j ) {
-                        var cell = row.insertCell();
-                        cell.style.width=(100/colCount)+"%"
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        @page {
+            size: 21cm 29.7cm;
+            
+            /* change the margins as you want them to be. */
+        }
 
-                        if ( i == 0 && j == 0 ) {
-                            cell.innerHTML="<button onclick='window.print();return false;'>&#9997;</button>"
-                        }
-                        if ( i > 0 ) {
-                            if ( j == 0 ) {
-                                cell.innerText = i;
-                            } else {
-                                cell.classList.add("namaCell")
-                            }
+        table {
+            page-break-after: always;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        .namaCell {
+            border-top: 1px solid grey;
+            border-left: 1px solid grey;
+            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .namaCellLastColumn {
+            border-right: 1px solid grey;
+        }
+
+        .namaCellLastRow {
+            border-bottom: 1px solid grey;
+        }
+    </style>
+    <script>
+        function buildGrid() {
+            var namaTable = document.getElementById("namaTable");
+            let colCount = 21, rowCount = (1000 / (colCount - 1)) + 1;
+
+            for (i = 0; i < rowCount; ++i) {
+                var row = namaTable.insertRow();
+                for (j = 0; j < colCount; ++j) {
+                    var cell = row.insertCell();
+                    cell.style.width = (100 / colCount) + "%"
+
+                    if (i == 0 && j == 0) {
+                        cell.innerHTML = "<button onclick='window.print();return false;'>&#9997;</button>"
+                    }
+                    if (i > 0) {
+                        if (j == 0) {
+                            cell.innerText = i;
                         } else {
-                            if ( j > 0 ) {
-                                cell.innerText = j;
-                            }
+                            cell.classList.add("namaCell")
                         }
-                        if ( i > 0 && j + 1 == colCount ) {
-                            cell.classList.add("namaCellLastColumn")
+                    } else {
+                        if (j > 0) {
+                            cell.innerText = j;
                         }
-                        if ( j > 0 && i + 1 == rowCount ) {
-                            cell.classList.add("namaCellLastRow")
-                        }
+                    }
+                    if (i > 0 && j + 1 == colCount) {
+                        cell.classList.add("namaCellLastColumn")
+                    }
+                    if (j > 0 && i + 1 == rowCount) {
+                        cell.classList.add("namaCellLastRow")
                     }
                 }
             }
-        </script>
-    </head>
+        }
+    </script>
+</head>
+
 <body onload="buildGrid()">
 
-<table width="100%" cellspacing="0">
-    <tbody id="namaTable">
+    <table width="100%" cellspacing="0">
+        <tbody id="namaTable">
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
 </body>
+
 </html>
