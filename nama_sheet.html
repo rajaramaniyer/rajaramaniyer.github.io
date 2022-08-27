@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            td {
+                text-align: center;
+            }
+            .namaCell {
+                border-top: 1px solid grey;
+                border-left: 1px solid grey;
+                font-size: 15px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            .namaCellLastColumn {
+                border-right: 1px solid grey; 
+            }
+            .namaCellLastRow {
+                border-bottom: 1px solid grey;
+            }
+        </style>
+        <script>
+            function buildGrid() {
+                var namaTable = document.getElementById("namaTable");
+                let colCount=21, rowCount=(1000/(colCount-1))+1;
+
+                for ( i = 0; i < rowCount; ++i ){
+                    var row = namaTable.insertRow();
+                    for ( j = 0; j < colCount; ++j ) {
+                        var cell = row.insertCell();
+                        cell.style.width=(100/colCount)+"%"
+                        if ( i > 0 ) {
+                            if ( j == 0 ) {
+                                cell.innerText = i;
+                            } else {
+                                cell.classList.add("namaCell")
+                            }
+                        } else {
+                            if ( j > 0 ) {
+                                cell.innerText = j;
+                            }
+                        }
+                        if ( i > 0 && j + 1 == colCount ) {
+                            cell.classList.add("namaCellLastColumn")
+                        }
+                        if ( j > 0 && i + 1 == rowCount ) {
+                            cell.classList.add("namaCellLastRow")
+                        }
+                    }
+                }
+            }
+        </script>
+    </head>
+<body onload="buildGrid()">
+
+<table width="100%" cellspacing="0">
+    <tbody id="namaTable">
+
+    </tbody>
+</table>
+
+</body>
+</html>
