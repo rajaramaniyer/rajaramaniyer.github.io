@@ -176,7 +176,7 @@
     <title>Web Harmonium - developed by Rajaraman Iyer</title>
     <script>
         var sampleURL = 'harmonium-kannan-orig.wav';
-        var debug = false;
+        var debug = true;
 
         var AudioContext = AudioContext || webkitAudioContext,
             context = null;
@@ -458,11 +458,14 @@
         //End of Fetch the sample
 
         function requestMIDIAccess() {
+            var midiInfo = document.getElementById('midiInputDevicesInfo');
             // Start of MIDI
             if (navigator.requestMIDIAccess) {
+                midiInfo.innerText += " Supported! "
                 if (debug) console.log('This browser supports WebMIDI!');
                 navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
             } else {
+                midiInfo.innerText += " Not Supported! "
                 if (debug) console.log('WebMIDI is not supported in this browser.');
             }
         }
@@ -483,6 +486,11 @@
                 midiInputDevices.add(option);
                 input.onmidimessage = getMIDIMessage;
             }
+        }
+
+        function onMIDIFailure() {
+            document.getElementById('midiInputDevicesInfo').innerText += " Failed!";
+            if (debug) console.log('Could not access your MIDI devices.');
         }
 
         function getMIDIMessage(message) {
@@ -516,10 +524,6 @@
                     // we could easily expand this switch statement to cover other types of commands such as controllers or sysex
                 }
             }
-        }
-
-        function onMIDIFailure() {
-            if (debug) console.log('Could not access your MIDI devices.');
         }
 
         // End of MIDI
@@ -786,7 +790,7 @@
                         <tbody>
                             <tr>
                                 <td width="10%">&nbsp;</td>
-                                <td width="80%">MIDI Keyboard</td>
+                                <td width="80%"><span id="midiInputDevicesInfo">MIDI Keyboard</span></td>
                                 <td align=right width="10%"><button onclick="requestMIDIAccess()"><i
                                             class="fa fa-refresh" style="font-size:36px;"></i></button></td>
                             </tr>
