@@ -458,15 +458,20 @@
         //End of Fetch the sample
 
         function requestMIDIAccess() {
-            var midiInfo = document.getElementById('midiInputDevicesInfo');
-            // Start of MIDI
-            if (navigator.requestMIDIAccess) {
-                midiInfo.innerText += " Supported! "
-                if (debug) console.log('This browser supports WebMIDI!');
-                navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-            } else {
-                midiInfo.innerText += " Not Supported! "
-                if (debug) console.log('WebMIDI is not supported in this browser.');
+            try {
+                var midiInfo = document.getElementById('midiInputDevicesInfo');
+                // Start of MIDI
+                if (navigator.requestMIDIAccess) {
+                    midiInfo.innerText += " Supported! "
+                    if (debug) console.log('This browser supports WebMIDI!');
+                    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+                } else {
+                    midiInfo.innerText += " Not Supported! "
+                    if (debug) console.log('WebMIDI is not supported in this browser.');
+                }
+            }
+            catch(err) {
+                midiInfo.innerText += " Failed! " + err
             }
         }
 
