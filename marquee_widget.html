@@ -3,38 +3,42 @@
 <head>
     <style>
         .mymarquee {
-            background-color: coral;
+            background-color: rgb(255, 85, 0);
             color: white;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 48pt;
-            padding: 3px;
+            font-size: 80vh;
         }
     </style>
     <script>
-        var template = "🌸 Radhekrishna! Welcome to Brahma Sabha Singapore Stream 🙏! %today%! Enjoy 😊! Don't forget to Subscribe and press the 🔔 bell icon to receive notification when we go live in future! 🌸"
-        fontSize="48pt"
         function onpageload() {
+            var template = "🌸 Radhekrishna! Welcome to Brahma Sabha Singapore Stream 🙏! %today%! Enjoy 😊! Don't forget to Subscribe and press the 🔔 bell icon to receive notification when we go live in future! 🌸"
+            var marqueeObject = document.getElementById("mymarquee")
             const searchParams = new URLSearchParams(location.search);
             todayString = ""
             if ( searchParams.has('fulltext') ) {
                 template=searchParams.get('fulltext')
-            } else if ( searchParams.has('todaytext') ) {
-                todayString=searchParams.get('todaytext')
-                template=template.replaceAll("%today%", todayString)
+            } else {
+                if ( searchParams.has('todaytext') ) {
+                    todayString=searchParams.get('todaytext')
+                    template=template.replaceAll("%today%", todayString)
+                } else {
+                    template=template.replaceAll("%today%", "")
+                }
             }
-
-            if ( searchParams.has('fontsize') ) {
-                fontSize=searchParams.get('fontsize')
-            }
-            var marqueeObject = document.getElementById("mymarquee")
             marqueeObject.innerText = template
-            marqueeObject.style.fontSize = fontSize
+
+            if ( searchParams.has('bgcolor') ) {
+                marqueeObject.style.backgroundColor = searchParams.get('bgcolor')
+            }
+            if ( searchParams.has('color') ) {
+                marqueeObject.style.color = searchParams.get('color')
+            }
         }
     </script>
 </head>
 
 <body onload="onpageload()" style="margin: 0">
-    <marquee id="mymarquee" class="mymarquee"></marquee>
+    <marquee id="mymarquee" height="100%" class="mymarquee"></marquee>
 </body>
 
 </html>
