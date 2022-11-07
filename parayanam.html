@@ -79,6 +79,7 @@
 
         /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
         @media screen and (max-width: 600px) {
+
             .col-25,
             .col-75,
             .button {
@@ -109,6 +110,8 @@
         let td = 1 //todate
         let fc = 2 //fromchapter
         let tc = 3 //tochapter
+
+        let chapters = [24, 26, 23, 25, 20, 25, 24, 22, 22, 24]
 
         //element objects
         var newuserform = null
@@ -158,6 +161,22 @@
             }
         }
 
+        function deleteUser(){
+            if ( currentuser > -1 ) {
+                userdata.splice(currentuser,1)
+                userlist.splice(currentuser,1)
+                if ( userlist.length > 0 ) {
+                    currentuser=0
+                } else {
+                    currentuser=-1
+                }
+                setStorage('userlist', JSON.stringify(userlist))
+                setStorage('userdata', JSON.stringify(userdata))
+                setStorage('currentuser', currentuser)
+                onpageload()
+            }
+        }
+
         function pullData(force = false) {
             if (sheetdata == null || force == true) {
                 var apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1lY9_dqY5-GhPAxhy-2KK4MTLKdKnKg3NlhvsGArzdR8/values/2023%20Global%20Parayanam%20Registry?alt=json&key=AIzaSyDr58mLD6Gyn_l3P4wYl6bW-EbwRfXyZ9I'
@@ -174,17 +193,51 @@
 
         function saveValues() {
             console.log("Saving...")
+            let todayDate = (new Date()).toISOString().split('T')[0]
             let pos = (datarowno.value == "") ? userdata[currentuser].length : parseInt(datarowno.value)
             console.log("position is", pos)
-            let regex = /^\d{2}-\d{2}$/
+            let regex = /^(\d{2})-(\d{2})$/
             errorblock.innerText = ""
-            if ( !regex.test(fromchapter.value) ) {
+            if (!regex.test(fromchapter.value)) {
                 errorblock.innerText += "Invalid 'From Chapter' value. It should be in the format 00-00. \n"
             }
-            if ( !regex.test(tochapter.value) ) {
+            if (!regex.test(tochapter.value)) {
                 errorblock.innerText += "Invalid 'To Chapter' value. It should be in the format 00-00. \n"
             }
-            if ( errorblock.innerText != "" ) {
+            if (fromdate.value > todayDate) {
+                errorblock.innerText += "From date cannot be greater than today's date. \n"
+            }
+            if (todate.value > todayDate) {
+                errorblock.innerText += "To date cannot be greater than today's date. \n"
+            }
+            if (fromdate.value > todate.value) {
+                errorblock.innerText += "From Date cannot be greater than To date. \n"
+            }
+            if (fromchapter.value > tochapter.value) {
+                errorblock.innerText += "From Chapter cannot be greater than To Chapter. \n"
+            }
+
+            if (errorblock.innerText == "") {
+                const frommatch = fromchapter.value.match(regex);
+                const tomatch = tochapter.value.match(regex);
+                iFromCanto = parseInt(frommatch[1])
+                iFromChapter = parseInt(frommatch[2])
+                iToCanto = parseInt(tomatch[1])
+                iToChapter = parseInt(tomatch[2])
+
+                if (iFromCanto < 1 || iFromCanto > 10) {
+                    errorblock.innerText += "From Chapter: Canto " + iFromCanto + " does not exists. \n"
+                } else if (iFromChapter < 1 || iFromChapter > chapters[iFromCanto]) {
+                    errorblock.innerText += "From Chapter: In canto " + iFromCanto + ", Chapter " + iFromChapter + " does not exists! \n"
+                }
+                if (iToCanto < 1 || iToCanto > 10) {
+                    errorblock.innerText += "To Chapter: Canto " + iToCanto + " does not exists. \n"
+                } else if (iToChapter < 1 || iToChapter > chapters[iToCanto]) {
+                    errorblock.innerText += "To Chapter: In canto " + iToCanto + ", Chapter " + iToChapter + " does not exists! \n"
+                }
+            }
+
+            if (errorblock.innerText != "") {
                 errorblock.style.display = 'block'
                 return
             }
@@ -234,14 +287,14 @@
                 userdropdown.options[userdropdown.selectedIndex].selected = true
                 currentuser = userdropdown.selectedIndex
                 console.log(userlist[currentuser])
-                var showdatatable = "<table cellspacing=0 cellpadding=3><tr><td></td><td></td><th>From Date</th><th>To Date</th><th>From Chapter</th><th>To Chapter</th></tr>"
+                var showdatatable = "<center><table cellspacing=0 cellpadding=3><tr><th colspan=2>Actions</th><th>From Date</th><th>To Date</th><th>From Chapter</th><th>To Chapter</th></tr>"
                 for (i = userdata[currentuser].length - 1; i > -1; --i) {
                     showdatatable += "<tr><td><button onclick='deleterow(" + i + ")'>❌</button></td><td><button onclick='showUpdateForm(" + i + ")'>✏️</button></td><td>" + userdata[currentuser][i][fd] + "</td><td>" + userdata[currentuser][i][td] + "</td><td>" + userdata[currentuser][i][fc] + "</td><td>" + userdata[currentuser][i][tc] + "</td></tr>"
                 }
                 if (userdata[currentuser].length == 0) {
-                    showdatatable += "<tr><td colspan=4>No data available</td></tr>"
+                    showdatatable += "<tr><td colspan=6>No data available</td></tr>"
                 }
-                showdatatable += "</table>"
+                showdatatable += "</table></center>"
                 document.getElementById('showdatatable').innerHTML = showdatatable
 
                 if (sheetdata != null) {
@@ -259,13 +312,11 @@
         }
 
         function populateUserDropDown() {
-            for (i = 0; i < userdropdown.options.length; ++i) {
-                userdropdown.remove(i)
-            }
+            userdropdown.innerHTML = ""
             for (i = 0; i < userlist.length; ++i) {
                 if (userlist[i].length == 2) {
                     var option = document.createElement("option");
-                    option.text = userlist[i][un];
+                    option.text = userlist[i][un] + " (" + userlist[i][lo] + ")";
                     userdropdown.add(option)
                 }
             }
@@ -315,6 +366,8 @@
 
             if (currentuser == -1) {
                 newuserform.style.display = 'block'
+                showdataform.style.display = 'none'
+                existinguserform.style.display = 'none'
                 document.getElementById('cancelStart').style.display = 'none'
                 return
             }
@@ -336,13 +389,20 @@
                 if (userdata[currentuser].length > 0) {
                     lastrow = userdata[currentuser][userdata[currentuser].length - 1]
                 }
+                console.log('lastrow', lastrow)
                 var lasttodate = null
                 if (lastrow != null) {
                     lasttodate = lastrow[td]
                 }
                 if (lasttodate == null || lasttodate == "") {
                     lasttodate = todayDate
+                } else {
+                    lasttodate = (new Date(Date.parse(lasttodate) + 1000 * 60 * 60 * 24)).toISOString().split('T')[0];
+                    if (lasttodate > todayDate) {
+                        lasttodate = todayDate
+                    }
                 }
+                console.log('lasttodate', lasttodate)
                 fromdate.value = lasttodate
                 todate.value = todayDate
                 var lasttochapter = null
@@ -351,7 +411,22 @@
                 }
                 if (lasttochapter == null || lasttochapter == "") {
                     lasttochapter = "01-01"
+                } else {
+                    let regex = /^(\d{2})-(\d{2})$/
+                    const match = lasttochapter.match(regex);
+                    iCanto = parseInt(match[1])
+                    iChapter = parseInt(match[2])
+                    iChapter++
+                    if (iChapter > chapters[iCanto]) {
+                        iChapter = 1
+                        iCanto++
+                        if (iCanto > chapters.length) {
+                            iCanto = 1
+                        }
+                    }
+                    lasttochapter = String(iCanto).padStart(2, '0') + "-" + String(iChapter).padStart(2, '0')
                 }
+                console.log('lasttochapter', lasttochapter)
                 fromchapter.value = lasttochapter
                 tochapter.value = ""
             } else {
@@ -363,6 +438,7 @@
             }
             showdataform.style.display = 'none'
             existinguserform.style.display = 'block'
+            tochapter.focus()
         }
     </script>
 </head>
@@ -405,6 +481,9 @@
 
     <div id="showdata" class="container">
         <div class="row">
+            <button class="button redButton" onclick="deleteUser()">Delete User</button>
+        </div>
+        <div class="row">
             <div class="col-25">
                 <label for="userdropdown">Users</label>
             </div>
@@ -413,6 +492,7 @@
                 </select>
             </div>
         </div>
+        <br />
         <div class="row">
             <div style="overflow-x:auto;" id="showdatatable">
             </div>
@@ -480,7 +560,7 @@
         <div class="row">
             <button class="button greenButton" onclick="saveValues()">Update</button>
             <button class="button redButton"
-                onclick="showdataform.style.display = 'block'; existinguserform.style.display = 'none'">Cancel</button>
+                onclick="showdataform.style.display = 'block'; existinguserform.style.display = 'none'; errorblock.style.display = 'none'">Cancel</button>
         </div>
     </div>
 </body>
