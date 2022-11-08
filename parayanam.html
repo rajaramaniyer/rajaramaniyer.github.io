@@ -161,14 +161,14 @@
             }
         }
 
-        function deleteUser(){
-            if ( currentuser > -1 ) {
-                userdata.splice(currentuser,1)
-                userlist.splice(currentuser,1)
-                if ( userlist.length > 0 ) {
-                    currentuser=0
+        function deleteUser() {
+            if (currentuser > -1 && confirm('Sure?!\nDelete user: ' + userlist[currentuser][un] + '?\n\nNote: All local data will be lost!')) {
+                userdata.splice(currentuser, 1)
+                userlist.splice(currentuser, 1)
+                if (userlist.length > 0) {
+                    currentuser = 0
                 } else {
-                    currentuser=-1
+                    currentuser = -1
                 }
                 setStorage('userlist', JSON.stringify(userlist))
                 setStorage('userdata', JSON.stringify(userdata))
@@ -179,7 +179,7 @@
 
         function pullData(force = false) {
             if (sheetdata == null || force == true) {
-                var apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1lY9_dqY5-GhPAxhy-2KK4MTLKdKnKg3NlhvsGArzdR8/values/2023%20Global%20Parayanam%20Registry?alt=json&key=AIzaSyDr58mLD6Gyn_l3P4wYl6bW-EbwRfXyZ9I'
+                var apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1JqnSyJgPqsftN0q8TWcIehFiZd_-eUVxE2Cwu5LMg_M/values/Sheet1?alt=json&key=AIzaSyDr58mLD6Gyn_l3P4wYl6bW-EbwRfXyZ9I'
                 fetch(apiUrl).then(response => {
                     return response.json();
                 }).then(data => {
@@ -250,8 +250,10 @@
         }
 
         function deleterow(i) {
-            userdata[currentuser].splice(i, 1);
-            onuserchanged()
+            if (confirm('Delete this row?')) {
+                userdata[currentuser].splice(i, 1);
+                onuserchanged()
+            }
         }
 
         function getStorage(varname) {
@@ -287,9 +289,9 @@
                 userdropdown.options[userdropdown.selectedIndex].selected = true
                 currentuser = userdropdown.selectedIndex
                 console.log(userlist[currentuser])
-                var showdatatable = "<center><table cellspacing=0 cellpadding=3><tr><th colspan=2>Actions</th><th>From Date</th><th>To Date</th><th>From Chapter</th><th>To Chapter</th></tr>"
+                var showdatatable = "<center><table cellspacing=0 cellpadding=3><tr><th>From Date</th><th>To Date</th><th>From Chapter</th><th>To Chapter</th><th colspan=2>Actions</th></tr>"
                 for (i = userdata[currentuser].length - 1; i > -1; --i) {
-                    showdatatable += "<tr><td><button onclick='deleterow(" + i + ")'>❌</button></td><td><button onclick='showUpdateForm(" + i + ")'>✏️</button></td><td>" + userdata[currentuser][i][fd] + "</td><td>" + userdata[currentuser][i][td] + "</td><td>" + userdata[currentuser][i][fc] + "</td><td>" + userdata[currentuser][i][tc] + "</td></tr>"
+                    showdatatable += "<tr><td>" + userdata[currentuser][i][fd] + "</td><td>" + userdata[currentuser][i][td] + "</td><td>" + userdata[currentuser][i][fc] + "</td><td>" + userdata[currentuser][i][tc] + "</td><td><button onclick='showUpdateForm(" + i + ")'>✏️</button></td><td><button onclick='deleterow(" + i + ")'>🗑️</button></td></tr>"
                 }
                 if (userdata[currentuser].length == 0) {
                     showdatatable += "<tr><td colspan=6>No data available</td></tr>"
@@ -302,8 +304,8 @@
                     for (i = 0; i < rows.length; ++i) {
                         if (rows[i].length >= 6) {
                             row = rows[i]
-                            if (row[1] == userlist[currentuser][un]) {
-                                console.log(row[1], row[2], row[3], row[5])
+                            if (row[0] == userlist[currentuser][un] && row[1] == userlist[currentuser][lo]) {
+
                             }
                         }
                     }
