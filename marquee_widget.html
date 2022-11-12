@@ -11,11 +11,25 @@
         }
     </style>
     <script>
-        function onpageload() {
+        var todayString = ""
+        function pullData() {
+            var apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1bgg-43DyUbP1PZITnxZbz89C14pC3RIrgGrF_lJkicc/values/Sheet1?alt=json&key=AIzaSyDr58mLD6Gyn_l3P4wYl6bW-EbwRfXyZ9I'
+            fetch(apiUrl).then(response => {
+                return response.json()
+            }).then(data => {
+                var row=0
+                var col=0
+                todayString = data['values'][row][col]
+                updateMarqueue()
+            }).catch(err => {
+                console.error('Failed to pull data', err);
+            });
+        }
+
+        function updateMarqueue() {
             var template = "🌸 Radhekrishna! Welcome to Brahma Sabha Singapore Stream 🙏! %today%! Enjoy 😊! Don't forget to Subscribe and press the 🔔 bell icon to receive notification when we go live in future! 🌸"
             var marqueeObject = document.getElementById("mymarquee")
             const searchParams = new URLSearchParams(location.search);
-            todayString = ""
             if ( searchParams.has('fulltext') ) {
                 template=searchParams.get('fulltext')
             } else {
@@ -23,7 +37,7 @@
                     todayString=searchParams.get('todaytext')
                     template=template.replaceAll("%today%", todayString)
                 } else {
-                    template=template.replaceAll("%today%", "")
+                    template=template.replaceAll("%today%", todayString)
                 }
             }
             marqueeObject.innerText = template
@@ -34,6 +48,11 @@
             if ( searchParams.has('color') ) {
                 marqueeObject.style.color = searchParams.get('color')
             }
+        }
+
+        function onpageload() {
+            pullData()
+            updateMarqueue()
         }
     </script>
 </head>
