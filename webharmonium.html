@@ -462,11 +462,15 @@
                 var midiInfo = document.getElementById('midiInputDevicesInfo');
                 // Start of MIDI
                 if (navigator.requestMIDIAccess) {
-                    midiInfo.innerText += " Supported! "
+                    if ( midiInfo.innerText.indexOf('Supported!') == -1 ) {
+                        midiInfo.innerText += " Supported! "
+                    }
                     if (debug) console.log('This browser supports WebMIDI!');
                     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
                 } else {
-                    midiInfo.innerText += " Not Supported! "
+                    if ( midiInfo.innerText.indexOf('Supported!') == -1 ) {
+                        midiInfo.innerText += " Not Supported! "
+                    }
                     if (debug) console.log('WebMIDI is not supported in this browser.');
                 }
             }
@@ -493,9 +497,9 @@
             }
         }
 
-        function onMIDIFailure() {
-            document.getElementById('midiInputDevicesInfo').innerText += " Failed!";
-            if (debug) console.log('Could not access your MIDI devices.');
+        function onMIDIFailure(error) {
+            document.getElementById('midiInputDevicesInfo').innerText += " Failed! " + error;
+            if (debug) console.log('Could not access your MIDI devices.', error);
         }
 
         function getMIDIMessage(message) {

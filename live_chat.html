@@ -1,0 +1,151 @@
+<html>
+
+<head>
+    <style>
+        .chatMessageStyle {
+            border: 1px solid gray
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        .row {
+            border-bottom: 1pt solid silver;
+        }
+
+        img {
+            width: 12vh;
+            height: 12vh;
+        }
+
+        td {
+            color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 6vh;
+            vertical-align: top;
+        }
+
+        th {
+            color: gray;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 6vh;
+            text-align: left;
+            vertical-align: top;
+        }
+    </style>
+    <script>
+        var channelId = "UChyWKJ6i9Yqjq1i2UNALhVA"
+        var liveVideoId = null
+        var liveChatId = null
+        var nextPageToken = null
+        var pollingIntervalMillis = 300000 // 5 mins
+        var chatMessages = new Array()
+        var chatMessageDiv = null
+        var apiToken = null
+
+        function pullData() {
+            var apiUrl = null
+
+            if (liveVideoId == null) {
+                // In the response look for the item where liveBroadcastContent = 'live'
+                apiUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=' + channelId + '&order=date&type=video&key=' + apiToken
+            } else if (liveChatId == null) {
+                // In the response, the snippet.liveStreamingDetails.activeLiveChatId is the id of the live chat to use for retrieving messages
+                apiUrl = 'https://www.googleapis.com/youtube/v3/videos?part=liveStreamingDetails,snippet&id=' + liveVideoId + '&key=' + apiToken
+            } else {
+                // Get Latest chat messages
+                // You can use the pollingIntervalMillis and the nextPageToken in the response to poll the API for new chat messages.
+                if (nextPageToken == null) {
+                    apiUrl = 'https://www.googleapis.com/youtube/v3/liveChat/messages?liveChatId=' + liveChatId + '&part=snippet,authorDetails&key=' + apiToken
+                } else {
+                    apiUrl = 'https://www.googleapis.com/youtube/v3/liveChat/messages?liveChatId=' + liveChatId + '&part=snippet,authorDetails&pageToken=' + nextPageToken + '&key=' + apiToken
+                }
+            }
+
+            fetch(apiUrl).then(response => {
+                return response.json()
+            }).then(data => {
+                console.log(data)
+                if (liveVideoId == null) {
+                    if (data['items'][0]['snippet']['liveBroadcastContent'] == 'live') {
+                        liveVideoId = data['items'][0]['id']['videoId']
+                    } else {
+                        liveVideoId = null
+                        liveChatId = null
+                        nextPageToken = null
+                    }
+                } else if (liveChatId == null) {
+                    if (data['items'][0]['liveStreamingDetails'].hasOwnProperty('activeLiveChatId')) {
+                        liveChatId = data['items'][0]['liveStreamingDetails']['activeLiveChatId']
+                        setTimeout(pullData, pollingIntervalMillis)
+                    } else {
+                        liveVideoId = null
+                        liveChatId = null
+                        nextPageToken = null
+                    }
+                } else {
+                    let count = chatMessages.length
+                    //pollingIntervalMillis = data['pollingIntervalMillis']
+                    nextPageToken = data['nextPageToken']
+                    data['items'].forEach(function (item) {
+                        if (item['snippet']['hasDisplayContent']) {
+                            chatMessage = {}
+                            chatMessage['publishedAt'] = item['snippet']['publishedAt']
+                            chatMessage['displayMessage'] = item['snippet']['displayMessage']
+                            chatMessage['displayName'] = item['authorDetails']['displayName']
+                            chatMessage['profileImageUrl'] = item['authorDetails']['profileImageUrl']
+                            chatMessages.push(chatMessage)
+                        }
+                    })
+                    console.log(chatMessages)
+                    if ( count < chatMessages.length ) {
+                        innerHtml = "<table>"
+                        chatMessages.forEach(function (chatMessage) {
+                            innerHtml += "<tr><td rowspan=2><img src='" + chatMessage['profileImageUrl'] + "'></td><th>" + chatMessage['displayName'] + "</th></tr><tr class='row'><td>" + chatMessage['displayMessage'] + "</td></tr>"
+                        })
+                        innerHtml += "<table>"
+                        chatMessageDiv.innerHTML = innerHtml
+                    }
+                    setTimeout(pullData, pollingIntervalMillis)
+                }
+            }).catch(err => {
+                console.error('Failed to pull data', err);
+            });
+            //setTimeout(pullData, pollingIntervalMillis)
+        }
+
+        function onpageload() {
+            chatMessageDiv = document.getElementById('chatMessages')
+            const searchParams = new URLSearchParams(location.search);
+            if (searchParams.has('key')) {
+                apiToken = searchParams.get('key')
+            }
+            if (searchParams.has('channelId')) {
+                channelId = searchParams.get('channelId')
+            }
+            if (searchParams.has('videoId')) {
+                liveVideoId = searchParams.get('videoId')
+            }
+            if (searchParams.has('bgcolor')) {
+                chatMessageDiv.style.backgroundColor = searchParams.get('bgcolor')
+            }
+            if (searchParams.has('color')) {
+                chatMessageDiv.style.color = searchParams.get('color')
+            }
+
+            //
+            if (apiToken != null) {
+                setTimeout(pullData, pollingIntervalMillis)
+            } else {
+                chatMessageDiv.innerText = 'Pass apiToken using parameter key=xxx'
+            }
+        }
+    </script>
+</head>
+
+<body onload="onpageload()" style="margin: 0; padding: 0">
+    <div id="chatMessages" class="chatMessageStyle"></div>
+</body>
+
+</html>
