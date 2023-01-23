@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <style>
+        .showbook {
+            font-size: 15vh;
+        }
+    </style>
+    <script>
+        var todayString = ""
+        function pullData() {
+            var apiUrl = 'https://raw.githubusercontent.com/rajaramanmythili/books/main/srisrianna/ranga-shathakam-sanskrit.txt?token=GHSAT0AAAAAAB5GGRZOQC5VBEYIEXJXRWKMY6OT7SA'
+            fetch(apiUrl).then(response => {
+                return response.text()
+            }).then(data => {
+                console.log(data)
+                document.getElementById('showbook').innerText = data
+            }).catch(err => {
+                console.error('Failed to pull data', err);
+            });
+        }
+        function onpageload() {
+            pullData()
+        }
+    </script>
+</head>
+
+<body onload="onpageload()" style="margin: 0; padding: 0">
+    <div id="showbook" class="showbook"></div>
+</body>
+
+</html>
