@@ -17,7 +17,11 @@
             fetch(apiUrl).then(response => {
                 return response.text()
             }).then(data => {
-                document.getElementById('showbook').innerText = data
+                if ( filename.indexOf('.html') != -1 ) {
+                    document.getElementsByTagName('body')[0].innerHTML = data
+                } else {
+                    document.getElementById('showbook').innerText = data
+                }
             }).catch(err => {
                 console.error('Failed to pull data', err);
             });
