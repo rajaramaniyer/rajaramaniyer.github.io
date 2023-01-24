@@ -3,13 +3,17 @@
 <head>
     <style>
         .showbook {
-            font-size: 15vh;
+            background-color: #303030;
+            color: #EBEBEB;
+            font-size: 8vh;
+            white-space: nowrap;
+            padding-left: 1vh;
         }
     </style>
     <script>
-        var todayString = ""
+        var filename = "ranga-shathakam-sanskrit.txt"
         function pullData() {
-            var apiUrl = 'https://raw.githubusercontent.com/rajaramanmythili/books/main/srisrianna/ranga-shathakam-sanskrit.txt?token=GHSAT0AAAAAAB5GGRZOQC5VBEYIEXJXRWKMY6OT7SA'
+            var apiUrl = 'https://raw.githubusercontent.com/rajaramanmythili/books/main/srisrianna/' + filename
             fetch(apiUrl).then(response => {
                 return response.text()
             }).then(data => {
@@ -20,12 +24,16 @@
             });
         }
         function onpageload() {
+            const searchParams = new URLSearchParams(location.search);
+            if ( searchParams.has('file') ) {
+                filename=searchParams.get('file')
+            }
             pullData()
         }
     </script>
 </head>
 
-<body onload="onpageload()" style="margin: 0; padding: 0">
+<body onload="onpageload()" style="margin: 0;">
     <div id="showbook" class="showbook"></div>
 </body>
 
