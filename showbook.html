@@ -8,7 +8,6 @@
         }
         .showbook {
             font-size: 3vw;
-            white-space: nowrap;
         }
     </style>
     <script>
@@ -33,6 +32,12 @@
                 let size=searchParams.get('size')
                 var r = document.querySelector('.showbook');
                 r.style.setProperty('font-size', size);
+            }
+
+            if ( searchParams.has('wrap') ) {
+                let wrap=searchParams.get('wrap')
+                var r = document.querySelector('.showbook');
+                r.style.setProperty('white-space', wrap);
             }
 
             pullData()
