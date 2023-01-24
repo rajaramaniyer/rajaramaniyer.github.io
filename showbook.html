@@ -2,12 +2,13 @@
 
 <head>
     <style>
-        .showbook {
+        body {
             background-color: #303030;
             color: #EBEBEB;
-            font-size: 8vh;
+        }
+        .showbook {
+            font-size: 3vw;
             white-space: nowrap;
-            padding-left: 1vh;
         }
     </style>
     <script>
@@ -17,7 +18,6 @@
             fetch(apiUrl).then(response => {
                 return response.text()
             }).then(data => {
-                console.log(data)
                 document.getElementById('showbook').innerText = data
             }).catch(err => {
                 console.error('Failed to pull data', err);
@@ -28,12 +28,19 @@
             if ( searchParams.has('file') ) {
                 filename=searchParams.get('file')
             }
+
+            if ( searchParams.has('size') ) {
+                let size=searchParams.get('size')
+                var r = document.querySelector('.showbook');
+                r.style.setProperty('font-size', size);
+            }
+
             pullData()
         }
     </script>
 </head>
 
-<body onload="onpageload()" style="margin: 0;">
+<body onload="onpageload()">
     <div id="showbook" class="showbook"></div>
 </body>
 
