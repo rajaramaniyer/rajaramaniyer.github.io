@@ -64,9 +64,9 @@
         }
     </style>
     <script>
-        var filename = "ranga-shathakam-sanskrit.txt"
+        var filename = "srisrianna/ranga-shathakam-sanskrit.txt"
         function pullData() {
-            var apiUrl = 'https://raw.githubusercontent.com/rajaramanmythili/books/main/srisrianna/' + filename
+            var apiUrl = 'https://raw.githubusercontent.com/rajaramanmythili/books/main/' + filename
             fetch(apiUrl).then(response => {
                 return response.text()
             }).then(data => {
