@@ -1,0 +1,137 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            background-color: #303030;
+            color: #c0c0c0;
+        }
+
+        .showbook {
+            font-size: 8vw;
+            word-wrap: break-word;
+        }
+
+        .para {
+            margin-top: 8px;
+            margin-bottom: 0.4in;
+            page-break-inside: avoid;
+        }
+
+        .slokam {
+            text-align: center;
+            font-size: 50pt;
+        }
+
+        .pallavi {
+            color: cyan;
+        }
+
+        .title {
+            text-align: center;
+            background-color: black;
+            color: #EBEBEB;
+        }
+
+        .song {
+            border-bottom: 3px solid #EBEBEB;
+            background-color: black;
+            color: #EBEBEB;
+            margin-top: 8px;
+            page-break-before: always;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        td {
+            border-bottom: 1px solid black;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            text-align: center;
+            width: 10%;
+            font-size: 26pt;
+        }
+
+        th {
+            border-bottom: 1px solid black;
+            width: 10%;
+            font-size: 26pt;
+        }
+    </style>
+    <script>
+        var filename = "sangraha-bhajan.txt"
+        function pullData() {
+            var apiUrl = 'https://raw.githubusercontent.com/rajaramaniyer/rajaramaniyer/main/' + filename
+            fetch(apiUrl).then(response => {
+                return response.text()
+            }).then(data => {
+                if (filename.indexOf('.html') != -1) {
+                    document.getElementsByTagName('body')[0].innerHTML = data
+                } else {
+                    const re = new RegExp('\n\n')
+                    const ne = new RegExp('^[१२३४५६७८९०1234567890]')
+                    const be = new RegExp('^[*]')
+                    const blocks = data.split(re)
+                    console.log(blocks.length)
+
+                    blocks.forEach(block => {
+                        lines=block.split("\n")
+                        classname="para"
+                        if ( lines.length == 1 && ne.test(lines[0]) ) {
+                            classname='song'
+                        }
+                        if ( be.test(block) ) {
+                            classname="title"
+                        }
+                        //console.log(block, lines.length)
+                        if ( lines.length > 4 ) {
+                            document.getElementById('showbook').innerHTML += "<div class='"+classname+"'>"
+                            for ( i = 0; i+4 < lines.length; i+=4 ) {
+                                document.getElementById('showbook').innerHTML += lines[i] + "<br>" + lines[i+1] + "<br>" + lines[i+2] + "<br>" + lines[i+3] + "<br>"
+                            }
+                            for ( ; i < lines.length; i++ ) {
+                                document.getElementById('showbook').innerHTML += lines[i] + "<br>"
+                            }
+                            document.getElementById('showbook').innerHTML += "</div>"
+                        } else {
+                            document.getElementById('showbook').innerHTML += "<div class='"+classname+"'>" + block.replaceAll("\n","<br>") + "</div>"
+                        }
+                    })
+                }
+            }).catch(err => {
+                console.error('Failed to pull data', err);
+            });
+        }
+        function onpageload() {
+            const searchParams = new URLSearchParams(location.search);
+            if (searchParams.has('file')) {
+                filename = searchParams.get('file')
+            }
+
+            if (searchParams.has('size')) {
+                let size = searchParams.get('size')
+                var r = document.querySelector('.showbook');
+                r.style.setProperty('font-size', size);
+            }
+
+            if (searchParams.has('wrap')) {
+                let wrap = searchParams.get('wrap')
+                var r = document.querySelector('.showbook');
+                r.style.setProperty('white-space', wrap);
+            }
+
+            pullData()
+        }
+    </script>
+</head>
+
+<body onload="onpageload()">
+    <div id="showbook" class="showbook"></div>
+</body>
+
+</html>
