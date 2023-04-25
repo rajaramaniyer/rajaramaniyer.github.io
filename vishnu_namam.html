@@ -7,6 +7,10 @@
         td {
             border: 1px solid white
         }
+        .content {
+            background-color: #303030;
+            color: #c0c0c0;
+        }
         /* Style the navbar */
         #navbar {
             overflow: hidden;
@@ -47,6 +51,7 @@
 
         .numRange {
             background-color: burlywood;
+            color: black
         }
     </style>
     <script>
@@ -2078,11 +2083,9 @@
         var scrollSpeed = 60;
         var currentPage = 0;
         var currentLine = incrementBy;
-        var tick = new Audio('tick.wav');
         var namavali = namavaliSanskrit;
         var contentHtml = null;
         var lang = null
-        var playTick = null
         var scrollState = false
         var maxNamaLength = 0
 
@@ -2104,7 +2107,11 @@
             }
 
             let content = document.getElementById("content");
-            contentHtml = "<div class='numRange'>" + (currentPage + 1) + " to " + (currentPage + incrementBy) + "</div>";
+            var toRange = (currentPage + incrementBy)
+            if ( namavaliSanskrit.length < toRange ) {
+                toRange = namavaliSanskrit.length
+            }
+            contentHtml = "<div class='numRange'>" + (currentPage + 1) + " to " + toRange + "</div>";
             for (i = 0; i < incrementBy && currentPage + i < namavali.length; ++i) {
                 if (lang.selectedIndex == 2) {
                     contentHtml += "<div id='a" + i + "'>" + namavaliSanskrit[currentPage + i] + " - " + namavaliTamil[currentPage + i] + "</div>"
@@ -2126,12 +2133,7 @@
                 if ( currentPage+currentLine < namavaliSanskrit.length ) {
                     setTimeout(autoScroll, (60000 / ((scrollSpeed/namavaliSanskrit[currentPage+currentLine].length*maxNamaLength))));
                 }
-                content.innerHTML = contentHtml.replace("id='a" + currentLine + "'", " style='background-color: cyan' id='a" + currentLine + "'");
-                if (playTick.checked) {
-                    tick.pause();
-                    tick.currentTime = 0;
-                    tick.play();
-                }
+                content.innerHTML = contentHtml.replace("id='a" + currentLine + "'", " style='background-color: black' id='a" + currentLine + "'");
             } else if (currentPage >= 1001 && scrollState) {
                 resetScroll()
             }
@@ -2164,7 +2166,6 @@
 
         function pageOnLoad() {
             lang = document.getElementById("lang");
-            playTick = document.getElementById("playTick");
             if (typeof (Storage) !== "undefined") {
                 if (localStorage.getItem("vishnu_namam.lines") != null) {
                     incrementBy = parseInt(localStorage.getItem("vishnu_namam.lines"));
@@ -2224,20 +2225,17 @@
     <div id="navbar">
         <table cellspacing="0" width="100%">
             <tr>
-                <td width="20%">
+                <td width="25%">
                     <div>Lines</div>
                 </td>
-                <td width="20%">
+                <td width="25%">
                     <div>BPM</div>
                 </td>
-                <td width="20%">
+                <td width="25%">
                     <input type="button" value="Reset" id="resetScroll" onclick="resetScroll()" />
                 </td>
-                <td width="20%">
+                <td width="25%">
                     <div>Langauge</div>
-                </td>
-                <td width="20%">
-                    <div>Audio</div>
                 </td>
             </tr>
             <tr>
@@ -2250,9 +2248,6 @@
                         <option id="Tamil">Tamil</option>
                         <option id="Both">Both</option>
                     </select>
-                </td>
-                <td>
-                    <input type="checkbox" checked id="playTick" />
                 </td>
             </tr>
         </table>
