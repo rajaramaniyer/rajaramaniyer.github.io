@@ -94,8 +94,8 @@
                     }
 
                     if (typeof (Storage) !== "undefined") {
-                        if (localStorage.getItem("ramayanam.chapter") != null) {
-                            document.getElementById('chapters').value = localStorage.getItem("ramayanam.chapter")
+                        if (localStorage.getItem("bhagavatham.chapter") != null) {
+                            document.getElementById('chapters').value = localStorage.getItem("bhagavatham.chapter")
                         }
                     }
 
@@ -105,7 +105,7 @@
                 function onchange_chapter() {
                     const chapters = document.getElementById('chapters')
                     if (typeof (Storage) !== "undefined") {
-                        localStorage.setItem("ramayanam.chapter", chapters.value);
+                        localStorage.setItem("bhagavatham.chapter", chapters.value);
                     }
                     getData(chapters.value);
                 }
