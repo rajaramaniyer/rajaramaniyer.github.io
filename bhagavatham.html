@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <optionnk rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <optionnk rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/optionbs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <style>
+                body {
+                    background-color: #303030;
+                    color: #c0c0c0;
+                }
+
+                .chapters {
+                    font-size: 3vw;
+                    white-space: nowrap;
+                    width: 100%;
+                    background-color: #303030;
+                    color: white;
+                }
+
+                .showbook {
+                    font-size: 8vw;
+                    word-wrap: break-word;
+                    background-color: #303030;
+                    color: #c0c0c0;
+                }
+
+                .para {
+                    margin-top: 8px;
+                    margin-bottom: 0.4in;
+                    page-break-inside: avoid;
+                }
+
+                .slokam {
+                    text-aoptiongn: center;
+                    font-size: 50pt;
+                }
+
+                .pallavi {
+                    color: cyan;
+                }
+
+                .title {
+                    text-aoptiongn: center;
+                    background-color: black;
+                    color: #EBEBEB;
+                }
+
+                .song {
+                    border-bottom: 3px sooptiond #EBEBEB;
+                    background-color: black;
+                    color: #EBEBEB;
+                    margin-top: 8px;
+                    page-break-before: always;
+                }
+
+                a {
+                    text-decoration: none;
+                }
+
+                td {
+                    border-bottom: 1px sooptiond black;
+                    border-left: 1px sooptiond black;
+                    border-right: 1px sooptiond black;
+                    text-aoptiongn: center;
+                    width: 10%;
+                    font-size: 26pt;
+                }
+
+                th {
+                    border-bottom: 1px sooptiond black;
+                    width: 10%;
+                    font-size: 26pt;
+                }
+            </style>
+            <script>
+                function onpageload() {
+                    const searchParams = new URLSearchParams(location.search);
+                    const showbook = document.getElementById('showbook')
+                    if (searchParams.has('size')) {
+                        showbook.style.setProperty('font-size', searchParams.get('size'));
+                    }
+
+                    if (searchParams.has('bold')) {
+                        showbook.style.setProperty('font-weight', searchParams.get('bold'));
+                    }
+
+                    if (searchParams.has('wrap')) {
+                        showbook.style.setProperty('white-space', searchParams.get('wrap'));
+                    }
+
+                    if (typeof (Storage) !== "undefined") {
+                        if (localStorage.getItem("ramayanam.chapter") != null) {
+                            document.getElementById('chapters').value = localStorage.getItem("ramayanam.chapter")
+                        }
+                    }
+
+                    getData(document.getElementById('chapters').value)
+                }
+
+                function onchange_chapter() {
+                    const chapters = document.getElementById('chapters')
+                    if (typeof (Storage) !== "undefined") {
+                        localStorage.setItem("ramayanam.chapter", chapters.value);
+                    }
+                    getData(chapters.value);
+                }
+
+                function getData(pageId) {
+                    console.log(pageId);
+                    const apiUrl = 'https://raw.githubusercontent.com/rajaramaniyer/srimad_bhaghavatham/master/sanskrit/'
+
+                    document.getElementById("showbook").innerText = "Loading..."
+                    fetch(apiUrl + pageId)
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error, status = ${response.status}`);
+                            }
+                            return response.text();
+                        })
+                        .then((text) => {
+                            document.getElementById("showbook").innerText = text;
+                        })
+                        .catch((error) => {
+                            document.getElementById("showbook").innerText = `Error: ${error.message}`;
+                        });
+                }
+
+                function moveChapter(direction) {
+                    const chapters = document.getElementById('chapters')
+                    const newIndex = chapters.options.selectedIndex + direction
+                    if ( newIndex >= 0 && newIndex < chapters.options.length ) {
+                        chapters.options.selectedIndex += direction
+                        onchange_chapter()
+                    }
+                }
+            </script>
+</head>
+
+<body width="100%" onload="onpageload()">
+    <h1>श्रीमद्भागवतं | Srimad Bhagavatham</h1>
+    <select name="chapters" id="chapters" class="chapters" onchange="onchange_chapter()">
+        <optgroup label="canto01">
+            <option value="canto01/chapter00.txt">00 canto01</option>
+            <option value="canto01/chapter01.txt">01 canto01</option>
+            <option value="canto01/chapter02.txt">02 canto01</option>
+            <option value="canto01/chapter03.txt">03 canto01</option>
+            <option value="canto01/chapter04.txt">04 canto01</option>
+            <option value="canto01/chapter05.txt">05 canto01</option>
+            <option value="canto01/chapter06.txt">06 canto01</option>
+            <option value="canto01/chapter07.txt">07 canto01</option>
+            <option value="canto01/chapter08.txt">08 canto01</option>
+            <option value="canto01/chapter09.txt">09 canto01</option>
+            <option value="canto01/chapter10.txt">10 canto01</option>
+            <option value="canto01/chapter11.txt">11 canto01</option>
+            <option value="canto01/chapter12.txt">12 canto01</option>
+            <option value="canto01/chapter13.txt">13 canto01</option>
+            <option value="canto01/chapter14.txt">14 canto01</option>
+            <option value="canto01/chapter15.txt">15 canto01</option>
+            <option value="canto01/chapter16.txt">16 canto01</option>
+            <option value="canto01/chapter17.txt">17 canto01</option>
+            <option value="canto01/chapter18.txt">18 canto01</option>
+            <option value="canto01/chapter19.txt">19 canto01</option>
+        </optgroup>
+        <optgroup label="canto02">
+            <option value="canto02/chapter01.txt">01 canto02</option>
+            <option value="canto02/chapter02.txt">02 canto02</option>
+            <option value="canto02/chapter03.txt">03 canto02</option>
+            <option value="canto02/chapter04.txt">04 canto02</option>
+            <option value="canto02/chapter05.txt">05 canto02</option>
+            <option value="canto02/chapter06.txt">06 canto02</option>
+            <option value="canto02/chapter07.txt">07 canto02</option>
+            <option value="canto02/chapter08.txt">08 canto02</option>
+            <option value="canto02/chapter09.txt">09 canto02</option>
+            <option value="canto02/chapter10.txt">10 canto02</option>
+        </optgroup>
+        <optgroup label="canto03">
+            <option value="canto03/chapter01.txt">01 canto03</option>
+            <option value="canto03/chapter02.txt">02 canto03</option>
+            <option value="canto03/chapter03.txt">03 canto03</option>
+            <option value="canto03/chapter04.txt">04 canto03</option>
+            <option value="canto03/chapter05.txt">05 canto03</option>
+            <option value="canto03/chapter06.txt">06 canto03</option>
+            <option value="canto03/chapter07.txt">07 canto03</option>
+            <option value="canto03/chapter08.txt">08 canto03</option>
+            <option value="canto03/chapter09.txt">09 canto03</option>
+            <option value="canto03/chapter10.txt">10 canto03</option>
+            <option value="canto03/chapter11.txt">11 canto03</option>
+            <option value="canto03/chapter12.txt">12 canto03</option>
+            <option value="canto03/chapter13.txt">13 canto03</option>
+            <option value="canto03/chapter14.txt">14 canto03</option>
+            <option value="canto03/chapter15.txt">15 canto03</option>
+            <option value="canto03/chapter16.txt">16 canto03</option>
+            <option value="canto03/chapter17.txt">17 canto03</option>
+            <option value="canto03/chapter18.txt">18 canto03</option>
+            <option value="canto03/chapter19.txt">19 canto03</option>
+            <option value="canto03/chapter20.txt">20 canto03</option>
+            <option value="canto03/chapter21.txt">21 canto03</option>
+            <option value="canto03/chapter22.txt">22 canto03</option>
+            <option value="canto03/chapter23.txt">23 canto03</option>
+            <option value="canto03/chapter24.txt">24 canto03</option>
+            <option value="canto03/chapter25.txt">25 canto03</option>
+            <option value="canto03/chapter26.txt">26 canto03</option>
+            <option value="canto03/chapter27.txt">27 canto03</option>
+            <option value="canto03/chapter28.txt">28 canto03</option>
+            <option value="canto03/chapter29.txt">29 canto03</option>
+            <option value="canto03/chapter30.txt">30 canto03</option>
+            <option value="canto03/chapter31.txt">31 canto03</option>
+            <option value="canto03/chapter32.txt">32 canto03</option>
+            <option value="canto03/chapter33.txt">33 canto03</option>
+        </optgroup>
+        <optgroup label="canto04">
+            <option value="canto04/chapter01.txt">01 canto04</option>
+            <option value="canto04/chapter02.txt">02 canto04</option>
+            <option value="canto04/chapter03.txt">03 canto04</option>
+            <option value="canto04/chapter04.txt">04 canto04</option>
+            <option value="canto04/chapter05.txt">05 canto04</option>
+            <option value="canto04/chapter06.txt">06 canto04</option>
+            <option value="canto04/chapter07.txt">07 canto04</option>
+            <option value="canto04/chapter08.txt">08 canto04</option>
+            <option value="canto04/chapter09.txt">09 canto04</option>
+            <option value="canto04/chapter10.txt">10 canto04</option>
+            <option value="canto04/chapter11.txt">11 canto04</option>
+            <option value="canto04/chapter12.txt">12 canto04</option>
+            <option value="canto04/chapter13.txt">13 canto04</option>
+            <option value="canto04/chapter14.txt">14 canto04</option>
+            <option value="canto04/chapter15.txt">15 canto04</option>
+            <option value="canto04/chapter16.txt">16 canto04</option>
+            <option value="canto04/chapter17.txt">17 canto04</option>
+            <option value="canto04/chapter18.txt">18 canto04</option>
+            <option value="canto04/chapter19.txt">19 canto04</option>
+            <option value="canto04/chapter20.txt">20 canto04</option>
+            <option value="canto04/chapter21.txt">21 canto04</option>
+            <option value="canto04/chapter22.txt">22 canto04</option>
+            <option value="canto04/chapter23.txt">23 canto04</option>
+            <option value="canto04/chapter24.txt">24 canto04</option>
+            <option value="canto04/chapter25.txt">25 canto04</option>
+            <option value="canto04/chapter26.txt">26 canto04</option>
+            <option value="canto04/chapter27.txt">27 canto04</option>
+            <option value="canto04/chapter28.txt">28 canto04</option>
+            <option value="canto04/chapter29.txt">29 canto04</option>
+            <option value="canto04/chapter30.txt">30 canto04</option>
+            <option value="canto04/chapter31.txt">31 canto04</option>
+        </optgroup>
+        <optgroup label="canto05">
+            <option value="canto05/chapter01.txt">01 canto05</option>
+            <option value="canto05/chapter02.txt">02 canto05</option>
+            <option value="canto05/chapter03.txt">03 canto05</option>
+            <option value="canto05/chapter04.txt">04 canto05</option>
+            <option value="canto05/chapter05.txt">05 canto05</option>
+            <option value="canto05/chapter06.txt">06 canto05</option>
+            <option value="canto05/chapter07.txt">07 canto05</option>
+            <option value="canto05/chapter08.txt">08 canto05</option>
+            <option value="canto05/chapter09.txt">09 canto05</option>
+            <option value="canto05/chapter10.txt">10 canto05</option>
+            <option value="canto05/chapter11.txt">11 canto05</option>
+            <option value="canto05/chapter12.txt">12 canto05</option>
+            <option value="canto05/chapter13.txt">13 canto05</option>
+            <option value="canto05/chapter14.txt">14 canto05</option>
+            <option value="canto05/chapter15.txt">15 canto05</option>
+            <option value="canto05/chapter16.txt">16 canto05</option>
+            <option value="canto05/chapter17.txt">17 canto05</option>
+            <option value="canto05/chapter18.txt">18 canto05</option>
+            <option value="canto05/chapter19.txt">19 canto05</option>
+            <option value="canto05/chapter20.txt">20 canto05</option>
+            <option value="canto05/chapter21.txt">21 canto05</option>
+            <option value="canto05/chapter22.txt">22 canto05</option>
+            <option value="canto05/chapter23.txt">23 canto05</option>
+            <option value="canto05/chapter24.txt">24 canto05</option>
+            <option value="canto05/chapter25.txt">25 canto05</option>
+            <option value="canto05/chapter26.txt">26 canto05</option>
+        </optgroup>
+        <optgroup label="canto06">
+            <option value="canto06/chapter01.txt">01 canto06</option>
+            <option value="canto06/chapter02.txt">02 canto06</option>
+            <option value="canto06/chapter03.txt">03 canto06</option>
+            <option value="canto06/chapter04.txt">04 canto06</option>
+            <option value="canto06/chapter05.txt">05 canto06</option>
+            <option value="canto06/chapter06.txt">06 canto06</option>
+            <option value="canto06/chapter07.txt">07 canto06</option>
+            <option value="canto06/chapter08.txt">08 canto06</option>
+            <option value="canto06/chapter09.txt">09 canto06</option>
+            <option value="canto06/chapter10.txt">10 canto06</option>
+            <option value="canto06/chapter11.txt">11 canto06</option>
+            <option value="canto06/chapter12.txt">12 canto06</option>
+            <option value="canto06/chapter13.txt">13 canto06</option>
+            <option value="canto06/chapter14.txt">14 canto06</option>
+            <option value="canto06/chapter15.txt">15 canto06</option>
+            <option value="canto06/chapter16.txt">16 canto06</option>
+            <option value="canto06/chapter17.txt">17 canto06</option>
+            <option value="canto06/chapter18.txt">18 canto06</option>
+            <option value="canto06/chapter19.txt">19 canto06</option>
+        </optgroup>
+        <optgroup label="canto07">
+            <option value="canto07/chapter01.txt">01 canto07</option>
+            <option value="canto07/chapter02.txt">02 canto07</option>
+            <option value="canto07/chapter03.txt">03 canto07</option>
+            <option value="canto07/chapter04.txt">04 canto07</option>
+            <option value="canto07/chapter05.txt">05 canto07</option>
+            <option value="canto07/chapter06.txt">06 canto07</option>
+            <option value="canto07/chapter07.txt">07 canto07</option>
+            <option value="canto07/chapter08.txt">08 canto07</option>
+            <option value="canto07/chapter09.txt">09 canto07</option>
+            <option value="canto07/chapter10.txt">10 canto07</option>
+            <option value="canto07/chapter11.txt">11 canto07</option>
+            <option value="canto07/chapter12.txt">12 canto07</option>
+            <option value="canto07/chapter13.txt">13 canto07</option>
+            <option value="canto07/chapter14.txt">14 canto07</option>
+            <option value="canto07/chapter15.txt">15 canto07</option>
+        </optgroup>
+        <optgroup label="canto08">
+            <option value="canto08/chapter01.txt">01 canto08</option>
+            <option value="canto08/chapter02.txt">02 canto08</option>
+            <option value="canto08/chapter03.txt">03 canto08</option>
+            <option value="canto08/chapter04.txt">04 canto08</option>
+            <option value="canto08/chapter05.txt">05 canto08</option>
+            <option value="canto08/chapter06.txt">06 canto08</option>
+            <option value="canto08/chapter07.txt">07 canto08</option>
+            <option value="canto08/chapter08.txt">08 canto08</option>
+            <option value="canto08/chapter09.txt">09 canto08</option>
+            <option value="canto08/chapter10.txt">10 canto08</option>
+            <option value="canto08/chapter11.txt">11 canto08</option>
+            <option value="canto08/chapter12.txt">12 canto08</option>
+            <option value="canto08/chapter13.txt">13 canto08</option>
+            <option value="canto08/chapter14.txt">14 canto08</option>
+            <option value="canto08/chapter15.txt">15 canto08</option>
+            <option value="canto08/chapter16.txt">16 canto08</option>
+            <option value="canto08/chapter17.txt">17 canto08</option>
+            <option value="canto08/chapter18.txt">18 canto08</option>
+            <option value="canto08/chapter19.txt">19 canto08</option>
+            <option value="canto08/chapter20.txt">20 canto08</option>
+            <option value="canto08/chapter21.txt">21 canto08</option>
+            <option value="canto08/chapter22.txt">22 canto08</option>
+            <option value="canto08/chapter23.txt">23 canto08</option>
+            <option value="canto08/chapter24.txt">24 canto08</option>
+        </optgroup>
+        <optgroup label="canto09">
+            <option value="canto09/chapter01.txt">01 canto09</option>
+            <option value="canto09/chapter02.txt">02 canto09</option>
+            <option value="canto09/chapter03.txt">03 canto09</option>
+            <option value="canto09/chapter04.txt">04 canto09</option>
+            <option value="canto09/chapter05.txt">05 canto09</option>
+            <option value="canto09/chapter06.txt">06 canto09</option>
+            <option value="canto09/chapter07.txt">07 canto09</option>
+            <option value="canto09/chapter08.txt">08 canto09</option>
+            <option value="canto09/chapter09.txt">09 canto09</option>
+            <option value="canto09/chapter10.txt">10 canto09</option>
+            <option value="canto09/chapter11.txt">11 canto09</option>
+            <option value="canto09/chapter12.txt">12 canto09</option>
+            <option value="canto09/chapter13.txt">13 canto09</option>
+            <option value="canto09/chapter14.txt">14 canto09</option>
+            <option value="canto09/chapter15.txt">15 canto09</option>
+            <option value="canto09/chapter16.txt">16 canto09</option>
+            <option value="canto09/chapter17.txt">17 canto09</option>
+            <option value="canto09/chapter18.txt">18 canto09</option>
+            <option value="canto09/chapter19.txt">19 canto09</option>
+            <option value="canto09/chapter20.txt">20 canto09</option>
+            <option value="canto09/chapter21.txt">21 canto09</option>
+            <option value="canto09/chapter22.txt">22 canto09</option>
+            <option value="canto09/chapter23.txt">23 canto09</option>
+            <option value="canto09/chapter24.txt">24 canto09</option>
+        </optgroup>
+        <optgroup label="canto10">
+            <option value="canto10/chapter01.txt">01 canto10</option>
+            <option value="canto10/chapter02.txt">02 canto10</option>
+            <option value="canto10/chapter03.txt">03 canto10</option>
+            <option value="canto10/chapter04.txt">04 canto10</option>
+            <option value="canto10/chapter05.txt">05 canto10</option>
+            <option value="canto10/chapter06.txt">06 canto10</option>
+            <option value="canto10/chapter07.txt">07 canto10</option>
+            <option value="canto10/chapter08.txt">08 canto10</option>
+            <option value="canto10/chapter09.txt">09 canto10</option>
+            <option value="canto10/chapter10.txt">10 canto10</option>
+            <option value="canto10/chapter11.txt">11 canto10</option>
+            <option value="canto10/chapter12.txt">12 canto10</option>
+            <option value="canto10/chapter13.txt">13 canto10</option>
+            <option value="canto10/chapter14.txt">14 canto10</option>
+            <option value="canto10/chapter15.txt">15 canto10</option>
+            <option value="canto10/chapter16.txt">16 canto10</option>
+            <option value="canto10/chapter17.txt">17 canto10</option>
+            <option value="canto10/chapter18.txt">18 canto10</option>
+            <option value="canto10/chapter19.txt">19 canto10</option>
+            <option value="canto10/chapter20.txt">20 canto10</option>
+            <option value="canto10/chapter21.txt">21 canto10</option>
+            <option value="canto10/chapter22.txt">22 canto10</option>
+            <option value="canto10/chapter23.txt">23 canto10</option>
+            <option value="canto10/chapter24.txt">24 canto10</option>
+            <option value="canto10/chapter25.txt">25 canto10</option>
+            <option value="canto10/chapter26.txt">26 canto10</option>
+            <option value="canto10/chapter27.txt">27 canto10</option>
+            <option value="canto10/chapter28.txt">28 canto10</option>
+            <option value="canto10/chapter29.txt">29 canto10</option>
+            <option value="canto10/chapter30.txt">30 canto10</option>
+            <option value="canto10/chapter31.txt">31 canto10</option>
+            <option value="canto10/chapter32.txt">32 canto10</option>
+            <option value="canto10/chapter33.txt">33 canto10</option>
+            <option value="canto10/chapter34.txt">34 canto10</option>
+            <option value="canto10/chapter35.txt">35 canto10</option>
+            <option value="canto10/chapter36.txt">36 canto10</option>
+            <option value="canto10/chapter37.txt">37 canto10</option>
+            <option value="canto10/chapter38.txt">38 canto10</option>
+            <option value="canto10/chapter39.txt">39 canto10</option>
+            <option value="canto10/chapter40.txt">40 canto10</option>
+            <option value="canto10/chapter41.txt">41 canto10</option>
+            <option value="canto10/chapter42.txt">42 canto10</option>
+            <option value="canto10/chapter43.txt">43 canto10</option>
+            <option value="canto10/chapter44.txt">44 canto10</option>
+            <option value="canto10/chapter45.txt">45 canto10</option>
+            <option value="canto10/chapter46.txt">46 canto10</option>
+            <option value="canto10/chapter47.txt">47 canto10</option>
+            <option value="canto10/chapter48.txt">48 canto10</option>
+            <option value="canto10/chapter49.txt">49 canto10</option>
+            <option value="canto10/chapter50.txt">50 canto10</option>
+            <option value="canto10/chapter51.txt">51 canto10</option>
+            <option value="canto10/chapter52.txt">52 canto10</option>
+            <option value="canto10/chapter53.txt">53 canto10</option>
+            <option value="canto10/chapter54.txt">54 canto10</option>
+            <option value="canto10/chapter55.txt">55 canto10</option>
+            <option value="canto10/chapter56.txt">56 canto10</option>
+            <option value="canto10/chapter57.txt">57 canto10</option>
+            <option value="canto10/chapter58.txt">58 canto10</option>
+            <option value="canto10/chapter59.txt">59 canto10</option>
+            <option value="canto10/chapter60.txt">60 canto10</option>
+            <option value="canto10/chapter61.txt">61 canto10</option>
+            <option value="canto10/chapter62.txt">62 canto10</option>
+            <option value="canto10/chapter63.txt">63 canto10</option>
+            <option value="canto10/chapter64.txt">64 canto10</option>
+            <option value="canto10/chapter65.txt">65 canto10</option>
+            <option value="canto10/chapter66.txt">66 canto10</option>
+            <option value="canto10/chapter67.txt">67 canto10</option>
+            <option value="canto10/chapter68.txt">68 canto10</option>
+            <option value="canto10/chapter69.txt">69 canto10</option>
+            <option value="canto10/chapter70.txt">70 canto10</option>
+            <option value="canto10/chapter71.txt">71 canto10</option>
+            <option value="canto10/chapter72.txt">72 canto10</option>
+            <option value="canto10/chapter73.txt">73 canto10</option>
+            <option value="canto10/chapter74.txt">74 canto10</option>
+            <option value="canto10/chapter75.txt">75 canto10</option>
+            <option value="canto10/chapter76.txt">76 canto10</option>
+            <option value="canto10/chapter77.txt">77 canto10</option>
+            <option value="canto10/chapter78.txt">78 canto10</option>
+            <option value="canto10/chapter79.txt">79 canto10</option>
+            <option value="canto10/chapter80.txt">80 canto10</option>
+            <option value="canto10/chapter81.txt">81 canto10</option>
+            <option value="canto10/chapter82.txt">82 canto10</option>
+            <option value="canto10/chapter83.txt">83 canto10</option>
+            <option value="canto10/chapter84.txt">84 canto10</option>
+            <option value="canto10/chapter85.txt">85 canto10</option>
+            <option value="canto10/chapter86.txt">86 canto10</option>
+            <option value="canto10/chapter87.txt">87 canto10</option>
+            <option value="canto10/chapter88.txt">88 canto10</option>
+            <option value="canto10/chapter89.txt">89 canto10</option>
+            <option value="canto10/chapter90.txt">90 canto10</option>
+        </optgroup>
+        <optgroup label="canto11">
+            <option value="canto11/chapter01.txt">01 canto11</option>
+            <option value="canto11/chapter02.txt">02 canto11</option>
+            <option value="canto11/chapter03.txt">03 canto11</option>
+            <option value="canto11/chapter04.txt">04 canto11</option>
+            <option value="canto11/chapter05.txt">05 canto11</option>
+            <option value="canto11/chapter06.txt">06 canto11</option>
+            <option value="canto11/chapter07.txt">07 canto11</option>
+            <option value="canto11/chapter08.txt">08 canto11</option>
+            <option value="canto11/chapter09.txt">09 canto11</option>
+            <option value="canto11/chapter10.txt">10 canto11</option>
+            <option value="canto11/chapter11.txt">11 canto11</option>
+            <option value="canto11/chapter12.txt">12 canto11</option>
+            <option value="canto11/chapter13.txt">13 canto11</option>
+            <option value="canto11/chapter14.txt">14 canto11</option>
+            <option value="canto11/chapter15.txt">15 canto11</option>
+            <option value="canto11/chapter16.txt">16 canto11</option>
+            <option value="canto11/chapter17.txt">17 canto11</option>
+            <option value="canto11/chapter18.txt">18 canto11</option>
+            <option value="canto11/chapter19.txt">19 canto11</option>
+            <option value="canto11/chapter20.txt">20 canto11</option>
+            <option value="canto11/chapter21.txt">21 canto11</option>
+            <option value="canto11/chapter22.txt">22 canto11</option>
+            <option value="canto11/chapter23.txt">23 canto11</option>
+            <option value="canto11/chapter24.txt">24 canto11</option>
+            <option value="canto11/chapter25.txt">25 canto11</option>
+            <option value="canto11/chapter26.txt">26 canto11</option>
+            <option value="canto11/chapter27.txt">27 canto11</option>
+            <option value="canto11/chapter28.txt">28 canto11</option>
+            <option value="canto11/chapter29.txt">29 canto11</option>
+            <option value="canto11/chapter30.txt">30 canto11</option>
+            <option value="canto11/chapter31.txt">31 canto11</option>
+        </optgroup>
+        <optgroup label="canto12">
+            <option value="canto12/chapter01.txt">01 canto12</option>
+            <option value="canto12/chapter02.txt">02 canto12</option>
+            <option value="canto12/chapter03.txt">03 canto12</option>
+            <option value="canto12/chapter04.txt">04 canto12</option>
+            <option value="canto12/chapter05.txt">05 canto12</option>
+            <option value="canto12/chapter06.txt">06 canto12</option>
+            <option value="canto12/chapter07.txt">07 canto12</option>
+            <option value="canto12/chapter08.txt">08 canto12</option>
+            <option value="canto12/chapter09.txt">09 canto12</option>
+            <option value="canto12/chapter10.txt">10 canto12</option>
+            <option value="canto12/chapter11.txt">11 canto12</option>
+            <option value="canto12/chapter12.txt">12 canto12</option>
+            <option value="canto12/chapter13.txt">13 canto12</option>
+        </optgroup>
+    </select>
+
+    <div id="showbook" class="showbook"></div>
+
+    <div>
+        <table width="100%">
+            <tr>
+                <td width="50%"><button onclick="moveChapter(-1)" class="chapters">&lt;&lt;</button></td>
+                <td width="50%" style="text-align: right;"><button onclick="moveChapter(1)" class="chapters">&gt;&gt;</button></td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+
+</html>
