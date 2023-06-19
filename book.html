@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 3vw;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .closebtn {
+            font-size: 3vw;
+            float: right;
+            width: 10%;
+            text-align: center;
+        }
+
+        .booklist {
+            padding: 10px;
+            font-size: 3vw;
+            float: left;
+            width: 90%
+        }
+
+        .left,
+        .right {
+            float: left;
+            width: 50%;
+            font-size: 3vw;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        #myInput {
+            width: 100%;
+            font-size: 3vw;
+            padding: 12px 20px 12px 40px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+
+        #myUL {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #myUL li a {
+            border: 1px solid #ddd;
+            margin-top: -1px;
+            /* Prevent double borders */
+            background-color: #f6f6f6;
+            padding: 12px;
+            text-decoration: none;
+            font-size: 3vw;
+            color: black;
+            display: block
+        }
+
+        #myUL li a:hover:not(.header) {
+            background-color: #eee;
+        }
+
+        .header {
+            padding: 10px 16px;
+            background: #555;
+            color: #f1f1f1;
+            font-size: 2vw
+        }
+
+        .content {
+            padding: 16px;
+        }
+
+        .sticky {
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        .sticky+.content {
+            padding-top: 102px;
+        }
+
+        body {
+            background-color: #303030;
+            color: #c0c0c0;
+        }
+
+        .showbook {
+            font-size: 3vw;
+            word-wrap: break-word;
+        }
+    </style>
+
+    <script>
+        window.onscroll = function () { stickHeader() };
+        var chapter = 0
+
+        var header = null
+        var sticky = null
+        var booklist = null
+
+        var ramayanamIndex = [
+            { "key": "02-bala-001.txt", "value": "1 बालकाण्डः - नारदवाक्यम् | bala kandam" },
+            { "key": "02-bala-002.txt", "value": "2 बालकाण्डः - ब्रह्मागमनम् | bala kandam" },
+            { "key": "02-bala-003.txt", "value": "3 बालकाण्डः - काव्यसङ्क्षेपः | bala kandam" },
+            { "key": "02-bala-004.txt", "value": "4 बालकाण्डः - अनुक्रमणिका | bala kandam" },
+            { "key": "02-bala-005.txt", "value": "5 बालकाण्डः - अयोध्यावर्णना | bala kandam" },
+            { "key": "02-bala-006.txt", "value": "6 बालकाण्डः - राजवर्णना | bala kandam" },
+            { "key": "02-bala-007.txt", "value": "7 बालकाण्डः - अमात्यवर्णना | bala kandam" },
+            { "key": "02-bala-008.txt", "value": "8 बालकाण्डः - सुमन्त्रवाक्यम् | bala kandam" },
+            { "key": "02-bala-009.txt", "value": "9 बालकाण्डः - ऋश्यशृङ्गोपाख्यानम् | bala kandam" },
+            { "key": "02-bala-010.txt", "value": "10 बालकाण्डः - ऋश्यशृङ्गस्याङ्गदेशानयनम् | bala kandam" },
+            { "key": "02-bala-011.txt", "value": "11 बालकाण्डः - ऋश्यशृङ्गस्यायोध्याप्रवेशः | bala kandam" },
+            { "key": "02-bala-012.txt", "value": "12 बालकाण्डः - अश्वमेधसंभारः | bala kandam" },
+            { "key": "02-bala-013.txt", "value": "13 बालकाण्डः - यज्ञशालाप्रवेशः | bala kandam" },
+            { "key": "02-bala-014.txt", "value": "14 बालकाण्डः - अश्वमेधः | bala kandam" },
+            { "key": "02-bala-015.txt", "value": "15 बालकाण्डः - रावणवधोपायः | bala kandam" },
+            { "key": "02-bala-016.txt", "value": "16 बालकाण्डः - पायसोत्पत्तिः | bala kandam" },
+            { "key": "02-bala-017.txt", "value": "17 बालकाण्डः - ऋक्षवानरोत्पत्तिः | bala kandam" },
+            { "key": "02-bala-018.txt", "value": "18 बालकाण्डः - श्रीरामाद्यवतारः | bala kandam" },
+            { "key": "02-bala-019.txt", "value": "19 बालकाण्डः - विश्वामित्रवाक्यम् | bala kandam" },
+            { "key": "02-bala-020.txt", "value": "20 बालकाण्डः - दशरथवाक्यम् | bala kandam" },
+            { "key": "02-bala-021.txt", "value": "21 बालकाण्डः - वसिष्ठवाक्यम् | bala kandam" },
+            { "key": "02-bala-022.txt", "value": "22 बालकाण्डः - विद्याप्रदानम् | bala kandam" },
+            { "key": "02-bala-023.txt", "value": "23 बालकाण्डः - कामाश्रमवासः | bala kandam" },
+            { "key": "02-bala-024.txt", "value": "24 बालकाण्डः - ताटकावनप्रवेशः | bala kandam" },
+            { "key": "02-bala-025.txt", "value": "25 बालकाण्डः - ताटकावृत्तान्तः | bala kandam" },
+            { "key": "02-bala-026.txt", "value": "26 बालकाण्डः - ताटकावधः | bala kandam" },
+            { "key": "02-bala-027.txt", "value": "27 बालकाण्डः - अस्त्रग्रामप्रदानम् | bala kandam" },
+            { "key": "02-bala-028.txt", "value": "28 बालकाण्डः - सिद्धाश्रम प्रवेशः | bala kandam" },
+            { "key": "02-bala-029.txt", "value": "29 बालकाण्डः - यज्ञरक्षणम् | bala kandam" },
+            { "key": "02-bala-030.txt", "value": "30 बालकाण्डः - मिथिलाप्रस्थानम् | bala kandam" },
+            { "key": "02-bala-031.txt", "value": "31 बालकाण्डः - कुशनाभकन्योपाख्यानम् | bala kandam" },
+            { "key": "02-bala-032.txt", "value": "32 बालकाण्डः - ब्रह्मदत्तविवाहः | bala kandam" },
+            { "key": "02-bala-033.txt", "value": "33 बालकाण्डः - विश्वामित्रवंशवर्णनम् | bala kandam" },
+            { "key": "02-bala-034.txt", "value": "34 बालकाण्डः - उमागङ्गावृत्तान्तसङ्क्षेपः | bala kandam" },
+            { "key": "02-bala-035.txt", "value": "35 बालकाण्डः - उमामाहात्म्यम् | bala kandam" },
+            { "key": "02-bala-036.txt", "value": "36 बालकाण्डः - कुमारोत्पत्तिः | bala kandam" },
+            { "key": "02-bala-037.txt", "value": "37 बालकाण्डः - सगरपुत्रजन्म | bala kandam" },
+            { "key": "02-bala-038.txt", "value": "38 बालकाण्डः - पृथिवीविदारणम् | bala kandam" },
+            { "key": "02-bala-039.txt", "value": "39 बालकाण्डः - कपिलदर्शनम् | bala kandam" },
+            { "key": "02-bala-040.txt", "value": "40 बालकाण्डः - सगरयज्ञसमाप्तिः | bala kandam" },
+            { "key": "02-bala-041.txt", "value": "41 बालकाण्डः - भगीरथवरप्रदानम् | bala kandam" },
+            { "key": "02-bala-042.txt", "value": "42 बालकाण्डः - गङ्गावतरणम् | bala kandam" },
+            { "key": "02-bala-043.txt", "value": "43 बालकाण्डः - सागरोद्धारः | bala kandam" },
+            { "key": "02-bala-044.txt", "value": "44 बालकाण्डः - अमृतोत्पत्तिः | bala kandam" },
+            { "key": "02-bala-045.txt", "value": "45 बालकाण्डः - दितिगर्भभेदः | bala kandam" },
+            { "key": "02-bala-046.txt", "value": "46 बालकाण्डः - विशालागमनम् | bala kandam" },
+            { "key": "02-bala-047.txt", "value": "47 बालकाण्डः - शक्राहल्याशापः | bala kandam" },
+            { "key": "02-bala-048.txt", "value": "48 बालकाण्डः - अहल्याशापमोक्षः | bala kandam" },
+            { "key": "02-bala-049.txt", "value": "49 बालकाण्डः - जनकसमागमः | bala kandam" },
+            { "key": "02-bala-050.txt", "value": "50 बालकाण्डः - विश्वामित्रवृत्तम् | bala kandam" },
+            { "key": "02-bala-051.txt", "value": "51 बालकाण्डः - वसिष्ठातिथ्यम् | bala kandam" },
+            { "key": "02-bala-052.txt", "value": "52 बालकाण्डः - शबलानिष्क्रयः | bala kandam" },
+            { "key": "02-bala-053.txt", "value": "53 बालकाण्डः - पप्लवादिसृष्टिः | bala kandam" },
+            { "key": "02-bala-054.txt", "value": "54 बालकाण्डः - विश्वामित्रधनुर्वेदाधिगमः | bala kandam" },
+            { "key": "02-bala-055.txt", "value": "55 बालकाण्डः - ब्रह्मतेजोबलम् | bala kandam" },
+            { "key": "02-bala-056.txt", "value": "56 बालकाण्डः - त्रिशङ्कयाजनप्रार्थना | bala kandam" },
+            { "key": "02-bala-057.txt", "value": "57 बालकाण्डः - त्रिशङ्कुशापः | bala kandam" },
+            { "key": "02-bala-058.txt", "value": "58 बालकाण्डः - वासिष्ठशापः | bala kandam" },
+            { "key": "02-bala-059.txt", "value": "59 बालकाण्डः - त्रिशङ्कुस्वर्गः | bala kandam" },
+            { "key": "02-bala-060.txt", "value": "60 बालकाण्डः - शुनःशेपविक्रयः | bala kandam" },
+            { "key": "02-bala-061.txt", "value": "61 बालकाण्डः - अम्बरीषयज्ञः | bala kandam" },
+            { "key": "02-bala-062.txt", "value": "62 बालकाण्डः - मेनकानिर्वासः | bala kandam" },
+            { "key": "02-bala-063.txt", "value": "63 बालकाण्डः - रम्भाशापः | bala kandam" },
+            { "key": "02-bala-064.txt", "value": "64 बालकाण्डः - ब्रह्मर्षित्वप्राप्तिः | bala kandam" },
+            { "key": "02-bala-065.txt", "value": "65 बालकाण्डः - धनुः प्रसंगः | bala kandam" },
+            { "key": "02-bala-066.txt", "value": "66 बालकाण्डः - धनुर्भङ्गः | bala kandam" },
+            { "key": "02-bala-067.txt", "value": "67 बालकाण्डः - दशरथाह्वानम् | bala kandam" },
+            { "key": "02-bala-068.txt", "value": "68 बालकाण्डः - दशरथजनकसमागमः | bala kandam" },
+            { "key": "02-bala-069.txt", "value": "69 बालकाण्डः - कन्यावरणम् | bala kandam" },
+            { "key": "02-bala-070.txt", "value": "70 बालकाण्डः - कन्यादानप्रतिश्रवः | bala kandam" },
+            { "key": "02-bala-071.txt", "value": "71 बालकाण्डः - गोदानमङ्गलम् | bala kandam" },
+            { "key": "02-bala-072.txt", "value": "72 बालकाण्डः - दशरथपुत्रोद्वाहः | bala kandam" },
+            { "key": "02-bala-073.txt", "value": "73 बालकाण्डः - जामदग्न्याभियोगः | bala kandam" },
+            { "key": "02-bala-074.txt", "value": "74 बालकाण्डः - वैष्णवधनुःप्रशंसा | bala kandam" },
+            { "key": "02-bala-075.txt", "value": "75 बालकाण्डः - जामदग्न्यप्रतिष्टम्भः | bala kandam" },
+            { "key": "02-bala-076.txt", "value": "76 बालकाण्डः - अयोध्याप्रवेशः | bala kandam" },
+            { "key": "03-ayodya-001.txt", "value": "1 अयोध्याकाण्डः - रामाभिषेकव्यवसायः | ayodya kandam" },
+            { "key": "03-ayodya-002.txt", "value": "2 अयोध्याकाण्डः - परिषदनुमोदनम् | ayodya kandam" },
+            { "key": "03-ayodya-003.txt", "value": "3 अयोध्याकाण्डः - पुत्रानुशासनम् | ayodya kandam" },
+            { "key": "03-ayodya-004.txt", "value": "4 अयोध्याकाण्डः - मात्राशीःपरिग्रहः | ayodya kandam" },
+            { "key": "03-ayodya-005.txt", "value": "5 अयोध्याकाण्डः - व्रतचर्याविधानम् | ayodya kandam" },
+            { "key": "03-ayodya-006.txt", "value": "6 अयोध्याकाण्डः - पौरोत्सेकः | ayodya kandam" },
+            { "key": "03-ayodya-007.txt", "value": "7 अयोध्याकाण्डः - मन्थरापरिदेवनम् | ayodya kandam" },
+            { "key": "03-ayodya-008.txt", "value": "8 अयोध्याकाण्डः - मन्थरोपजापः | ayodya kandam" },
+            { "key": "03-ayodya-009.txt", "value": "9 अयोध्याकाण्डः - रामप्रवासनोपायचिन्ता | ayodya kandam" },
+            { "key": "03-ayodya-010.txt", "value": "10 अयोध्याकाण्डः - कैकेय्यनुनयः | ayodya kandam" },
+            { "key": "03-ayodya-011.txt", "value": "11 अयोध्याकाण्डः - वरद्वयनिर्बन्धः | ayodya kandam" },
+            { "key": "03-ayodya-012.txt", "value": "12 अयोध्याकाण्डः - कैकेयीनिवर्तनप्रयासः | ayodya kandam" },
+            { "key": "03-ayodya-013.txt", "value": "13 अयोध्याकाण्डः - दशरथविलापः | ayodya kandam" },
+            { "key": "03-ayodya-014.txt", "value": "14 अयोध्याकाण्डः - कैकेय्युपालम्भः | ayodya kandam" },
+            { "key": "03-ayodya-015.txt", "value": "15 अयोध्याकाण्डः - सुमन्त्रप्रेषणम् | ayodya kandam" },
+            { "key": "03-ayodya-016.txt", "value": "16 अयोध्याकाण्डः - रामप्रस्थानम् | ayodya kandam" },
+            { "key": "03-ayodya-017.txt", "value": "17 अयोध्याकाण्डः - रामागमनम्स | ayodya kandam" },
+            { "key": "03-ayodya-018.txt", "value": "18 अयोध्याकाण्डः - वनवासनिदेशः | ayodya kandam" },
+            { "key": "03-ayodya-019.txt", "value": "19 अयोध्याकाण्डः - रामप्रतिज्ञा | ayodya kandam" },
+            { "key": "03-ayodya-020.txt", "value": "20 अयोध्याकाण्डः - कौसल्याक्रन्दः | ayodya kandam" },
+            { "key": "03-ayodya-021.txt", "value": "21 अयोध्याकाण्डः - कौसल्यालक्ष्मणप्रतिबोधनम् | ayodya kandam" },
+            { "key": "03-ayodya-022.txt", "value": "22 अयोध्याकाण्डः - दैवप्राबल्यम् | ayodya kandam" },
+            { "key": "03-ayodya-023.txt", "value": "23 अयोध्याकाण्डः - लक्ष्मणक्रोधः | ayodya kandam" },
+            { "key": "03-ayodya-024.txt", "value": "24 अयोध्याकाण्डः - कौसल्यार्तिसमाश्वासनम् | ayodya kandam" },
+            { "key": "03-ayodya-025.txt", "value": "25 अयोध्याकाण्डः - मातृस्वस्त्ययनम् | ayodya kandam" },
+            { "key": "03-ayodya-026.txt", "value": "26 अयोध्याकाण्डः - सीताप्रत्यवस्थापनम् | ayodya kandam" },
+            { "key": "03-ayodya-027.txt", "value": "27 अयोध्याकाण्डः - पतिव्रताध्यवसायः | ayodya kandam" },
+            { "key": "03-ayodya-028.txt", "value": "28 अयोध्याकाण्डः - वनदुःखप्रतिबोधनम् | ayodya kandam" },
+            { "key": "03-ayodya-029.txt", "value": "29 अयोध्याकाण्डः - वनानुगमनयाच्ञानिर्बन्धः | ayodya kandam" },
+            { "key": "03-ayodya-030.txt", "value": "30 अयोध्याकाण्डः - वनगमनाभ्युपपत्तिः | ayodya kandam" },
+            { "key": "03-ayodya-031.txt", "value": "31 अयोध्याकाण्डः - लक्ष्मणवनानुगमनाभ्यनुज्ञा | ayodya kandam" },
+            { "key": "03-ayodya-032.txt", "value": "32 अयोध्याकाण्डः - वित्तविश्राणनम् | ayodya kandam" },
+            { "key": "03-ayodya-033.txt", "value": "33 अयोध्याकाण्डः - पौरवाक्यम् | ayodya kandam" },
+            { "key": "03-ayodya-034.txt", "value": "34 अयोध्याकाण्डः - दशरथसमाश्वासनम् | ayodya kandam" },
+            { "key": "03-ayodya-035.txt", "value": "35 अयोध्याकाण्डः - सुमन्त्रगर्हणम् | ayodya kandam" },
+            { "key": "03-ayodya-036.txt", "value": "36 अयोध्याकाण्डः - सिद्धार्थप्रतिबोधनम् | ayodya kandam" },
+            { "key": "03-ayodya-037.txt", "value": "37 अयोध्याकाण्डः - चारपरिग्रहनिमित्तवसिष्ठक्रोधः | ayodya kandam" },
+            { "key": "03-ayodya-038.txt", "value": "38 अयोध्याकाण्डः - जनाक्रोशः | ayodya kandam" },
+            { "key": "03-ayodya-039.txt", "value": "39 अयोध्याकाण्डः - वनगमनापृच्छा | ayodya kandam" },
+            { "key": "03-ayodya-040.txt", "value": "40 अयोध्याकाण्डः - पौराद्यनुव्रज्या | ayodya kandam" },
+            { "key": "03-ayodya-041.txt", "value": "41 अयोध्याकाण्डः - नगरसंक्षोभः | ayodya kandam" },
+            { "key": "03-ayodya-042.txt", "value": "42 अयोध्याकाण्डः - दशरथाक्रन्दः | ayodya kandam" },
+            { "key": "03-ayodya-043.txt", "value": "43 अयोध्याकाण्डः - कौसल्यापरिदेवितम् | ayodya kandam" },
+            { "key": "03-ayodya-044.txt", "value": "44 अयोध्याकाण्डः - सुमित्राश्वासनम् | ayodya kandam" },
+            { "key": "03-ayodya-045.txt", "value": "45 अयोध्याकाण्डः - पौरयाचनम् | ayodya kandam" },
+            { "key": "03-ayodya-046.txt", "value": "46 अयोध्याकाण्डः - पौरमोहनम् | ayodya kandam" },
+            { "key": "03-ayodya-047.txt", "value": "47 अयोध्याकाण्डः - पौरनिवृत्तिः | ayodya kandam" },
+            { "key": "03-ayodya-048.txt", "value": "48 अयोध्याकाण्डः - पौराङ्गनाविलापः | ayodya kandam" },
+            { "key": "03-ayodya-049.txt", "value": "49 अयोध्याकाण्डः - जानपदाक्रोशः | ayodya kandam" },
+            { "key": "03-ayodya-050.txt", "value": "50 अयोध्याकाण्डः - गुहसंगतम् | ayodya kandam" },
+            { "key": "03-ayodya-051.txt", "value": "51 अयोध्याकाण्डः - गुहलक्ष्मणजागरणम् | ayodya kandam" },
+            { "key": "03-ayodya-052.txt", "value": "52 अयोध्याकाण्डः - गङ्गातरणम् | ayodya kandam" },
+            { "key": "03-ayodya-053.txt", "value": "53 अयोध्याकाण्डः - रामसंक्षोभः | ayodya kandam" },
+            { "key": "03-ayodya-054.txt", "value": "54 अयोध्याकाण्डः - भरद्वाजाश्रमाभिगमनम् | ayodya kandam" },
+            { "key": "03-ayodya-055.txt", "value": "55 अयोध्याकाण्डः - यमुनातरणम् | ayodya kandam" },
+            { "key": "03-ayodya-056.txt", "value": "56 अयोध्याकाण्डः - चित्रकूटनिवासः | ayodya kandam" },
+            { "key": "03-ayodya-057.txt", "value": "57 अयोध्याकाण्डः - सुमन्त्रोपावर्तनम् | ayodya kandam" },
+            { "key": "03-ayodya-058.txt", "value": "58 अयोध्याकाण्डः - रामसंदेशाख्यानम् | ayodya kandam" },
+            { "key": "03-ayodya-059.txt", "value": "59 अयोध्याकाण्डः - दशरथविलापः | ayodya kandam" },
+            { "key": "03-ayodya-060.txt", "value": "60 अयोध्याकाण्डः - कौसल्यासमाश्वासनम् | ayodya kandam" },
+            { "key": "03-ayodya-061.txt", "value": "61 अयोध्याकाण्डः - कौसल्योपालंभः | ayodya kandam" },
+            { "key": "03-ayodya-062.txt", "value": "62 अयोध्याकाण्डः - कौसल्याप्रसादनम् | ayodya kandam" },
+            { "key": "03-ayodya-063.txt", "value": "63 अयोध्याकाण्डः - ऋषिकुमारवधाख्यानम् | ayodya kandam" },
+            { "key": "03-ayodya-064.txt", "value": "64 अयोध्याकाण्डः - दशरथदिष्टान्तः | ayodya kandam" },
+            { "key": "03-ayodya-065.txt", "value": "65 अयोध्याकाण्डः - अन्तःपुराक्रन्दः | ayodya kandam" },
+            { "key": "03-ayodya-066.txt", "value": "66 अयोध्याकाण्डः - तैलद्रोण्यधिशयनम् | ayodya kandam" },
+            { "key": "03-ayodya-067.txt", "value": "67 अयोध्याकाण्डः - अराजकदुरवस्थावर्णनम् | ayodya kandam" },
+            { "key": "03-ayodya-068.txt", "value": "68 अयोध्याकाण्डः - दूतप्रेषणम् | ayodya kandam" },
+            { "key": "03-ayodya-069.txt", "value": "69 अयोध्याकाण्डः - भरतदुःस्वप्नः | ayodya kandam" },
+            { "key": "03-ayodya-070.txt", "value": "70 अयोध्याकाण्डः - भरतप्रस्थानम् | ayodya kandam" },
+            { "key": "03-ayodya-071.txt", "value": "71 अयोध्याकाण्डः - अयोध्यागमनम् | ayodya kandam" },
+            { "key": "03-ayodya-072.txt", "value": "72 अयोध्याकाण्डः - भरतसन्तापः | ayodya kandam" },
+            { "key": "03-ayodya-073.txt", "value": "73 अयोध्याकाण्डः - कैकेयीविगर्हणम् | ayodya kandam" },
+            { "key": "03-ayodya-074.txt", "value": "74 अयोध्याकाण्डः - कैकेय्याक्रोशः | ayodya kandam" },
+            { "key": "03-ayodya-075.txt", "value": "75 अयोध्याकाण्डः - भरतशपथः | ayodya kandam" },
+            { "key": "03-ayodya-076.txt", "value": "76 अयोध्याकाण्डः - दशरथौर्ध्वदैहिकम् | ayodya kandam" },
+            { "key": "03-ayodya-077.txt", "value": "77 अयोध्याकाण्डः - भरतशत्रुघ्नविलापः | ayodya kandam" },
+            { "key": "03-ayodya-078.txt", "value": "78 अयोध्याकाण्डः - कुब्जाविक्षेपः | ayodya kandam" },
+            { "key": "03-ayodya-079.txt", "value": "79 अयोध्याकाण्डः - सचिवप्रार्थनाप्रतिषेधः | ayodya kandam" },
+            { "key": "03-ayodya-080.txt", "value": "80 अयोध्याकाण्डः - मार्गसंस्कारः | ayodya kandam" },
+            { "key": "03-ayodya-081.txt", "value": "81 अयोध्याकाण्डः - सभास्थानम् | ayodya kandam" },
+            { "key": "03-ayodya-082.txt", "value": "82 अयोध्याकाण्डः - सेनाप्रस्थापनम् | ayodya kandam" },
+            { "key": "03-ayodya-083.txt", "value": "83 अयोध्याकाण्डः - भरतवनप्रस्थानम् | ayodya kandam" },
+            { "key": "03-ayodya-084.txt", "value": "84 अयोध्याकाण्डः - गुहागमनम् | ayodya kandam" },
+            { "key": "03-ayodya-085.txt", "value": "85 अयोध्याकाण्डः - गुहसमागमः | ayodya kandam" },
+            { "key": "03-ayodya-086.txt", "value": "86 अयोध्याकाण्डः - गुहवाक्यम् | ayodya kandam" },
+            { "key": "03-ayodya-087.txt", "value": "87 अयोध्याकाण्डः - रामशयनादिप्रश्नः | ayodya kandam" },
+            { "key": "03-ayodya-088.txt", "value": "88 अयोध्याकाण्डः - शय्यानुवीक्षणम् | ayodya kandam" },
+            { "key": "03-ayodya-089.txt", "value": "89 अयोध्याकाण्डः - गङ्गातरणम् | ayodya kandam" },
+            { "key": "03-ayodya-090.txt", "value": "90 अयोध्याकाण्डः - भरद्वाजाश्रमनिवासः | ayodya kandam" },
+            { "key": "03-ayodya-091.txt", "value": "91 अयोध्याकाण्डः - भरद्वाजातिथ्यम् | ayodya kandam" },
+            { "key": "03-ayodya-092.txt", "value": "92 अयोध्याकाण्डः - भरद्वाजामन्त्रणम् | ayodya kandam" },
+            { "key": "03-ayodya-093.txt", "value": "93 अयोध्याकाण्डः - चित्रकूटवनप्रेक्षणम् | ayodya kandam" },
+            { "key": "03-ayodya-094.txt", "value": "94 अयोध्याकाण्डः - चित्रकूटवर्णना | ayodya kandam" },
+            { "key": "03-ayodya-095.txt", "value": "95 अयोध्याकाण्डः - मन्दाकिनीवर्णना | ayodya kandam" },
+            { "key": "03-ayodya-096.txt", "value": "96 अयोध्याकाण्डः - लक्ष्मणक्रोधः | ayodya kandam" },
+            { "key": "03-ayodya-097.txt", "value": "97 अयोध्याकाण्डः - भरतगुणप्रशंसा | ayodya kandam" },
+            { "key": "03-ayodya-098.txt", "value": "98 अयोध्याकाण्डः - रामान्वेषणम् | ayodya kandam" },
+            { "key": "03-ayodya-099.txt", "value": "99 अयोध्याकाण्डः - रामसमागमः | ayodya kandam" },
+            { "key": "03-ayodya-100.txt", "value": "100 अयोध्याकाण्डः - कच्चित्सर्गः | ayodya kandam" },
+            { "key": "03-ayodya-101.txt", "value": "101 अयोध्याकाण्डः - पितृदिष्टान्तश्रवणम् | ayodya kandam" },
+            { "key": "03-ayodya-102.txt", "value": "102 अयोध्याकाण्डः - निवापदानम् | ayodya kandam" },
+            { "key": "03-ayodya-103.txt", "value": "103 अयोध्याकाण्डः - मातृदर्शनम् | ayodya kandam" },
+            { "key": "03-ayodya-104.txt", "value": "104 अयोध्याकाण्डः - रामभरतसंवादः | ayodya kandam" },
+            { "key": "03-ayodya-105.txt", "value": "105 अयोध्याकाण्डः - रामवाक्यम् | ayodya kandam" },
+            { "key": "03-ayodya-106.txt", "value": "106 अयोध्याकाण्डः - भरतवचनम् | ayodya kandam" },
+            { "key": "03-ayodya-107.txt", "value": "107 अयोध्याकाण्डः - रामप्रतिवचनम् | ayodya kandam" },
+            { "key": "03-ayodya-108.txt", "value": "108 अयोध्याकाण्डः - जाबालिवाक्यम् | ayodya kandam" },
+            { "key": "03-ayodya-109.txt", "value": "109 अयोध्याकाण्डः - सत्यप्रशंसा | ayodya kandam" },
+            { "key": "03-ayodya-110.txt", "value": "110 अयोध्याकाण्डः - इक्ष्वाकुवंशकीर्तनम् | ayodya kandam" },
+            { "key": "03-ayodya-111.txt", "value": "111 अयोध्याकाण्डः - भरतानुशासनम् | ayodya kandam" },
+            { "key": "03-ayodya-112.txt", "value": "112 अयोध्याकाण्डः - पादुकाप्रदानम् | ayodya kandam" },
+            { "key": "03-ayodya-113.txt", "value": "113 अयोध्याकाण्डः - पादुकाग्रहणम् | ayodya kandam" },
+            { "key": "03-ayodya-114.txt", "value": "114 अयोध्याकाण्डः - अयोध्याप्रवेशः | ayodya kandam" },
+            { "key": "03-ayodya-115.txt", "value": "115 अयोध्याकाण्डः - नन्दिग्रामनिवासः | ayodya kandam" },
+            { "key": "03-ayodya-116.txt", "value": "116 अयोध्याकाण्डः - खरविप्रकरणकथनम् | ayodya kandam" },
+            { "key": "03-ayodya-117.txt", "value": "117 अयोध्याकाण्डः - सीतापातिव्रत्यप्रशंसा | ayodya kandam" },
+            { "key": "03-ayodya-118.txt", "value": "118 अयोध्याकाण्डः - दिव्यालंकारग्रहणम् | ayodya kandam" },
+            { "key": "03-ayodya-119.txt", "value": "119 अयोध्याकाण्डः - दण्डकारण्यप्रवेशः | ayodya kandam" },
+            { "key": "04-aranya-001.txt", "value": "1 अरण्यकाण्डः - महर्षिसङ्गः | aranya kandam" },
+            { "key": "04-aranya-002.txt", "value": "2 अरण्यकाण्डः - विराधसंरोधः | aranya kandam" },
+            { "key": "04-aranya-003.txt", "value": "3 अरण्यकाण्डः - विराधप्रहारः | aranya kandam" },
+            { "key": "04-aranya-004.txt", "value": "4 अरण्यकाण्डः - विराधनिखननम् | aranya kandam" },
+            { "key": "04-aranya-005.txt", "value": "5 अरण्यकाण्डः - शरभङ्गब्रह्मलोकप्रस्थानम् | aranya kandam" },
+            { "key": "04-aranya-006.txt", "value": "6 अरण्यकाण्डः - रक्षोवधप्रतिज्ञानम् | aranya kandam" },
+            { "key": "04-aranya-007.txt", "value": "7 अरण्यकाण्डः - सुतीक्ष्णाश्रमः | aranya kandam" },
+            { "key": "04-aranya-008.txt", "value": "8 अरण्यकाण्डः - सुतीक्ष्णाभ्यनुज्ञा | aranya kandam" },
+            { "key": "04-aranya-009.txt", "value": "9 अरण्यकाण्डः - सीताधर्मावेदनम् | aranya kandam" },
+            { "key": "04-aranya-010.txt", "value": "10 अरण्यकाण्डः - रक्षोवधसमर्थनम् | aranya kandam" },
+            { "key": "04-aranya-011.txt", "value": "11 अरण्यकाण्डः - अगस्त्याश्रमः | aranya kandam" },
+            { "key": "04-aranya-012.txt", "value": "12 अरण्यकाण्डः - अगस्त्यदर्शनम् | aranya kandam" },
+            { "key": "04-aranya-013.txt", "value": "13 अरण्यकाण्डः - पञ्चवटीगमनम् | aranya kandam" },
+            { "key": "04-aranya-014.txt", "value": "14 अरण्यकाण्डः - जटायुस्संगमः | aranya kandam" },
+            { "key": "04-aranya-015.txt", "value": "15 अरण्यकाण्डः - पञ्चवटीपर्णशाला | aranya kandam" },
+            { "key": "04-aranya-016.txt", "value": "16 अरण्यकाण्डः - हेमन्तवर्णनम् | aranya kandam" },
+            { "key": "04-aranya-017.txt", "value": "17 अरण्यकाण्डः - शूर्पणखाभावाविष्करणम् | aranya kandam" },
+            { "key": "04-aranya-018.txt", "value": "18 अरण्यकाण्डः - शूर्पणखाविरूपणम् | aranya kandam" },
+            { "key": "04-aranya-019.txt", "value": "19 अरण्यकाण्डः - खरक्रोधः | aranya kandam" },
+            { "key": "04-aranya-020.txt", "value": "20 अरण्यकाण्डः - चतुर्दशरक्षोवधः | aranya kandam" },
+            { "key": "04-aranya-021.txt", "value": "21 अरण्यकाण्डः - खरसन्धुक्षणम् | aranya kandam" },
+            { "key": "04-aranya-022.txt", "value": "22 अरण्यकाण्डः - खरसंनाहः | aranya kandam" },
+            { "key": "04-aranya-023.txt", "value": "23 अरण्यकाण्डः - उत्पातदर्शनम् | aranya kandam" },
+            { "key": "04-aranya-024.txt", "value": "24 अरण्यकाण्डः - रामखरबलसंनिकर्षः | aranya kandam" },
+            { "key": "04-aranya-025.txt", "value": "25 अरण्यकाण्डः - खरसैन्यावमर्दः | aranya kandam" },
+            { "key": "04-aranya-026.txt", "value": "26 अरण्यकाण्डः - दूषणादिवधः | aranya kandam" },
+            { "key": "04-aranya-027.txt", "value": "27 अरण्यकाण्डः - त्रिशिरोवधः | aranya kandam" },
+            { "key": "04-aranya-028.txt", "value": "28 अरण्यकाण्डः - खररामसंप्रारः | aranya kandam" },
+            { "key": "04-aranya-029.txt", "value": "29 अरण्यकाण्डः - खरगदाभेदनम् | aranya kandam" },
+            { "key": "04-aranya-030.txt", "value": "30 अरण्यकाण्डः - खरसंहारः | aranya kandam" },
+            { "key": "04-aranya-031.txt", "value": "31 अरण्यकाण्डः - रावणखरवृत्तोपलम्भः | aranya kandam" },
+            { "key": "04-aranya-032.txt", "value": "32 अरण्यकाण्डः - शूर्पणखोद्यमः | aranya kandam" },
+            { "key": "04-aranya-033.txt", "value": "33 अरण्यकाण्डः - रावणनिन्दा | aranya kandam" },
+            { "key": "04-aranya-034.txt", "value": "34 अरण्यकाण्डः - सीताहरणोपदेशः | aranya kandam" },
+            { "key": "04-aranya-035.txt", "value": "35 अरण्यकाण्डः - मारीचाश्रमपुनर्गमनम् | aranya kandam" },
+            { "key": "04-aranya-036.txt", "value": "36 अरण्यकाण्डः - सहायैषणा | aranya kandam" },
+            { "key": "04-aranya-037.txt", "value": "37 अरण्यकाण्डः - अप्रियपथ्यवचनम् | aranya kandam" },
+            { "key": "04-aranya-038.txt", "value": "38 अरण्यकाण्डः - रामस्त्रमहिमा | aranya kandam" },
+            { "key": "04-aranya-039.txt", "value": "39 अरण्यकाण्डः - साहाय्यकानभ्युपगमः | aranya kandam" },
+            { "key": "04-aranya-040.txt", "value": "40 अरण्यकाण्डः - मायामृगरूपपरिग्रहनिर्बन्धः | aranya kandam" },
+            { "key": "04-aranya-041.txt", "value": "41 अरण्यकाण्डः - रावणनिन्दा | aranya kandam" },
+            { "key": "04-aranya-042.txt", "value": "42 अरण्यकाण्डः - स्वर्णमृगप्रेक्षणम् | aranya kandam" },
+            { "key": "04-aranya-043.txt", "value": "43 अरण्यकाण्डः - लक्ष्मणशङ्काप्रतिसमाधानम् | aranya kandam" },
+            { "key": "04-aranya-044.txt", "value": "44 अरण्यकाण्डः - मारीचवञ्चना | aranya kandam" },
+            { "key": "04-aranya-045.txt", "value": "45 अरण्यकाण्डः - सीतापारुष्यम् | aranya kandam" },
+            { "key": "04-aranya-046.txt", "value": "46 अरण्यकाण्डः - सवणभिक्षुसत्कारः | aranya kandam" },
+            { "key": "04-aranya-047.txt", "value": "47 अरण्यकाण्डः - रावणाधिक्षेपः | aranya kandam" },
+            { "key": "04-aranya-048.txt", "value": "48 अरण्यकाण्डः - रावणविकत्थनम् | aranya kandam" },
+            { "key": "04-aranya-049.txt", "value": "49 अरण्यकाण्डः - सीतापहरणम् | aranya kandam" },
+            { "key": "04-aranya-050.txt", "value": "50 अरण्यकाण्डः - जटायुरभियोगः | aranya kandam" },
+            { "key": "04-aranya-051.txt", "value": "51 अरण्यकाण्डः - जटायूरावणयुद्धम् | aranya kandam" },
+            { "key": "04-aranya-052.txt", "value": "52 अरण्यकाण्डः - सीताविक्रोशः | aranya kandam" },
+            { "key": "04-aranya-053.txt", "value": "53 अरण्यकाण्डः - रावणभर्त्सनम् | aranya kandam" },
+            { "key": "04-aranya-054.txt", "value": "54 अरण्यकाण्डः - लङ्काप्रापणम् | aranya kandam" },
+            { "key": "04-aranya-055.txt", "value": "55 अरण्यकाण्डः - सीताविलोभनोद्यमः | aranya kandam" },
+            { "key": "04-aranya-056.txt", "value": "56 अरण्यकाण्डः - वत्सरावधिकरणम् | aranya kandam" },
+            { "key": "04-aranya-057.txt", "value": "57 अरण्यकाण्डः - रामप्रत्यागमनम् | aranya kandam" },
+            { "key": "04-aranya-058.txt", "value": "58 अरण्यकाण्डः - अनिमित्तदर्शनम् | aranya kandam" },
+            { "key": "04-aranya-059.txt", "value": "59 अरण्यकाण्डः - लक्ष्मणागमनविगर्हणम् | aranya kandam" },
+            { "key": "04-aranya-060.txt", "value": "60 अरण्यकाण्डः - रामोन्मादः | aranya kandam" },
+            { "key": "04-aranya-061.txt", "value": "61 अरण्यकाण्डः - सीतान्वेषणम् | aranya kandam" },
+            { "key": "04-aranya-062.txt", "value": "62 अरण्यकाण्डः - राघवविलापः | aranya kandam" },
+            { "key": "04-aranya-063.txt", "value": "63 अरण्यकाण्डः - दुःखानुचिन्तनम् | aranya kandam" },
+            { "key": "04-aranya-064.txt", "value": "64 अरण्यकाण्डः - रामक्रोधः | aranya kandam" },
+            { "key": "04-aranya-065.txt", "value": "65 अरण्यकाण्डः - क्रोधसंहारप्रार्थना | aranya kandam" },
+            { "key": "04-aranya-066.txt", "value": "66 अरण्यकाण्डः - औचित्यप्रबोधनम् | aranya kandam" },
+            { "key": "04-aranya-067.txt", "value": "67 अरण्यकाण्डः - गृधराजदर्शनम् | aranya kandam" },
+            { "key": "04-aranya-068.txt", "value": "68 अरण्यकाण्डः - जटायुस्संस्कारः | aranya kandam" },
+            { "key": "04-aranya-069.txt", "value": "69 अरण्यकाण्डः - कबन्धग्राहः | aranya kandam" },
+            { "key": "04-aranya-070.txt", "value": "70 अरण्यकाण्डः - कबन्धबाहुच्छेद | aranya kandam" },
+            { "key": "04-aranya-071.txt", "value": "71 अरण्यकाण्डः - कबन्धशापाख्यानम् | aranya kandam" },
+            { "key": "04-aranya-072.txt", "value": "72 अरण्यकाण्डः - सीताधिगमोपायः | aranya kandam" },
+            { "key": "04-aranya-073.txt", "value": "73 अरण्यकाण्डः - ऋश्यमूकमार्गकथनम् | aranya kandam" },
+            { "key": "04-aranya-074.txt", "value": "74 अरण्यकाण्डः - शबरीस्वर्गप्राप्तिः | aranya kandam" },
+            { "key": "04-aranya-075.txt", "value": "75 अरण्यकाण्डः - पम्पादर्शनम् | aranya kandam" },
+            { "key": "05-kishkinda-001.txt", "value": "1 किष्किन्धाकाण्डः - रामविप्रलम्भावेशः | kishkinda kandam" },
+            { "key": "05-kishkinda-002.txt", "value": "2 किष्किन्धाकाण्डः - सुग्रीवमन्त्रः | kishkinda kandam" },
+            { "key": "05-kishkinda-003.txt", "value": "3 किष्किन्धाकाण्डः - हनूमत्प्रेषणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-004.txt", "value": "4 किष्किन्धाकाण्डः - सुग्रीवसमीपगमनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-005.txt", "value": "5 किष्किन्धाकाण्डः - सुग्रीवसख्यम् | kishkinda kandam" },
+            { "key": "05-kishkinda-006.txt", "value": "6 किष्किन्धाकाण्डः - भूषणप्रत्यभिज्ञानम् | kishkinda kandam" },
+            { "key": "05-kishkinda-007.txt", "value": "7 किष्किन्धाकाण्डः - रामसमाश्वासनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-008.txt", "value": "8 किष्किन्धाकाण्डः - वालिवधप्रतिज्ञा | kishkinda kandam" },
+            { "key": "05-kishkinda-009.txt", "value": "9 किष्किन्धाकाण्डः - वैरवृत्तान्तानुक्रमः | kishkinda kandam" },
+            { "key": "05-kishkinda-010.txt", "value": "10 किष्किन्धाकाण्डः - राज्यनिर्वासकथनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-011.txt", "value": "11 किष्किन्धाकाण्डः - बालिबलाविष्करणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-012.txt", "value": "12 किष्किन्धाकाण्डः - सुग्रीवप्रत्ययदानम् | kishkinda kandam" },
+            { "key": "05-kishkinda-013.txt", "value": "13 किष्किन्धाकाण्डः - सप्तजनाश्रमप्रणामः | kishkinda kandam" },
+            { "key": "05-kishkinda-014.txt", "value": "14 किष्किन्धाकाण्डः - सुग्रीवगर्जनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-015.txt", "value": "15 किष्किन्धाकाण्डः - ताराहितोक्तिः | kishkinda kandam" },
+            { "key": "05-kishkinda-016.txt", "value": "16 किष्किन्धाकाण्डः - वालिसंहारः | kishkinda kandam" },
+            { "key": "05-kishkinda-017.txt", "value": "17 किष्किन्धाकाण्डः - रामाधिक्षेपः | kishkinda kandam" },
+            { "key": "05-kishkinda-018.txt", "value": "18 किष्किन्धाकाण्डः - वालिवधसर्मथनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-019.txt", "value": "19 किष्किन्धाकाण्डः - तारागमनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-020.txt", "value": "20 किष्किन्धाकाण्डः - ताराविलापः | kishkinda kandam" },
+            { "key": "05-kishkinda-021.txt", "value": "21 किष्किन्धाकाण्डः - हनुमदाश्वासनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-022.txt", "value": "22 किष्किन्धाकाण्डः - वाल्यनुशासनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-023.txt", "value": "23 किष्किन्धाकाण्डः - अङ्गदाभिवादनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-024.txt", "value": "24 किष्किन्धाकाण्डः - सुग्रीवताराश्वासनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-025.txt", "value": "25 किष्किन्धाकाण्डः - वालिसंस्कारः | kishkinda kandam" },
+            { "key": "05-kishkinda-026.txt", "value": "26 किष्किन्धाकाण्डः - सुग्रीवाभिषेकः | kishkinda kandam" },
+            { "key": "05-kishkinda-027.txt", "value": "27 किष्किन्धाकाण्डः - माल्यवन्निवासः | kishkinda kandam" },
+            { "key": "05-kishkinda-028.txt", "value": "28 किष्किन्धाकाण्डः - प्रावृडुज्जृम्भणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-029.txt", "value": "29 किष्किन्धाकाण्डः - हनुमत्प्रतिबोधनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-030.txt", "value": "30 किष्किन्धाकाण्डः - शरद्वर्णनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-031.txt", "value": "31 किष्किन्धाकाण्डः - लक्ष्मणक्रोधः | kishkinda kandam" },
+            { "key": "05-kishkinda-032.txt", "value": "32 किष्किन्धाकाण्डः - हनूमन्मन्त्रः | kishkinda kandam" },
+            { "key": "05-kishkinda-033.txt", "value": "33 किष्किन्धाकाण्डः - तारासान्त्ववचनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-034.txt", "value": "34 किष्किन्धाकाण्डः - सुग्रीवतर्जनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-035.txt", "value": "35 किष्किन्धाकाण्डः - तारासमाधानम् | kishkinda kandam" },
+            { "key": "05-kishkinda-036.txt", "value": "36 किष्किन्धाकाण्डः - सुग्रीवलक्ष्मणानुरोधः | kishkinda kandam" },
+            { "key": "05-kishkinda-037.txt", "value": "37 किष्किन्धाकाण्डः - कपिसेनासमानयनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-038.txt", "value": "38 किष्किन्धाकाण्डः - रामसमीपगमनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-039.txt", "value": "39 किष्किन्धाकाण्डः - सेनानिवेशः | kishkinda kandam" },
+            { "key": "05-kishkinda-040.txt", "value": "40 किष्किन्धाकाण्डः - प्राचीप्रेषणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-041.txt", "value": "41 किष्किन्धाकाण्डः - दक्षिणाप्रेषणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-042.txt", "value": "42 किष्किन्धाकाण्डः - प्रतीचीप्रेषणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-043.txt", "value": "43 किष्किन्धाकाण्डः - उदीचीप्रेषणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-044.txt", "value": "44 किष्किन्धाकाण्डः - हनूमत्संदेशः | kishkinda kandam" },
+            { "key": "05-kishkinda-045.txt", "value": "45 किष्किन्धाकाण्डः - वानरबलप्रस्थानम् | kishkinda kandam" },
+            { "key": "05-kishkinda-046.txt", "value": "46 किष्किन्धाकाण्डः - भूमण्डलभ्रमणकथनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-047.txt", "value": "47 किष्किन्धाकाण्डः - कपिसेनाप्रत्यागमनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-048.txt", "value": "48 किष्किन्धाकाण्डः - कण्डूवनादिविचयः | kishkinda kandam" },
+            { "key": "05-kishkinda-049.txt", "value": "49 किष्किन्धाकाण्डः - रजतपर्वतविचयः | kishkinda kandam" },
+            { "key": "05-kishkinda-050.txt", "value": "50 किष्किन्धाकाण्डः - ऋक्षबिलप्रवेशः | kishkinda kandam" },
+            { "key": "05-kishkinda-051.txt", "value": "51 किष्किन्धाकाण्डः - स्वयंप्रभातिथ्यम् | kishkinda kandam" },
+            { "key": "05-kishkinda-052.txt", "value": "52 किष्किन्धाकाण्डः - बिलप्रवेशकारणकथनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-053.txt", "value": "53 किष्किन्धाकाण्डः - अङ्गदादिनिर्वेद | kishkinda kandam" },
+            { "key": "05-kishkinda-054.txt", "value": "54 किष्किन्धाकाण्डः - हनूमद्भेदनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-055.txt", "value": "55 किष्किन्धाकाण्डः - प्रायोपवेशः | kishkinda kandam" },
+            { "key": "05-kishkinda-056.txt", "value": "56 किष्किन्धाकाण्डः - संपातिप्रश्नः | kishkinda kandam" },
+            { "key": "05-kishkinda-057.txt", "value": "57 किष्किन्धाकाण्डः - जटायुर्दिष्टकथनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-058.txt", "value": "58 किष्किन्धाकाण्डः - सीताप्रवृत्त्युपलम्भः | kishkinda kandam" },
+            { "key": "05-kishkinda-059.txt", "value": "59 किष्किन्धाकाण्डः - सुपार्श्ववचनानुवादः | kishkinda kandam" },
+            { "key": "05-kishkinda-060.txt", "value": "60 किष्किन्धाकाण्डः - संपातिपुरावृत्तवर्णनम् | kishkinda kandam" },
+            { "key": "05-kishkinda-061.txt", "value": "61 किष्किन्धाकाण्डः - सूर्यानुगमनाख्यानम् | kishkinda kandam" },
+            { "key": "05-kishkinda-062.txt", "value": "62 किष्किन्धाकाण्डः - निशाकरभविष्याख्यानम् | kishkinda kandam" },
+            { "key": "05-kishkinda-063.txt", "value": "63 किष्किन्धाकाण्डः - संपातिपक्षप्ररोहः | kishkinda kandam" },
+            { "key": "05-kishkinda-064.txt", "value": "64 किष्किन्धाकाण्डः - समुद्रलङ्घनमन्त्रणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-065.txt", "value": "65 किष्किन्धाकाण्डः - बलेयत्ताविष्करणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-066.txt", "value": "66 किष्किन्धाकाण्डः - हनूमद्बलसंधुक्षणम् | kishkinda kandam" },
+            { "key": "05-kishkinda-067.txt", "value": "67 किष्किन्धाकाण्डः - लङ्घनावष्टम्भः | kishkinda kandam" },
+            { "key": "06-sundara-001.txt", "value": "1 सुन्दरकाण्डः - सागरलङ्घनम् | sundara kandam" },
+            { "key": "06-sundara-002.txt", "value": "2 सुन्दरकाण्डः - निशागमप्रतीक्षा | sundara kandam" },
+            { "key": "06-sundara-003.txt", "value": "3 सुन्दरकाण्डः - लङ्काधिदेवताविजयः | sundara kandam" },
+            { "key": "06-sundara-004.txt", "value": "4 सुन्दरकाण्डः - लङ्कापुरीप्रवेशः | sundara kandam" },
+            { "key": "06-sundara-005.txt", "value": "5 सुन्दरकाण्डः - भवनविचयः | sundara kandam" },
+            { "key": "06-sundara-006.txt", "value": "6 सुन्दरकाण्डः - रावणगृहावेक्षणम् | sundara kandam" },
+            { "key": "06-sundara-007.txt", "value": "7 सुन्दरकाण्डः - पुष्पकदर्शनम् | sundara kandam" },
+            { "key": "06-sundara-008.txt", "value": "8 सुन्दरकाण्डः - पुष्पकानुवर्णनम् | sundara kandam" },
+            { "key": "06-sundara-009.txt", "value": "9 सुन्दरकाण्डः - संकुलान्तःपुरम् | sundara kandam" },
+            { "key": "06-sundara-010.txt", "value": "10 सुन्दरकाण्डः - मन्दोदरीदर्शनम् | sundara kandam" },
+            { "key": "06-sundara-011.txt", "value": "11 सुन्दरकाण्डः - पानभूमिविचयः | sundara kandam" },
+            { "key": "06-sundara-012.txt", "value": "12 सुन्दरकाण्डः - हनूमद्विषादः | sundara kandam" },
+            { "key": "06-sundara-013.txt", "value": "13 सुन्दरकाण्डः - हनूमन्निर्वेदः | sundara kandam" },
+            { "key": "06-sundara-014.txt", "value": "14 सुन्दरकाण्डः - अशोकवनिकाविचयः | sundara kandam" },
+            { "key": "06-sundara-015.txt", "value": "15 सुन्दरकाण्डः - सीतोपलंभः | sundara kandam" },
+            { "key": "06-sundara-016.txt", "value": "16 सुन्दरकाण्डः - हनूमत्परीतापः | sundara kandam" },
+            { "key": "06-sundara-017.txt", "value": "17 सुन्दरकाण्डः - राक्षसीपरिवारः | sundara kandam" },
+            { "key": "06-sundara-018.txt", "value": "18 सुन्दरकाण्डः - रावणागमनम् | sundara kandam" },
+            { "key": "06-sundara-019.txt", "value": "19 सुन्दरकाण्डः - कृच्छ्रगतसीतोपमाः | sundara kandam" },
+            { "key": "06-sundara-020.txt", "value": "20 सुन्दरकाण्डः - प्रणयप्रार्थना | sundara kandam" },
+            { "key": "06-sundara-021.txt", "value": "21 सुन्दरकाण्डः - रावणतृणीकरणम् | sundara kandam" },
+            { "key": "06-sundara-022.txt", "value": "22 सुन्दरकाण्डः - मासद्वयावधिकरणम् | sundara kandam" },
+            { "key": "06-sundara-023.txt", "value": "23 सुन्दरकाण्डः - राक्षसीप्ररोचनम् | sundara kandam" },
+            { "key": "06-sundara-024.txt", "value": "24 सुन्दरकाण्डः - राक्षसीनिर्भर्त्सनम् | sundara kandam" },
+            { "key": "06-sundara-025.txt", "value": "25 सुन्दरकाण्डः - सीतानिर्वेदः | sundara kandam" },
+            { "key": "06-sundara-026.txt", "value": "26 सुन्दरकाण्डः - प्राणत्यागसंप्रधारणम् | sundara kandam" },
+            { "key": "06-sundara-027.txt", "value": "27 सुन्दरकाण्डः - त्रिजटास्वप्नः | sundara kandam" },
+            { "key": "06-sundara-028.txt", "value": "28 सुन्दरकाण्डः - उद्बन्धनव्यवसायः | sundara kandam" },
+            { "key": "06-sundara-029.txt", "value": "29 सुन्दरकाण्डः - शुभनिमित्तानि | sundara kandam" },
+            { "key": "06-sundara-030.txt", "value": "30 सुन्दरकाण्डः - हनूमत्कृत्याकृत्यविचिन्तनम् | sundara kandam" },
+            { "key": "06-sundara-031.txt", "value": "31 सुन्दरकाण्डः - रामवृत्तसंश्रवः | sundara kandam" },
+            { "key": "06-sundara-032.txt", "value": "32 सुन्दरकाण्डः - सीतावितर्कः | sundara kandam" },
+            { "key": "06-sundara-033.txt", "value": "33 सुन्दरकाण्डः - हनूमज्जानकीसंवादोपक्रमः | sundara kandam" },
+            { "key": "06-sundara-034.txt", "value": "34 सुन्दरकाण्डः - रावणशङ्कानिवारणम् | sundara kandam" },
+            { "key": "06-sundara-035.txt", "value": "35 सुन्दरकाण्डः - विश्वासोत्पादनम् | sundara kandam" },
+            { "key": "06-sundara-036.txt", "value": "36 सुन्दरकाण्डः - अङ्गुलीयकप्रदानम् | sundara kandam" },
+            { "key": "06-sundara-037.txt", "value": "37 सुन्दरकाण्डः - सीताप्रत्यानयनानौचित्यम् | sundara kandam" },
+            { "key": "06-sundara-038.txt", "value": "38 सुन्दरकाण्डः - वायसवृत्तान्तकथनम् | sundara kandam" },
+            { "key": "06-sundara-039.txt", "value": "39 सुन्दरकाण्डः - हनुमत्संदेशः | sundara kandam" },
+            { "key": "06-sundara-040.txt", "value": "40 सुन्दरकाण्डः - हनूमत्प्रेषणम् | sundara kandam" },
+            { "key": "06-sundara-041.txt", "value": "41 सुन्दरकाण्डः - प्रमदावनभञ्जनम् | sundara kandam" },
+            { "key": "06-sundara-042.txt", "value": "42 सुन्दरकाण्डः - किंकरनिषूदनम् | sundara kandam" },
+            { "key": "06-sundara-043.txt", "value": "43 सुन्दरकाण्डः - चैत्यप्रासाददाहः | sundara kandam" },
+            { "key": "06-sundara-044.txt", "value": "44 सुन्दरकाण्डः - जम्बुमालिवधः | sundara kandam" },
+            { "key": "06-sundara-045.txt", "value": "45 सुन्दरकाण्डः - अमात्यपुत्रवधः | sundara kandam" },
+            { "key": "06-sundara-046.txt", "value": "46 सुन्दरकाण्डः - सेनापतिपञ्चकवधः | sundara kandam" },
+            { "key": "06-sundara-047.txt", "value": "47 सुन्दरकाण्डः - अक्षकुमारवधः | sundara kandam" },
+            { "key": "06-sundara-048.txt", "value": "48 सुन्दरकाण्डः - इन्द्रजिदभियोगः | sundara kandam" },
+            { "key": "06-sundara-049.txt", "value": "49 सुन्दरकाण्डः - रावणप्रभावदर्शनम् | sundara kandam" },
+            { "key": "06-sundara-050.txt", "value": "50 सुन्दरकाण्डः - प्रहस्तप्रश्नः | sundara kandam" },
+            { "key": "06-sundara-051.txt", "value": "51 सुन्दरकाण्डः - हनूमदुपदेशः | sundara kandam" },
+            { "key": "06-sundara-052.txt", "value": "52 सुन्दरकाण्डः - दूतवधनिवारणम् | sundara kandam" },
+            { "key": "06-sundara-053.txt", "value": "53 सुन्दरकाण्डः - पावकशैत्यम् | sundara kandam" },
+            { "key": "06-sundara-054.txt", "value": "54 सुन्दरकाण्डः - लङ्कादाहः | sundara kandam" },
+            { "key": "06-sundara-055.txt", "value": "55 सुन्दरकाण्डः - हनूमद्विभ्रमः | sundara kandam" },
+            { "key": "06-sundara-056.txt", "value": "56 सुन्दरकाण्डः - प्रतिप्रयाणोत्पतनम् | sundara kandam" },
+            { "key": "06-sundara-057.txt", "value": "57 सुन्दरकाण्डः - हनूमत्प्रत्यागमनम् | sundara kandam" },
+            { "key": "06-sundara-058.txt", "value": "58 सुन्दरकाण्डः - हनूमद्वृत्तानुकथनम् | sundara kandam" },
+            { "key": "06-sundara-059.txt", "value": "59 सुन्दरकाण्डः - अनन्तरकार्यप्ररोचनम् | sundara kandam" },
+            { "key": "06-sundara-060.txt", "value": "60 सुन्दरकाण्डः - अङ्गदजाम्बवत्संवादः | sundara kandam" },
+            { "key": "06-sundara-061.txt", "value": "61 सुन्दरकाण्डः - मधुवनप्रवेशः | sundara kandam" },
+            { "key": "06-sundara-062.txt", "value": "62 सुन्दरकाण्डः - दधिमुखखिलीकारः | sundara kandam" },
+            { "key": "06-sundara-063.txt", "value": "63 सुन्दरकाण्डः - सुग्रीवहर्षः | sundara kandam" },
+            { "key": "06-sundara-064.txt", "value": "64 सुन्दरकाण्डः - हनूमदाद्यागमनम् | sundara kandam" },
+            { "key": "06-sundara-065.txt", "value": "65 सुन्दरकाण्डः - चूडामणिप्रदानम् | sundara kandam" },
+            { "key": "06-sundara-066.txt", "value": "66 सुन्दरकाण्डः - सीताभाषितप्रश्नः | sundara kandam" },
+            { "key": "06-sundara-067.txt", "value": "67 सुन्दरकाण्डः - सीताभाषितानुवचनम् | sundara kandam" },
+            { "key": "06-sundara-068.txt", "value": "68 सुन्दरकाण्डः - हनूमत्समाश्वासवचनानुवादः | sundara kandam" },
+            { "key": "07-yuddha-001.txt", "value": "1 युद्धकाण्डः - हनूमत्प्रशंसनम् | yuddha kandam" },
+            { "key": "07-yuddha-002.txt", "value": "2 युद्धकाण्डः - रामप्रोत्साहनम् | yuddha kandam" },
+            { "key": "07-yuddha-003.txt", "value": "3 युद्धकाण्डः - लङ्कादुर्गादिकथनम् | yuddha kandam" },
+            { "key": "07-yuddha-004.txt", "value": "4 युद्धकाण्डः - रामभिषेणनम् | yuddha kandam" },
+            { "key": "07-yuddha-005.txt", "value": "5 युद्धकाण्डः - रामविप्रलम्भः | yuddha kandam" },
+            { "key": "07-yuddha-006.txt", "value": "6 युद्धकाण्डः - रावणमन्त्रणम् | yuddha kandam" },
+            { "key": "07-yuddha-007.txt", "value": "7 युद्धकाण्डः - सचिवोक्तिः | yuddha kandam" },
+            { "key": "07-yuddha-008.txt", "value": "8 युद्धकाण्डः - प्रहस्तादिवचनम् | yuddha kandam" },
+            { "key": "07-yuddha-009.txt", "value": "9 युद्धकाण्डः - विभीषणसमालोचनम् | yuddha kandam" },
+            { "key": "07-yuddha-010.txt", "value": "10 युद्धकाण्डः - विभीषणपथ्योपदेशः | yuddha kandam" },
+            { "key": "07-yuddha-011.txt", "value": "11 युद्धकाण्डः - द्वितीयमन्त्राधिवेशः | yuddha kandam" },
+            { "key": "07-yuddha-012.txt", "value": "12 युद्धकाण्डः - कुम्भकर्णमतिः | yuddha kandam" },
+            { "key": "07-yuddha-013.txt", "value": "13 युद्धकाण्डः - महापार्श्ववचोऽभिनन्दनम् | yuddha kandam" },
+            { "key": "07-yuddha-014.txt", "value": "14 युद्धकाण्डः - प्रहस्तविभीषणविवादः | yuddha kandam" },
+            { "key": "07-yuddha-015.txt", "value": "15 युद्धकाण्डः - इन्द्रजिद्विभीषणविवादः | yuddha kandam" },
+            { "key": "07-yuddha-016.txt", "value": "16 युद्धकाण्डः - विभीषणाक्रोशः | yuddha kandam" },
+            { "key": "07-yuddha-017.txt", "value": "17 युद्धकाण्डः - विभीषणशरणागतिनिवेदनम् | yuddha kandam" },
+            { "key": "07-yuddha-018.txt", "value": "18 युद्धकाण्डः - विभीषणसंग्रहनिर्णयः | yuddha kandam" },
+            { "key": "07-yuddha-019.txt", "value": "19 युद्धकाण्डः - समुद्रतरणोपायः | yuddha kandam" },
+            { "key": "07-yuddha-020.txt", "value": "20 युद्धकाण्डः - सुग्रीवभेदनोपायः | yuddha kandam" },
+            { "key": "07-yuddha-021.txt", "value": "21 युद्धकाण्डः - समुद्रसंक्षोभः | yuddha kandam" },
+            { "key": "07-yuddha-022.txt", "value": "22 युद्धकाण्डः - सेतुबन्धः | yuddha kandam" },
+            { "key": "07-yuddha-023.txt", "value": "23 युद्धकाण्डः - लङ्काभिषेणनम् | yuddha kandam" },
+            { "key": "07-yuddha-024.txt", "value": "24 युद्धकाण्डः - रावणप्रतिज्ञा | yuddha kandam" },
+            { "key": "07-yuddha-025.txt", "value": "25 युद्धकाण्डः - शुकसारणप्रेषणम् | yuddha kandam" },
+            { "key": "07-yuddha-026.txt", "value": "26 युद्धकाण्डः - कपिबलावेक्षणम् | yuddha kandam" },
+            { "key": "07-yuddha-027.txt", "value": "27 युद्धकाण्डः - हरादिवानेरपराक्रमाख्यानम् | yuddha kandam" },
+            { "key": "07-yuddha-028.txt", "value": "28 युद्धकाण्डः - मैन्दादिपराक्रमाख्यानम् | yuddha kandam" },
+            { "key": "07-yuddha-029.txt", "value": "29 युद्धकाण्डः - शार्दूलादिचारप्रेषणम् | yuddha kandam" },
+            { "key": "07-yuddha-030.txt", "value": "30 युद्धकाण्डः - वानरबलसंख्यानम् | yuddha kandam" },
+            { "key": "07-yuddha-031.txt", "value": "31 युद्धकाण्डः - विद्युज्जिह्वमायाप्रयोगः | yuddha kandam" },
+            { "key": "07-yuddha-032.txt", "value": "32 युद्धकाण्डः - सीताविलापः | yuddha kandam" },
+            { "key": "07-yuddha-033.txt", "value": "33 युद्धकाण्डः - सरमासमाश्वासनम् | yuddha kandam" },
+            { "key": "07-yuddha-034.txt", "value": "34 युद्धकाण्डः - रावणनिश्चयकथनम् | yuddha kandam" },
+            { "key": "07-yuddha-035.txt", "value": "35 युद्धकाण्डः - माल्यवदुपदेशः | yuddha kandam" },
+            { "key": "07-yuddha-036.txt", "value": "36 युद्धकाण्डः - पुरद्वाररक्षा | yuddha kandam" },
+            { "key": "07-yuddha-037.txt", "value": "37 युद्धकाण्डः - रामगुल्मविभागः | yuddha kandam" },
+            { "key": "07-yuddha-038.txt", "value": "38 युद्धकाण्डः - सुवेलारोहणम् | yuddha kandam" },
+            { "key": "07-yuddha-039.txt", "value": "39 युद्धकाण्डः - लङ्कादर्शनम् | yuddha kandam" },
+            { "key": "07-yuddha-040.txt", "value": "40 युद्धकाण्डः - रावणसुग्रीवनियुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-041.txt", "value": "41 युद्धकाण्डः - अङ्गददूत्यम् | yuddha kandam" },
+            { "key": "07-yuddha-042.txt", "value": "42 युद्धकाण्डः - युद्धारम्भः | yuddha kandam" },
+            { "key": "07-yuddha-043.txt", "value": "43 युद्धकाण्डः - द्वन्द्वयुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-044.txt", "value": "44 युद्धकाण्डः - निशायुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-045.txt", "value": "45 युद्धकाण्डः - नागपाशबन्धः | yuddha kandam" },
+            { "key": "07-yuddha-046.txt", "value": "46 युद्धकाण्डः - सुग्रीवाद्यनुशोकः | yuddha kandam" },
+            { "key": "07-yuddha-047.txt", "value": "47 युद्धकाण्डः - नागबद्धरामलक्ष्मणप्रदर्शनम् | yuddha kandam" },
+            { "key": "07-yuddha-048.txt", "value": "48 युद्धकाण्डः - सीताश्वासनम् | yuddha kandam" },
+            { "key": "07-yuddha-049.txt", "value": "49 युद्धकाण्डः - रामनिर्वेदः | yuddha kandam" },
+            { "key": "07-yuddha-050.txt", "value": "50 युद्धकाण्डः - नागपाशविमोक्षणम् | yuddha kandam" },
+            { "key": "07-yuddha-051.txt", "value": "51 युद्धकाण्डः - धूम्राक्षाभिषेणनम् | yuddha kandam" },
+            { "key": "07-yuddha-052.txt", "value": "52 युद्धकाण्डः - धूम्राक्षवधः | yuddha kandam" },
+            { "key": "07-yuddha-053.txt", "value": "53 युद्धकाण्डः - वज्रदंष्ट्रयुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-054.txt", "value": "54 युद्धकाण्डः - वज्रदंष्ट्रवधः | yuddha kandam" },
+            { "key": "07-yuddha-055.txt", "value": "55 युद्धकाण्डः - अकम्पनयुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-056.txt", "value": "56 युद्धकाण्डः - अकम्पनवधः | yuddha kandam" },
+            { "key": "07-yuddha-057.txt", "value": "57 युद्धकाण्डः - प्रहस्तयुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-058.txt", "value": "58 युद्धकाण्डः - प्रहस्तवधः | yuddha kandam" },
+            { "key": "07-yuddha-059.txt", "value": "59 युद्धकाण्डः - रावणाभिषेणनम् | yuddha kandam" },
+            { "key": "07-yuddha-060.txt", "value": "60 युद्धकाण्डः - कुम्भकर्णप्रबोधः | yuddha kandam" },
+            { "key": "07-yuddha-061.txt", "value": "61 युद्धकाण्डः - कुम्भकर्णवृत्तकथनम् | yuddha kandam" },
+            { "key": "07-yuddha-062.txt", "value": "62 युद्धकाण्डः - रावणाभ्यर्थना | yuddha kandam" },
+            { "key": "07-yuddha-063.txt", "value": "63 युद्धकाण्डः - कुम्भकर्णानुशोकः | yuddha kandam" },
+            { "key": "07-yuddha-064.txt", "value": "64 युद्धकाण्डः - सीताप्रलोभनोपायः | yuddha kandam" },
+            { "key": "07-yuddha-065.txt", "value": "65 युद्धकाण्डः - कुम्भकर्णाभिषेणनम् | yuddha kandam" },
+            { "key": "07-yuddha-066.txt", "value": "66 युद्धकाण्डः - वानरपर्यवस्थापनम् | yuddha kandam" },
+            { "key": "07-yuddha-067.txt", "value": "67 युद्धकाण्डः - कुम्भकर्णवधः | yuddha kandam" },
+            { "key": "07-yuddha-068.txt", "value": "68 युद्धकाण्डः - रावणानुशोकः | yuddha kandam" },
+            { "key": "07-yuddha-069.txt", "value": "69 युद्धकाण्डः - नरान्तकवधः | yuddha kandam" },
+            { "key": "07-yuddha-070.txt", "value": "70 युद्धकाण्डः - देवान्तकादिवधः | yuddha kandam" },
+            { "key": "07-yuddha-071.txt", "value": "71 युद्धकाण्डः - अतिकायवधः | yuddha kandam" },
+            { "key": "07-yuddha-072.txt", "value": "72 युद्धकाण्डः - रावणमन्युशल्याविष्कारः | yuddha kandam" },
+            { "key": "07-yuddha-073.txt", "value": "73 युद्धकाण्डः - इन्द्रजिन्मायायुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-074.txt", "value": "74 युद्धकाण्डः - ओषधिपर्वतानयनम् | yuddha kandam" },
+            { "key": "07-yuddha-075.txt", "value": "75 युद्धकाण्डः - लङ्कादाहः | yuddha kandam" },
+            { "key": "07-yuddha-076.txt", "value": "76 युद्धकाण्डः - कम्पनादिवधः | yuddha kandam" },
+            { "key": "07-yuddha-077.txt", "value": "77 युद्धकाण्डः - निकुम्भवधः | yuddha kandam" },
+            { "key": "07-yuddha-078.txt", "value": "78 युद्धकाण्डः - मकराक्षाभिषेणनम् | yuddha kandam" },
+            { "key": "07-yuddha-079.txt", "value": "79 युद्धकाण्डः - मकराक्षवधः | yuddha kandam" },
+            { "key": "07-yuddha-080.txt", "value": "80 युद्धकाण्डः - तिरोहितरावणियुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-081.txt", "value": "81 युद्धकाण्डः - मायासीतावधः | yuddha kandam" },
+            { "key": "07-yuddha-082.txt", "value": "82 युद्धकाण्डः - हनूमदादिनिर्वेदः | yuddha kandam" },
+            { "key": "07-yuddha-083.txt", "value": "83 युद्धकाण्डः - रामाश्वासनम् | yuddha kandam" },
+            { "key": "07-yuddha-084.txt", "value": "84 युद्धकाण्डः - इन्द्रजिन्मायाविवरणम् | yuddha kandam" },
+            { "key": "07-yuddha-085.txt", "value": "85 युद्धकाण्डः - निकुम्भिलाभियानम् | yuddha kandam" },
+            { "key": "07-yuddha-086.txt", "value": "86 युद्धकाण्डः - रावणिबलकदनम् | yuddha kandam" },
+            { "key": "07-yuddha-087.txt", "value": "87 युद्धकाण्डः - विभीषणरावणिपरस्परनिन्दा | yuddha kandam" },
+            { "key": "07-yuddha-088.txt", "value": "88 युद्धकाण्डः - सौमित्रिरावणियुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-089.txt", "value": "89 युद्धकाण्डः - सौमित्रिसंधुक्षणम् | yuddha kandam" },
+            { "key": "07-yuddha-090.txt", "value": "90 युद्धकाण्डः - सौमित्रिरावणियुद्धम् | yuddha kandam" },
+            { "key": "07-yuddha-091.txt", "value": "91 युद्धकाण्डः - रावणवधः | yuddha kandam" },
+            { "key": "07-yuddha-092.txt", "value": "92 युद्धकाण्डः - रावणिशस्त्रहतचिकित्सा | yuddha kandam" },
+            { "key": "07-yuddha-093.txt", "value": "93 युद्धकाण्डः - सीताहननोद्यमनिवृत्तिः | yuddha kandam" },
+            { "key": "07-yuddha-094.txt", "value": "94 युद्धकाण्डः - गान्धर्वास्त्रमोहनम् | yuddha kandam" },
+            { "key": "07-yuddha-095.txt", "value": "95 युद्धकाण्डः - राक्षसीविलापः | yuddha kandam" },
+            { "key": "07-yuddha-096.txt", "value": "96 युद्धकाण्डः - रावणाभिषेणनम् | yuddha kandam" },
+            { "key": "07-yuddha-097.txt", "value": "97 युद्धकाण्डः - विरूपाक्षवधः | yuddha kandam" },
+            { "key": "07-yuddha-098.txt", "value": "98 युद्धकाण्डः - महोदरवधः | yuddha kandam" },
+            { "key": "07-yuddha-099.txt", "value": "99 युद्धकाण्डः - महापार्श्ववधः | yuddha kandam" },
+            { "key": "07-yuddha-100.txt", "value": "100 युद्धकाण्डः - रामरावणास्त्रपरम्परा | yuddha kandam" },
+            { "key": "07-yuddha-101.txt", "value": "101 युद्धकाण्डः - लक्ष्मणशक्तिक्षेपः | yuddha kandam" },
+            { "key": "07-yuddha-102.txt", "value": "102 युद्धकाण्डः - लक्ष्मणसंजीवनम् | yuddha kandam" },
+            { "key": "07-yuddha-103.txt", "value": "103 युद्धकाण्डः - ऐन्द्ररथकेतुपातनम् | yuddha kandam" },
+            { "key": "07-yuddha-104.txt", "value": "104 युद्धकाण्डः - रावणशूलभङ्गः | yuddha kandam" },
+            { "key": "07-yuddha-105.txt", "value": "105 युद्धकाण्डः - दशग्रीवविघूर्णनम् | yuddha kandam" },
+            { "key": "07-yuddha-106.txt", "value": "106 युद्धकाण्डः - सारथिविज्ञेयम् | yuddha kandam" },
+            { "key": "07-yuddha-107.txt", "value": "107 युद्धकाण्डः - आदित्यहृदयम् | yuddha kandam" },
+            { "key": "07-yuddha-108.txt", "value": "108 युद्धकाण्डः - शुभाशुभनिमित्तदर्शनम् | yuddha kandam" },
+            { "key": "07-yuddha-109.txt", "value": "109 युद्धकाण्डः - रावणध्वजोन्मथनम् | yuddha kandam" },
+            { "key": "07-yuddha-110.txt", "value": "110 युद्धकाण्डः - रावणैकशतशिरश्छेदनम् | yuddha kandam" },
+            { "key": "07-yuddha-111.txt", "value": "111 युद्धकाण्डः - पौलस्त्यवधः | yuddha kandam" },
+            { "key": "07-yuddha-112.txt", "value": "112 युद्धकाण्डः - विभीषणविलापः | yuddha kandam" },
+            { "key": "07-yuddha-113.txt", "value": "113 युद्धकाण्डः - रावणान्तःपुरपरिदेवनम् | yuddha kandam" },
+            { "key": "07-yuddha-114.txt", "value": "114 युद्धकाण्डः - मन्दोदरीविलापः | yuddha kandam" },
+            { "key": "07-yuddha-115.txt", "value": "115 युद्धकाण्डः - विभीषणाभिषेकः | yuddha kandam" },
+            { "key": "07-yuddha-116.txt", "value": "116 युद्धकाण्डः - मैथिलीप्रियनिवेदनम् | yuddha kandam" },
+            { "key": "07-yuddha-117.txt", "value": "117 युद्धकाण्डः - सीताभर्तृमुखोदीक्षणम् | yuddha kandam" },
+            { "key": "07-yuddha-118.txt", "value": "118 युद्धकाण्डः - सीताप्रत्यादेशः | yuddha kandam" },
+            { "key": "07-yuddha-119.txt", "value": "119 युद्धकाण्डः - सीताहुताशनप्रवेशः | yuddha kandam" },
+            { "key": "07-yuddha-120.txt", "value": "120 युद्धकाण्डः - ब्रह्मकृतरामस्तवः | yuddha kandam" },
+            { "key": "07-yuddha-121.txt", "value": "121 युद्धकाण्डः - सीताप्रतिग्रहः | yuddha kandam" },
+            { "key": "07-yuddha-122.txt", "value": "122 युद्धकाण्डः - दशरथप्रतिसमादेशः | yuddha kandam" },
+            { "key": "07-yuddha-123.txt", "value": "123 युद्धकाण्डः - इन्द्रवरदानम् | yuddha kandam" },
+            { "key": "07-yuddha-124.txt", "value": "124 युद्धकाण्डः - पुष्पकोपस्थापनम् | yuddha kandam" },
+            { "key": "07-yuddha-125.txt", "value": "125 युद्धकाण्डः - पुष्पकोत्पतनम् | yuddha kandam" },
+            { "key": "07-yuddha-126.txt", "value": "126 युद्धकाण्डः - प्रत्यावृत्तिपथवर्णनम् | yuddha kandam" },
+            { "key": "07-yuddha-127.txt", "value": "127 युद्धकाण्डः - भरद्वाजामन्त्रणम् | yuddha kandam" },
+            { "key": "07-yuddha-128.txt", "value": "128 युद्धकाण्डः - भरतप्रियाख्यानम् | yuddha kandam" },
+            { "key": "07-yuddha-129.txt", "value": "129 युद्धकाण्डः - हनूमद्भरतसंभाषणम् | yuddha kandam" },
+            { "key": "07-yuddha-130.txt", "value": "130 युद्धकाण्डः - भरतसमागमः | yuddha kandam" },
+            { "key": "07-yuddha-131.txt", "value": "131 युद्धकाण्डः - श्रीरामपट्टाभिषेकः | yuddha kandam" }
+        ]
+
+        var bhagavathamIndex = [
+            { "key": "canto01/chapter00.txt", "value": "00 canto01" },
+            { "key": "canto01/chapter01.txt", "value": "01 canto01" },
+            { "key": "canto01/chapter02.txt", "value": "02 canto01" },
+            { "key": "canto01/chapter03.txt", "value": "03 canto01" },
+            { "key": "canto01/chapter04.txt", "value": "04 canto01" },
+            { "key": "canto01/chapter05.txt", "value": "05 canto01" },
+            { "key": "canto01/chapter06.txt", "value": "06 canto01" },
+            { "key": "canto01/chapter07.txt", "value": "07 canto01" },
+            { "key": "canto01/chapter08.txt", "value": "08 canto01" },
+            { "key": "canto01/chapter09.txt", "value": "09 canto01" },
+            { "key": "canto01/chapter10.txt", "value": "10 canto01" },
+            { "key": "canto01/chapter11.txt", "value": "11 canto01" },
+            { "key": "canto01/chapter12.txt", "value": "12 canto01" },
+            { "key": "canto01/chapter13.txt", "value": "13 canto01" },
+            { "key": "canto01/chapter14.txt", "value": "14 canto01" },
+            { "key": "canto01/chapter15.txt", "value": "15 canto01" },
+            { "key": "canto01/chapter16.txt", "value": "16 canto01" },
+            { "key": "canto01/chapter17.txt", "value": "17 canto01" },
+            { "key": "canto01/chapter18.txt", "value": "18 canto01" },
+            { "key": "canto01/chapter19.txt", "value": "19 canto01" },
+            { "key": "canto02/chapter01.txt", "value": "01 canto02" },
+            { "key": "canto02/chapter02.txt", "value": "02 canto02" },
+            { "key": "canto02/chapter03.txt", "value": "03 canto02" },
+            { "key": "canto02/chapter04.txt", "value": "04 canto02" },
+            { "key": "canto02/chapter05.txt", "value": "05 canto02" },
+            { "key": "canto02/chapter06.txt", "value": "06 canto02" },
+            { "key": "canto02/chapter07.txt", "value": "07 canto02" },
+            { "key": "canto02/chapter08.txt", "value": "08 canto02" },
+            { "key": "canto02/chapter09.txt", "value": "09 canto02" },
+            { "key": "canto02/chapter10.txt", "value": "10 canto02" },
+            { "key": "canto03/chapter01.txt", "value": "01 canto03" },
+            { "key": "canto03/chapter02.txt", "value": "02 canto03" },
+            { "key": "canto03/chapter03.txt", "value": "03 canto03" },
+            { "key": "canto03/chapter04.txt", "value": "04 canto03" },
+            { "key": "canto03/chapter05.txt", "value": "05 canto03" },
+            { "key": "canto03/chapter06.txt", "value": "06 canto03" },
+            { "key": "canto03/chapter07.txt", "value": "07 canto03" },
+            { "key": "canto03/chapter08.txt", "value": "08 canto03" },
+            { "key": "canto03/chapter09.txt", "value": "09 canto03" },
+            { "key": "canto03/chapter10.txt", "value": "10 canto03" },
+            { "key": "canto03/chapter11.txt", "value": "11 canto03" },
+            { "key": "canto03/chapter12.txt", "value": "12 canto03" },
+            { "key": "canto03/chapter13.txt", "value": "13 canto03" },
+            { "key": "canto03/chapter14.txt", "value": "14 canto03" },
+            { "key": "canto03/chapter15.txt", "value": "15 canto03" },
+            { "key": "canto03/chapter16.txt", "value": "16 canto03" },
+            { "key": "canto03/chapter17.txt", "value": "17 canto03" },
+            { "key": "canto03/chapter18.txt", "value": "18 canto03" },
+            { "key": "canto03/chapter19.txt", "value": "19 canto03" },
+            { "key": "canto03/chapter20.txt", "value": "20 canto03" },
+            { "key": "canto03/chapter21.txt", "value": "21 canto03" },
+            { "key": "canto03/chapter22.txt", "value": "22 canto03" },
+            { "key": "canto03/chapter23.txt", "value": "23 canto03" },
+            { "key": "canto03/chapter24.txt", "value": "24 canto03" },
+            { "key": "canto03/chapter25.txt", "value": "25 canto03" },
+            { "key": "canto03/chapter26.txt", "value": "26 canto03" },
+            { "key": "canto03/chapter27.txt", "value": "27 canto03" },
+            { "key": "canto03/chapter28.txt", "value": "28 canto03" },
+            { "key": "canto03/chapter29.txt", "value": "29 canto03" },
+            { "key": "canto03/chapter30.txt", "value": "30 canto03" },
+            { "key": "canto03/chapter31.txt", "value": "31 canto03" },
+            { "key": "canto03/chapter32.txt", "value": "32 canto03" },
+            { "key": "canto03/chapter33.txt", "value": "33 canto03" },
+            { "key": "canto04/chapter01.txt", "value": "01 canto04" },
+            { "key": "canto04/chapter02.txt", "value": "02 canto04" },
+            { "key": "canto04/chapter03.txt", "value": "03 canto04" },
+            { "key": "canto04/chapter04.txt", "value": "04 canto04" },
+            { "key": "canto04/chapter05.txt", "value": "05 canto04" },
+            { "key": "canto04/chapter06.txt", "value": "06 canto04" },
+            { "key": "canto04/chapter07.txt", "value": "07 canto04" },
+            { "key": "canto04/chapter08.txt", "value": "08 canto04" },
+            { "key": "canto04/chapter09.txt", "value": "09 canto04" },
+            { "key": "canto04/chapter10.txt", "value": "10 canto04" },
+            { "key": "canto04/chapter11.txt", "value": "11 canto04" },
+            { "key": "canto04/chapter12.txt", "value": "12 canto04" },
+            { "key": "canto04/chapter13.txt", "value": "13 canto04" },
+            { "key": "canto04/chapter14.txt", "value": "14 canto04" },
+            { "key": "canto04/chapter15.txt", "value": "15 canto04" },
+            { "key": "canto04/chapter16.txt", "value": "16 canto04" },
+            { "key": "canto04/chapter17.txt", "value": "17 canto04" },
+            { "key": "canto04/chapter18.txt", "value": "18 canto04" },
+            { "key": "canto04/chapter19.txt", "value": "19 canto04" },
+            { "key": "canto04/chapter20.txt", "value": "20 canto04" },
+            { "key": "canto04/chapter21.txt", "value": "21 canto04" },
+            { "key": "canto04/chapter22.txt", "value": "22 canto04" },
+            { "key": "canto04/chapter23.txt", "value": "23 canto04" },
+            { "key": "canto04/chapter24.txt", "value": "24 canto04" },
+            { "key": "canto04/chapter25.txt", "value": "25 canto04" },
+            { "key": "canto04/chapter26.txt", "value": "26 canto04" },
+            { "key": "canto04/chapter27.txt", "value": "27 canto04" },
+            { "key": "canto04/chapter28.txt", "value": "28 canto04" },
+            { "key": "canto04/chapter29.txt", "value": "29 canto04" },
+            { "key": "canto04/chapter30.txt", "value": "30 canto04" },
+            { "key": "canto04/chapter31.txt", "value": "31 canto04" },
+            { "key": "canto05/chapter01.txt", "value": "01 canto05" },
+            { "key": "canto05/chapter02.txt", "value": "02 canto05" },
+            { "key": "canto05/chapter03.txt", "value": "03 canto05" },
+            { "key": "canto05/chapter04.txt", "value": "04 canto05" },
+            { "key": "canto05/chapter05.txt", "value": "05 canto05" },
+            { "key": "canto05/chapter06.txt", "value": "06 canto05" },
+            { "key": "canto05/chapter07.txt", "value": "07 canto05" },
+            { "key": "canto05/chapter08.txt", "value": "08 canto05" },
+            { "key": "canto05/chapter09.txt", "value": "09 canto05" },
+            { "key": "canto05/chapter10.txt", "value": "10 canto05" },
+            { "key": "canto05/chapter11.txt", "value": "11 canto05" },
+            { "key": "canto05/chapter12.txt", "value": "12 canto05" },
+            { "key": "canto05/chapter13.txt", "value": "13 canto05" },
+            { "key": "canto05/chapter14.txt", "value": "14 canto05" },
+            { "key": "canto05/chapter15.txt", "value": "15 canto05" },
+            { "key": "canto05/chapter16.txt", "value": "16 canto05" },
+            { "key": "canto05/chapter17.txt", "value": "17 canto05" },
+            { "key": "canto05/chapter18.txt", "value": "18 canto05" },
+            { "key": "canto05/chapter19.txt", "value": "19 canto05" },
+            { "key": "canto05/chapter20.txt", "value": "20 canto05" },
+            { "key": "canto05/chapter21.txt", "value": "21 canto05" },
+            { "key": "canto05/chapter22.txt", "value": "22 canto05" },
+            { "key": "canto05/chapter23.txt", "value": "23 canto05" },
+            { "key": "canto05/chapter24.txt", "value": "24 canto05" },
+            { "key": "canto05/chapter25.txt", "value": "25 canto05" },
+            { "key": "canto05/chapter26.txt", "value": "26 canto05" },
+            { "key": "canto06/chapter01.txt", "value": "01 canto06" },
+            { "key": "canto06/chapter02.txt", "value": "02 canto06" },
+            { "key": "canto06/chapter03.txt", "value": "03 canto06" },
+            { "key": "canto06/chapter04.txt", "value": "04 canto06" },
+            { "key": "canto06/chapter05.txt", "value": "05 canto06" },
+            { "key": "canto06/chapter06.txt", "value": "06 canto06" },
+            { "key": "canto06/chapter07.txt", "value": "07 canto06" },
+            { "key": "canto06/chapter08.txt", "value": "08 canto06" },
+            { "key": "canto06/chapter09.txt", "value": "09 canto06" },
+            { "key": "canto06/chapter10.txt", "value": "10 canto06" },
+            { "key": "canto06/chapter11.txt", "value": "11 canto06" },
+            { "key": "canto06/chapter12.txt", "value": "12 canto06" },
+            { "key": "canto06/chapter13.txt", "value": "13 canto06" },
+            { "key": "canto06/chapter14.txt", "value": "14 canto06" },
+            { "key": "canto06/chapter15.txt", "value": "15 canto06" },
+            { "key": "canto06/chapter16.txt", "value": "16 canto06" },
+            { "key": "canto06/chapter17.txt", "value": "17 canto06" },
+            { "key": "canto06/chapter18.txt", "value": "18 canto06" },
+            { "key": "canto06/chapter19.txt", "value": "19 canto06" },
+            { "key": "canto07/chapter01.txt", "value": "01 canto07" },
+            { "key": "canto07/chapter02.txt", "value": "02 canto07" },
+            { "key": "canto07/chapter03.txt", "value": "03 canto07" },
+            { "key": "canto07/chapter04.txt", "value": "04 canto07" },
+            { "key": "canto07/chapter05.txt", "value": "05 canto07" },
+            { "key": "canto07/chapter06.txt", "value": "06 canto07" },
+            { "key": "canto07/chapter07.txt", "value": "07 canto07" },
+            { "key": "canto07/chapter08.txt", "value": "08 canto07" },
+            { "key": "canto07/chapter09.txt", "value": "09 canto07" },
+            { "key": "canto07/chapter10.txt", "value": "10 canto07" },
+            { "key": "canto07/chapter11.txt", "value": "11 canto07" },
+            { "key": "canto07/chapter12.txt", "value": "12 canto07" },
+            { "key": "canto07/chapter13.txt", "value": "13 canto07" },
+            { "key": "canto07/chapter14.txt", "value": "14 canto07" },
+            { "key": "canto07/chapter15.txt", "value": "15 canto07" },
+            { "key": "canto08/chapter01.txt", "value": "01 canto08" },
+            { "key": "canto08/chapter02.txt", "value": "02 canto08" },
+            { "key": "canto08/chapter03.txt", "value": "03 canto08" },
+            { "key": "canto08/chapter04.txt", "value": "04 canto08" },
+            { "key": "canto08/chapter05.txt", "value": "05 canto08" },
+            { "key": "canto08/chapter06.txt", "value": "06 canto08" },
+            { "key": "canto08/chapter07.txt", "value": "07 canto08" },
+            { "key": "canto08/chapter08.txt", "value": "08 canto08" },
+            { "key": "canto08/chapter09.txt", "value": "09 canto08" },
+            { "key": "canto08/chapter10.txt", "value": "10 canto08" },
+            { "key": "canto08/chapter11.txt", "value": "11 canto08" },
+            { "key": "canto08/chapter12.txt", "value": "12 canto08" },
+            { "key": "canto08/chapter13.txt", "value": "13 canto08" },
+            { "key": "canto08/chapter14.txt", "value": "14 canto08" },
+            { "key": "canto08/chapter15.txt", "value": "15 canto08" },
+            { "key": "canto08/chapter16.txt", "value": "16 canto08" },
+            { "key": "canto08/chapter17.txt", "value": "17 canto08" },
+            { "key": "canto08/chapter18.txt", "value": "18 canto08" },
+            { "key": "canto08/chapter19.txt", "value": "19 canto08" },
+            { "key": "canto08/chapter20.txt", "value": "20 canto08" },
+            { "key": "canto08/chapter21.txt", "value": "21 canto08" },
+            { "key": "canto08/chapter22.txt", "value": "22 canto08" },
+            { "key": "canto08/chapter23.txt", "value": "23 canto08" },
+            { "key": "canto08/chapter24.txt", "value": "24 canto08" },
+            { "key": "canto09/chapter01.txt", "value": "01 canto09" },
+            { "key": "canto09/chapter02.txt", "value": "02 canto09" },
+            { "key": "canto09/chapter03.txt", "value": "03 canto09" },
+            { "key": "canto09/chapter04.txt", "value": "04 canto09" },
+            { "key": "canto09/chapter05.txt", "value": "05 canto09" },
+            { "key": "canto09/chapter06.txt", "value": "06 canto09" },
+            { "key": "canto09/chapter07.txt", "value": "07 canto09" },
+            { "key": "canto09/chapter08.txt", "value": "08 canto09" },
+            { "key": "canto09/chapter09.txt", "value": "09 canto09" },
+            { "key": "canto09/chapter10.txt", "value": "10 canto09" },
+            { "key": "canto09/chapter11.txt", "value": "11 canto09" },
+            { "key": "canto09/chapter12.txt", "value": "12 canto09" },
+            { "key": "canto09/chapter13.txt", "value": "13 canto09" },
+            { "key": "canto09/chapter14.txt", "value": "14 canto09" },
+            { "key": "canto09/chapter15.txt", "value": "15 canto09" },
+            { "key": "canto09/chapter16.txt", "value": "16 canto09" },
+            { "key": "canto09/chapter17.txt", "value": "17 canto09" },
+            { "key": "canto09/chapter18.txt", "value": "18 canto09" },
+            { "key": "canto09/chapter19.txt", "value": "19 canto09" },
+            { "key": "canto09/chapter20.txt", "value": "20 canto09" },
+            { "key": "canto09/chapter21.txt", "value": "21 canto09" },
+            { "key": "canto09/chapter22.txt", "value": "22 canto09" },
+            { "key": "canto09/chapter23.txt", "value": "23 canto09" },
+            { "key": "canto09/chapter24.txt", "value": "24 canto09" },
+            { "key": "canto10/chapter01.txt", "value": "01 canto10" },
+            { "key": "canto10/chapter02.txt", "value": "02 canto10" },
+            { "key": "canto10/chapter03.txt", "value": "03 canto10" },
+            { "key": "canto10/chapter04.txt", "value": "04 canto10" },
+            { "key": "canto10/chapter05.txt", "value": "05 canto10" },
+            { "key": "canto10/chapter06.txt", "value": "06 canto10" },
+            { "key": "canto10/chapter07.txt", "value": "07 canto10" },
+            { "key": "canto10/chapter08.txt", "value": "08 canto10" },
+            { "key": "canto10/chapter09.txt", "value": "09 canto10" },
+            { "key": "canto10/chapter10.txt", "value": "10 canto10" },
+            { "key": "canto10/chapter11.txt", "value": "11 canto10" },
+            { "key": "canto10/chapter12.txt", "value": "12 canto10" },
+            { "key": "canto10/chapter13.txt", "value": "13 canto10" },
+            { "key": "canto10/chapter14.txt", "value": "14 canto10" },
+            { "key": "canto10/chapter15.txt", "value": "15 canto10" },
+            { "key": "canto10/chapter16.txt", "value": "16 canto10" },
+            { "key": "canto10/chapter17.txt", "value": "17 canto10" },
+            { "key": "canto10/chapter18.txt", "value": "18 canto10" },
+            { "key": "canto10/chapter19.txt", "value": "19 canto10" },
+            { "key": "canto10/chapter20.txt", "value": "20 canto10" },
+            { "key": "canto10/chapter21.txt", "value": "21 canto10" },
+            { "key": "canto10/chapter22.txt", "value": "22 canto10" },
+            { "key": "canto10/chapter23.txt", "value": "23 canto10" },
+            { "key": "canto10/chapter24.txt", "value": "24 canto10" },
+            { "key": "canto10/chapter25.txt", "value": "25 canto10" },
+            { "key": "canto10/chapter26.txt", "value": "26 canto10" },
+            { "key": "canto10/chapter27.txt", "value": "27 canto10" },
+            { "key": "canto10/chapter28.txt", "value": "28 canto10" },
+            { "key": "canto10/chapter29.txt", "value": "29 canto10" },
+            { "key": "canto10/chapter30.txt", "value": "30 canto10" },
+            { "key": "canto10/chapter31.txt", "value": "31 canto10" },
+            { "key": "canto10/chapter32.txt", "value": "32 canto10" },
+            { "key": "canto10/chapter33.txt", "value": "33 canto10" },
+            { "key": "canto10/chapter34.txt", "value": "34 canto10" },
+            { "key": "canto10/chapter35.txt", "value": "35 canto10" },
+            { "key": "canto10/chapter36.txt", "value": "36 canto10" },
+            { "key": "canto10/chapter37.txt", "value": "37 canto10" },
+            { "key": "canto10/chapter38.txt", "value": "38 canto10" },
+            { "key": "canto10/chapter39.txt", "value": "39 canto10" },
+            { "key": "canto10/chapter40.txt", "value": "40 canto10" },
+            { "key": "canto10/chapter41.txt", "value": "41 canto10" },
+            { "key": "canto10/chapter42.txt", "value": "42 canto10" },
+            { "key": "canto10/chapter43.txt", "value": "43 canto10" },
+            { "key": "canto10/chapter44.txt", "value": "44 canto10" },
+            { "key": "canto10/chapter45.txt", "value": "45 canto10" },
+            { "key": "canto10/chapter46.txt", "value": "46 canto10" },
+            { "key": "canto10/chapter47.txt", "value": "47 canto10" },
+            { "key": "canto10/chapter48.txt", "value": "48 canto10" },
+            { "key": "canto10/chapter49.txt", "value": "49 canto10" },
+            { "key": "canto10/chapter50.txt", "value": "50 canto10" },
+            { "key": "canto10/chapter51.txt", "value": "51 canto10" },
+            { "key": "canto10/chapter52.txt", "value": "52 canto10" },
+            { "key": "canto10/chapter53.txt", "value": "53 canto10" },
+            { "key": "canto10/chapter54.txt", "value": "54 canto10" },
+            { "key": "canto10/chapter55.txt", "value": "55 canto10" },
+            { "key": "canto10/chapter56.txt", "value": "56 canto10" },
+            { "key": "canto10/chapter57.txt", "value": "57 canto10" },
+            { "key": "canto10/chapter58.txt", "value": "58 canto10" },
+            { "key": "canto10/chapter59.txt", "value": "59 canto10" },
+            { "key": "canto10/chapter60.txt", "value": "60 canto10" },
+            { "key": "canto10/chapter61.txt", "value": "61 canto10" },
+            { "key": "canto10/chapter62.txt", "value": "62 canto10" },
+            { "key": "canto10/chapter63.txt", "value": "63 canto10" },
+            { "key": "canto10/chapter64.txt", "value": "64 canto10" },
+            { "key": "canto10/chapter65.txt", "value": "65 canto10" },
+            { "key": "canto10/chapter66.txt", "value": "66 canto10" },
+            { "key": "canto10/chapter67.txt", "value": "67 canto10" },
+            { "key": "canto10/chapter68.txt", "value": "68 canto10" },
+            { "key": "canto10/chapter69.txt", "value": "69 canto10" },
+            { "key": "canto10/chapter70.txt", "value": "70 canto10" },
+            { "key": "canto10/chapter71.txt", "value": "71 canto10" },
+            { "key": "canto10/chapter72.txt", "value": "72 canto10" },
+            { "key": "canto10/chapter73.txt", "value": "73 canto10" },
+            { "key": "canto10/chapter74.txt", "value": "74 canto10" },
+            { "key": "canto10/chapter75.txt", "value": "75 canto10" },
+            { "key": "canto10/chapter76.txt", "value": "76 canto10" },
+            { "key": "canto10/chapter77.txt", "value": "77 canto10" },
+            { "key": "canto10/chapter78.txt", "value": "78 canto10" },
+            { "key": "canto10/chapter79.txt", "value": "79 canto10" },
+            { "key": "canto10/chapter80.txt", "value": "80 canto10" },
+            { "key": "canto10/chapter81.txt", "value": "81 canto10" },
+            { "key": "canto10/chapter82.txt", "value": "82 canto10" },
+            { "key": "canto10/chapter83.txt", "value": "83 canto10" },
+            { "key": "canto10/chapter84.txt", "value": "84 canto10" },
+            { "key": "canto10/chapter85.txt", "value": "85 canto10" },
+            { "key": "canto10/chapter86.txt", "value": "86 canto10" },
+            { "key": "canto10/chapter87.txt", "value": "87 canto10" },
+            { "key": "canto10/chapter88.txt", "value": "88 canto10" },
+            { "key": "canto10/chapter89.txt", "value": "89 canto10" },
+            { "key": "canto10/chapter90.txt", "value": "90 canto10" },
+            { "key": "canto11/chapter01.txt", "value": "01 canto11" },
+            { "key": "canto11/chapter02.txt", "value": "02 canto11" },
+            { "key": "canto11/chapter03.txt", "value": "03 canto11" },
+            { "key": "canto11/chapter04.txt", "value": "04 canto11" },
+            { "key": "canto11/chapter05.txt", "value": "05 canto11" },
+            { "key": "canto11/chapter06.txt", "value": "06 canto11" },
+            { "key": "canto11/chapter07.txt", "value": "07 canto11" },
+            { "key": "canto11/chapter08.txt", "value": "08 canto11" },
+            { "key": "canto11/chapter09.txt", "value": "09 canto11" },
+            { "key": "canto11/chapter10.txt", "value": "10 canto11" },
+            { "key": "canto11/chapter11.txt", "value": "11 canto11" },
+            { "key": "canto11/chapter12.txt", "value": "12 canto11" },
+            { "key": "canto11/chapter13.txt", "value": "13 canto11" },
+            { "key": "canto11/chapter14.txt", "value": "14 canto11" },
+            { "key": "canto11/chapter15.txt", "value": "15 canto11" },
+            { "key": "canto11/chapter16.txt", "value": "16 canto11" },
+            { "key": "canto11/chapter17.txt", "value": "17 canto11" },
+            { "key": "canto11/chapter18.txt", "value": "18 canto11" },
+            { "key": "canto11/chapter19.txt", "value": "19 canto11" },
+            { "key": "canto11/chapter20.txt", "value": "20 canto11" },
+            { "key": "canto11/chapter21.txt", "value": "21 canto11" },
+            { "key": "canto11/chapter22.txt", "value": "22 canto11" },
+            { "key": "canto11/chapter23.txt", "value": "23 canto11" },
+            { "key": "canto11/chapter24.txt", "value": "24 canto11" },
+            { "key": "canto11/chapter25.txt", "value": "25 canto11" },
+            { "key": "canto11/chapter26.txt", "value": "26 canto11" },
+            { "key": "canto11/chapter27.txt", "value": "27 canto11" },
+            { "key": "canto11/chapter28.txt", "value": "28 canto11" },
+            { "key": "canto11/chapter29.txt", "value": "29 canto11" },
+            { "key": "canto11/chapter30.txt", "value": "30 canto11" },
+            { "key": "canto11/chapter31.txt", "value": "31 canto11" },
+            { "key": "canto12/chapter01.txt", "value": "01 canto12" },
+            { "key": "canto12/chapter02.txt", "value": "02 canto12" },
+            { "key": "canto12/chapter03.txt", "value": "03 canto12" },
+            { "key": "canto12/chapter04.txt", "value": "04 canto12" },
+            { "key": "canto12/chapter05.txt", "value": "05 canto12" },
+            { "key": "canto12/chapter06.txt", "value": "06 canto12" },
+            { "key": "canto12/chapter07.txt", "value": "07 canto12" },
+            { "key": "canto12/chapter08.txt", "value": "08 canto12" },
+            { "key": "canto12/chapter09.txt", "value": "09 canto12" },
+            { "key": "canto12/chapter10.txt", "value": "10 canto12" },
+            { "key": "canto12/chapter11.txt", "value": "11 canto12" },
+            { "key": "canto12/chapter12.txt", "value": "12 canto12" },
+            { "key": "canto12/chapter13.txt", "value": "13 canto12" }
+        ]
+
+        const storage_var = ["ramayanam.chapter", "bhagavatham.chapter"]
+        const booklistIndex = [ramayanamIndex, bhagavathamIndex]
+        const bookTitle = ["श्रीमाद्वाल्मीकिरामायणम् | Srimad Ramayanam", "श्रीमद्भागवतं | Srimad Bhagavatham"]
+
+        function stickHeader() {
+            if (window.pageYOffset > sticky) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
+        }
+
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "100%";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+        function search_index() {
+            // Regex search
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.replace(' ', '.*');
+            ul = document.getElementById("myUL");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.match(new RegExp(filter, 'gi')) != null) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+        function onpageload() {
+            const searchParams = new URLSearchParams(location.search);
+            const showbook = document.getElementById('showbook')
+            if (searchParams.has('size')) {
+                showbook.style.setProperty('font-size', searchParams.get('size'));
+            }
+
+            if (searchParams.has('bold')) {
+                showbook.style.setProperty('font-weight', searchParams.get('bold'));
+            }
+
+            if (searchParams.has('wrap')) {
+                showbook.style.setProperty('white-space', searchParams.get('wrap'));
+            }
+
+            header = document.getElementById("myHeader");
+            sticky = header.offsetTop;
+            booklist = document.getElementById("booklist")
+
+            if (typeof (Storage) !== "undefined") {
+                if (localStorage.getItem('book.selectedBook') != null) {
+                    booklist.value = localStorage.getItem('book.selectedBook')
+                }
+            }
+
+            console.log(booklist.value, booklist.selectedIndex)
+
+            onchange_book()
+        }
+
+        function onchange_book() {
+            
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem('book.selectedBook', booklist.value);
+            }
+
+            document.getElementById("myInput").value = ''
+            chapter = 0
+            if (typeof (Storage) !== "undefined") {
+                if (localStorage.getItem(storage_var[booklist.selectedIndex]) != null) {
+                    chapter = parseInt(localStorage.getItem(storage_var[booklist.selectedIndex]))
+                }
+            }
+
+            console.log(bookTitle[booklist.selectedIndex])
+
+            document.getElementById('title_text').innerText = bookTitle[booklist.selectedIndex]
+
+            var indexContent = ''
+            for (i = 0; i < booklistIndex[booklist.selectedIndex].length; ++i) {
+                indexContent += '<li><a data-index="' + i + '">' + booklistIndex[booklist.selectedIndex][i]['value'] + '</a></li>'
+            }
+
+            document.getElementById('myUL').innerHTML = indexContent
+
+            const myLinks = document.querySelectorAll("ul a");
+            for (const link of myLinks) {
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    chapter = e.target.getAttribute("data-index");
+                    getData()
+                    closeNav()
+                };
+            }
+
+            getData()
+        }
+
+        function getData() {
+            const pageId = booklistIndex[booklist.selectedIndex][chapter]['key']
+            document.getElementById('subtitle_text').innerText = booklistIndex[booklist.selectedIndex][chapter]['value']
+            console.log(pageId);
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem(storage_var[booklist.selectedIndex], chapter);
+            }
+            const apiUrl = booklist.value
+
+            document.getElementById("showbook").innerText = "Loading..."
+            fetch(apiUrl + pageId)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error, status = ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then((text) => {
+                    document.getElementById("showbook").innerText = text;
+                })
+                .catch((error) => {
+                    document.getElementById("showbook").innerText = `Error: ${error.message}`;
+                });
+        }
+
+        function moveChapter(direction) {
+            const newIndex = chapter + direction
+            if (newIndex >= 0 && newIndex < booklistIndex[booklist.selectedIndex].length) {
+                chapter += direction
+                getData()
+            }
+        }
+    </script>
+</head>
+
+<body onload="onpageload()">
+    <div class="header" id="myHeader">
+        <div id="mySidenav" class="sidenav">
+            <select class="booklist" id="booklist" onchange="onchange_book()">
+                <option value='https://raw.githubusercontent.com/rajaramanmythili/books/main/ramayanam-sanskrit/'>
+                    ramayanam</option>
+                <option value='https://raw.githubusercontent.com/rajaramaniyer/srimad_bhaghavatham/master/sanskrit/'>
+                    bhagavatham</option>
+            </select>
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <input type="text" id="myInput" onkeyup="search_index()" placeholder="Search" title="Type to search">
+            <ul id="myUL">Loaded dynamically</ul>
+        </div>
+        <span style="cursor:pointer" onclick="openNav()">&#9776;</span>
+        <span id="subtitle_text"></span> <span id="title_text"></span><br>
+    </div>
+
+    <div id="showbook" class="showbook">Loading...</div>
+
+    <div>
+        <button onclick="moveChapter(-1)" class="left">&lt;&lt;</button>
+        <button onclick="moveChapter(1)" class="right">&gt;&gt;</button>
+    </div>
+
+</body>
+
+</html>
