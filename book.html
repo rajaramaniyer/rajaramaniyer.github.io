@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -28,13 +27,8 @@
         .sidenav a {
             padding: 8px 8px 8px 8px;
             text-decoration: none;
-            color: #818181;
             display: block;
             transition: 0.3s;
-        }
-
-        .sidenav a:hover {
-            color: #f1f1f1;
         }
 
         .closebtn {
@@ -71,22 +65,9 @@
         }
 
         #myUL li a {
-            border: 1px solid #ddd;
-            margin-top: -1px;
-            /* Prevent double borders */
-            background-color: #f6f6f6;
             padding: 12px;
             text-decoration: none;
-            color: black;
             display: block
-        }
-
-        #myUL li a:hover:not(.header) {
-            background-color: #eee;
-        }
-
-        .content {
-            padding: 16px;
         }
 
         .sticky {
@@ -99,9 +80,14 @@
             padding-top: 102px;
         }
 
-        .header{
+        .header {
             background: black;
-            padding-bottom: 10px;
+            padding: 10px;
+        }
+
+        .title_style {
+            cursor: pointer;
+            white-space: nowrap;
         }
 
         body {
@@ -1083,8 +1069,6 @@
                 }
             }
 
-            console.log(bookTitle[booklist.selectedIndex])
-
             document.getElementById('title_text').innerText = bookTitle[booklist.selectedIndex]
 
             var indexContent = ''
@@ -1109,7 +1093,7 @@
 
         function getData() {
             const pageId = booklistIndex[booklist.selectedIndex][chapter]['key']
-            document.getElementById('subtitle_text').innerText = booklistIndex[booklist.selectedIndex][chapter]['value']
+            document.getElementById('title_text').innerText = booklistIndex[booklist.selectedIndex][chapter]['value'] + " " + bookTitle[booklist.selectedIndex]
             console.log(pageId);
             if (typeof (Storage) !== "undefined") {
                 localStorage.setItem(storage_var[booklist.selectedIndex], chapter);
@@ -1155,8 +1139,7 @@
             <input type="text" id="myInput" onkeyup="search_index()" placeholder="Search" title="Type to search">
             <ul id="myUL">Loaded dynamically</ul>
         </div>
-        <span style="cursor:pointer" onclick="openNav()">&#9776;</span>
-        <span id="subtitle_text"></span> <span id="title_text"></span><br>
+        <span class="title_style" onclick="openNav()">&#9776; <span id="title_text"></span></span>
     </div>
 
     <div id="showbook" class="showbook">Loading...</div>
