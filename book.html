@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         .sidenav {
             height: 100%;
             width: 0;
@@ -22,9 +26,8 @@
         }
 
         .sidenav a {
-            padding: 8px 8px 8px 32px;
+            padding: 8px 8px 8px 8px;
             text-decoration: none;
-            font-size: 3vw;
             color: #818181;
             display: block;
             transition: 0.3s;
@@ -35,7 +38,6 @@
         }
 
         .closebtn {
-            font-size: 3vw;
             float: right;
             width: 10%;
             text-align: center;
@@ -43,7 +45,8 @@
 
         .booklist {
             padding: 10px;
-            font-size: 3vw;
+            background-color: #111;
+            color: #ebebeb;
             float: left;
             width: 90%
         }
@@ -52,16 +55,10 @@
         .right {
             float: left;
             width: 50%;
-            font-size: 3vw;
-        }
-
-        * {
-            box-sizing: border-box;
         }
 
         #myInput {
             width: 100%;
-            font-size: 3vw;
             padding: 12px 20px 12px 40px;
             border: 1px solid #ddd;
             margin-bottom: 12px;
@@ -80,20 +77,12 @@
             background-color: #f6f6f6;
             padding: 12px;
             text-decoration: none;
-            font-size: 3vw;
             color: black;
             display: block
         }
 
         #myUL li a:hover:not(.header) {
             background-color: #eee;
-        }
-
-        .header {
-            padding: 10px 16px;
-            background: #555;
-            color: #f1f1f1;
-            font-size: 2vw
         }
 
         .content {
@@ -110,14 +99,20 @@
             padding-top: 102px;
         }
 
+        .header{
+            background: black;
+            padding-bottom: 10px;
+        }
+
         body {
             background-color: #303030;
             color: #c0c0c0;
+            font-size: 3vw;
         }
 
         .showbook {
-            font-size: 3vw;
             word-wrap: break-word;
+            font-size: 5vw;
         }
     </style>
 
@@ -1076,7 +1071,6 @@
         }
 
         function onchange_book() {
-            
             if (typeof (Storage) !== "undefined") {
                 localStorage.setItem('book.selectedBook', booklist.value);
             }
