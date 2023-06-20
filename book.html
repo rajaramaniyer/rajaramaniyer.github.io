@@ -110,7 +110,7 @@
         var sticky = null
         var booklist = null
 
-        var ramayanamIndex = [
+        const ramayanamIndex = [
             { "key": "02-bala-001.txt", "value": "1 बालकाण्डः - नारदवाक्यम् | bala kandam" },
             { "key": "02-bala-002.txt", "value": "2 बालकाण्डः - ब्रह्मागमनम् | bala kandam" },
             { "key": "02-bala-003.txt", "value": "3 बालकाण्डः - काव्यसङ्क्षेपः | bala kandam" },
@@ -649,7 +649,7 @@
             { "key": "07-yuddha-131.txt", "value": "131 युद्धकाण्डः - श्रीरामपट्टाभिषेकः | yuddha kandam" }
         ]
 
-        var bhagavathamIndex = [
+        const bhagavathamIndex = [
             { "key": "canto01/chapter00.txt", "value": "00 canto01" },
             { "key": "canto01/chapter01.txt", "value": "01 canto01" },
             { "key": "canto01/chapter02.txt", "value": "02 canto01" },
@@ -988,9 +988,125 @@
             { "key": "canto12/chapter13.txt", "value": "13 canto12" }
         ]
 
-        const storage_var = ["ramayanam.chapter", "bhagavatham.chapter"]
-        const booklistIndex = [ramayanamIndex, bhagavathamIndex]
-        const bookTitle = ["श्रीमाद्वाल्मीकिरामायणम् | Srimad Ramayanam", "श्रीमद्भागवतं | Srimad Bhagavatham"]
+        const narayaneeyamIndex = [
+            { "key": "narayaneeyam-001.txt", "value": "dashakam 001"},
+            { "key": "narayaneeyam-002.txt", "value": "dashakam 002"},
+            { "key": "narayaneeyam-003.txt", "value": "dashakam 003"},
+            { "key": "narayaneeyam-004.txt", "value": "dashakam 004"},
+            { "key": "narayaneeyam-005.txt", "value": "dashakam 005"},
+            { "key": "narayaneeyam-006.txt", "value": "dashakam 006"},
+            { "key": "narayaneeyam-007.txt", "value": "dashakam 007"},
+            { "key": "narayaneeyam-008.txt", "value": "dashakam 008"},
+            { "key": "narayaneeyam-009.txt", "value": "dashakam 009"},
+            { "key": "narayaneeyam-010.txt", "value": "dashakam 010"},
+            { "key": "narayaneeyam-011.txt", "value": "dashakam 011"},
+            { "key": "narayaneeyam-012.txt", "value": "dashakam 012"},
+            { "key": "narayaneeyam-013.txt", "value": "dashakam 013"},
+            { "key": "narayaneeyam-014.txt", "value": "dashakam 014"},
+            { "key": "narayaneeyam-015.txt", "value": "dashakam 015"},
+            { "key": "narayaneeyam-016.txt", "value": "dashakam 016"},
+            { "key": "narayaneeyam-017.txt", "value": "dashakam 017"},
+            { "key": "narayaneeyam-018.txt", "value": "dashakam 018"},
+            { "key": "narayaneeyam-019.txt", "value": "dashakam 019"},
+            { "key": "narayaneeyam-020.txt", "value": "dashakam 020"},
+            { "key": "narayaneeyam-021.txt", "value": "dashakam 021"},
+            { "key": "narayaneeyam-022.txt", "value": "dashakam 022"},
+            { "key": "narayaneeyam-023.txt", "value": "dashakam 023"},
+            { "key": "narayaneeyam-024.txt", "value": "dashakam 024"},
+            { "key": "narayaneeyam-025.txt", "value": "dashakam 025"},
+            { "key": "narayaneeyam-026.txt", "value": "dashakam 026"},
+            { "key": "narayaneeyam-027.txt", "value": "dashakam 027"},
+            { "key": "narayaneeyam-028.txt", "value": "dashakam 028"},
+            { "key": "narayaneeyam-029.txt", "value": "dashakam 029"},
+            { "key": "narayaneeyam-030.txt", "value": "dashakam 030"},
+            { "key": "narayaneeyam-031.txt", "value": "dashakam 031"},
+            { "key": "narayaneeyam-032.txt", "value": "dashakam 032"},
+            { "key": "narayaneeyam-033.txt", "value": "dashakam 033"},
+            { "key": "narayaneeyam-034.txt", "value": "dashakam 034"},
+            { "key": "narayaneeyam-035.txt", "value": "dashakam 035"},
+            { "key": "narayaneeyam-036.txt", "value": "dashakam 036"},
+            { "key": "narayaneeyam-037.txt", "value": "dashakam 037"},
+            { "key": "narayaneeyam-038.txt", "value": "dashakam 038"},
+            { "key": "narayaneeyam-039.txt", "value": "dashakam 039"},
+            { "key": "narayaneeyam-040.txt", "value": "dashakam 040"},
+            { "key": "narayaneeyam-041.txt", "value": "dashakam 041"},
+            { "key": "narayaneeyam-042.txt", "value": "dashakam 042"},
+            { "key": "narayaneeyam-043.txt", "value": "dashakam 043"},
+            { "key": "narayaneeyam-044.txt", "value": "dashakam 044"},
+            { "key": "narayaneeyam-045.txt", "value": "dashakam 045"},
+            { "key": "narayaneeyam-046.txt", "value": "dashakam 046"},
+            { "key": "narayaneeyam-047.txt", "value": "dashakam 047"},
+            { "key": "narayaneeyam-048.txt", "value": "dashakam 048"},
+            { "key": "narayaneeyam-049.txt", "value": "dashakam 049"},
+            { "key": "narayaneeyam-050.txt", "value": "dashakam 050"},
+            { "key": "narayaneeyam-051.txt", "value": "dashakam 051"},
+            { "key": "narayaneeyam-052.txt", "value": "dashakam 052"},
+            { "key": "narayaneeyam-053.txt", "value": "dashakam 053"},
+            { "key": "narayaneeyam-054.txt", "value": "dashakam 054"},
+            { "key": "narayaneeyam-055.txt", "value": "dashakam 055"},
+            { "key": "narayaneeyam-056.txt", "value": "dashakam 056"},
+            { "key": "narayaneeyam-057.txt", "value": "dashakam 057"},
+            { "key": "narayaneeyam-058.txt", "value": "dashakam 058"},
+            { "key": "narayaneeyam-059.txt", "value": "dashakam 059"},
+            { "key": "narayaneeyam-060.txt", "value": "dashakam 060"},
+            { "key": "narayaneeyam-061.txt", "value": "dashakam 061"},
+            { "key": "narayaneeyam-062.txt", "value": "dashakam 062"},
+            { "key": "narayaneeyam-063.txt", "value": "dashakam 063"},
+            { "key": "narayaneeyam-064.txt", "value": "dashakam 064"},
+            { "key": "narayaneeyam-065.txt", "value": "dashakam 065"},
+            { "key": "narayaneeyam-066.txt", "value": "dashakam 066"},
+            { "key": "narayaneeyam-067.txt", "value": "dashakam 067"},
+            { "key": "narayaneeyam-068.txt", "value": "dashakam 068"},
+            { "key": "narayaneeyam-069.txt", "value": "dashakam 069"},
+            { "key": "narayaneeyam-070.txt", "value": "dashakam 070"},
+            { "key": "narayaneeyam-071.txt", "value": "dashakam 071"},
+            { "key": "narayaneeyam-072.txt", "value": "dashakam 072"},
+            { "key": "narayaneeyam-073.txt", "value": "dashakam 073"},
+            { "key": "narayaneeyam-074.txt", "value": "dashakam 074"},
+            { "key": "narayaneeyam-075.txt", "value": "dashakam 075"},
+            { "key": "narayaneeyam-076.txt", "value": "dashakam 076"},
+            { "key": "narayaneeyam-077.txt", "value": "dashakam 077"},
+            { "key": "narayaneeyam-078.txt", "value": "dashakam 078"},
+            { "key": "narayaneeyam-079.txt", "value": "dashakam 079"},
+            { "key": "narayaneeyam-080.txt", "value": "dashakam 080"},
+            { "key": "narayaneeyam-081.txt", "value": "dashakam 081"},
+            { "key": "narayaneeyam-082.txt", "value": "dashakam 082"},
+            { "key": "narayaneeyam-083.txt", "value": "dashakam 083"},
+            { "key": "narayaneeyam-084.txt", "value": "dashakam 084"},
+            { "key": "narayaneeyam-085.txt", "value": "dashakam 085"},
+            { "key": "narayaneeyam-086.txt", "value": "dashakam 086"},
+            { "key": "narayaneeyam-087.txt", "value": "dashakam 087"},
+            { "key": "narayaneeyam-088.txt", "value": "dashakam 088"},
+            { "key": "narayaneeyam-089.txt", "value": "dashakam 089"},
+            { "key": "narayaneeyam-090.txt", "value": "dashakam 090"},
+            { "key": "narayaneeyam-091.txt", "value": "dashakam 091"},
+            { "key": "narayaneeyam-092.txt", "value": "dashakam 092"},
+            { "key": "narayaneeyam-093.txt", "value": "dashakam 093"},
+            { "key": "narayaneeyam-094.txt", "value": "dashakam 094"},
+            { "key": "narayaneeyam-095.txt", "value": "dashakam 095"},
+            { "key": "narayaneeyam-096.txt", "value": "dashakam 096"},
+            { "key": "narayaneeyam-097.txt", "value": "dashakam 097"},
+            { "key": "narayaneeyam-098.txt", "value": "dashakam 098"},
+            { "key": "narayaneeyam-099.txt", "value": "dashakam 099"},
+            { "key": "narayaneeyam-100.txt", "value": "dashakam1001"}
+        ]
+
+        const vaishnavaSamhitaIndex = [
+            { "key": "vaishnava-samhita-sanskirt-01.txt", "value": "volume 01"},
+            { "key": "vaishnava-samhita-sanskirt-02.txt", "value": "volume 02"},
+            { "key": "vaishnava-samhita-sanskirt-03.txt", "value": "volume 03"},
+            { "key": "vaishnava-samhita-sanskirt-04.txt", "value": "volume 04"},
+            { "key": "vaishnava-samhita-sanskirt-05.txt", "value": "volume 05"},
+            { "key": "vaishnava-samhita-sanskirt-06.txt", "value": "volume 06"},
+            { "key": "vaishnava-samhita-sanskirt-07.txt", "value": "volume 07"},
+            { "key": "vaishnava-samhita-sanskirt-08.txt", "value": "volume 08"},
+            { "key": "vaishnava-samhita-sanskirt-09.txt", "value": "volume 09"},
+            { "key": "vaishnava-samhita-sanskirt-10.txt", "value": "volume 10"}
+        ]
+
+        const storage_var = ["ramayanam.chapter", "bhagavatham.chapter", "narayaneeyam.chapter", "vaishnava-samhita.chapter"]
+        const booklistIndex = [ramayanamIndex, bhagavathamIndex, narayaneeyamIndex, vaishnavaSamhitaIndex]
+        const bookTitle = ["श्रीमाद्वाल्मीकिरामायणम् | Srimad Ramayanam", "श्रीमद्भागवतं | Srimad Bhagavatham", "Narayaneeyam", "Vaishnava Samhita"]
 
         function stickHeader() {
             if (window.pageYOffset > sticky) {
@@ -1134,6 +1250,10 @@
                     ramayanam</option>
                 <option value='https://raw.githubusercontent.com/rajaramaniyer/srimad_bhaghavatham/master/sanskrit/'>
                     bhagavatham</option>
+                <option value='https://raw.githubusercontent.com/rajaramanmythili/books/main/narayaneeyam/'>
+                    narayaneeyam</option>
+                <option value='https://raw.githubusercontent.com/rajaramanmythili/books/main/srisrianna/vaishnava-samhita/'>
+                    vaishnava-samhita</option>
             </select>
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <input type="text" id="myInput" onkeyup="search_index()" placeholder="Search" title="Type to search">
