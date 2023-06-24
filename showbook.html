@@ -74,7 +74,7 @@
                     document.getElementsByTagName('body')[0].innerHTML = data
                 } else {
                     const re = new RegExp('\n\n')
-                    const ne = new RegExp('^[१२३४५६७८९०1234567890]')
+                    const ne = new RegExp('^[१२३४५६७८९०1234567890]|[^-]+- [१२३४५६७८९०1234567890]+\n')
                     const be = new RegExp('^[*]')
                     const blocks = data.split(re)
                     console.log(blocks.length)
