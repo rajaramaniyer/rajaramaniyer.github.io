@@ -1,0 +1,240 @@
+<html>
+
+<head>
+    <style>
+        body {
+            margin: 0;
+            background-color: #00FF00;
+        }
+
+        .container {
+            position: fixed;
+            overflow: hidden;
+            font-size: 6vw;
+            font-family: 'Shobhika';
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .white {
+            color: orangered;
+            animation-name: erase;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            width: 0px;
+            --scaleStart: 0px;
+        }
+
+        .line1 {
+            top: 20px;
+        }
+
+        .line2 {
+            top: 180px;
+        }
+
+        .line3 {
+            top: 420px;
+        }
+
+        .line4 {
+            top: 580px;
+        }
+
+        @keyframes erase {
+            0% {
+                width: var(--scaleStart)
+            }
+
+            24% {
+                width: var(--scaleEnd)
+            }
+
+            25%,
+            100% {
+                width: var(--scaleStart)
+            }
+        }
+    </style>
+
+    <script>
+        var blocks = [
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+पुण्डरीकप्रिय पुण्डरीकाक्ष
+पण्डरीनाथ पाण्डुरङ्ग ॥1॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+कटिधृतकर कनकाम्बर
+कौस्तुभधर पाण्डुरङ्ग ॥2॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+मकरकुण्डलधर मन्दहासमुख
+मङ्गलविग्रह पाण्डुरङ्ग ॥3॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+शङ्खचक्रधर पङ्कजनेत्र
+किङ्कररक्षक पाण्डुरङ्ग ॥4॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+त्वमेव माता च त्वमेव पिता
+त्वमेव भ्राता पाण्डुरङ्ग ॥5॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+त्वमेव भर्ता च त्वमेव पुत्रः
+त्वमेव बन्धुः पाण्डुरङ्ग ॥6॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+न हि मम ज्ञानं न हि मम ध्यानं
+न हि मम मौनं पाण्डुरङ्ग ॥7॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+न हि मम योगो न हि मम यागो
+नहि मम तपः पाण्डुरङ्ग ॥8॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+भागवतपाददूलीषु विलुठन्
+भक्तिमेव याचे पाण्डुरङ्ग ॥9॥
+
+`,
+
+            `* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+* पाण्डुरङ्ग जय पाण्डुरङ्ग *
+
+भावुकप्रेमिक भक्तमण्डले
+भावय मामपि पाण्डुरङ्ग ॥10॥
+
+`
+        ]
+
+        var duration_per_line = 5143; // milliseconds
+        var b = 0
+        function nextPage() {
+            if (b >= blocks.length) return;
+            const c = document.getElementsByClassName('container')
+
+            lines = blocks[b].split('\n')
+            var d = 1
+            for (i = 0; i < lines.length; ++i) {
+                if (lines[i] == '') continue;
+                lineDiv = document.getElementsByClassName('line' + d)
+                lineDiv[0].innerText = lines[i]
+                lineDiv[1].innerText = lines[i]
+                d++;
+            }
+
+            var prevLeft = 0
+            var prevWidth = 0
+            for (i = 0; i < c.length; ++i) {
+                if (prevLeft == 0) {
+                    prevLeft = (window.innerWidth - c[i].clientWidth) / 2
+                    prevWidth = c[i].clientWidth
+                    c[i].style.setProperty('left', prevLeft);
+                } else {
+                    c[i].style.setProperty('left', prevLeft);
+                    c[i].style.setProperty('--scaleEnd', prevWidth + 'px');
+                    prevLeft = 0
+                    prevWidth = 0
+                }
+            }
+            b++;
+            setTimeout(nextPage, duration_per_line * 4)
+        }
+
+        function onpageload() {
+            console.log(document.styleSheets[0].cssRules)
+            changeStyle('.white', { 'animation-duration': (duration_per_line * 4) + 'ms' });
+
+            changeStyle('.line1', { 'animation-delay': (duration_per_line * 0) + 'ms' });
+            changeStyle('.line2', { 'animation-delay': (duration_per_line * 1) + 'ms' });
+            changeStyle('.line3', { 'animation-delay': (duration_per_line * 2) + 'ms' });
+            changeStyle('.line4', { 'animation-delay': (duration_per_line * 3) + 'ms' });
+
+            nextPage()
+        }
+
+        function changeStyle(findSelector, newRules) {
+            // Change original css style declaration.   
+            for (s in document.styleSheets) {
+                var CssRulesStyle = document.styleSheets[s].cssRules;
+                for (x in CssRulesStyle) {
+                    if (CssRulesStyle[x].selectorText == findSelector) {
+                        for (cssprop in newRules) {
+                            CssRulesStyle[x].style[cssprop] = newRules[cssprop];
+                        }
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+    </script>
+</head>
+
+<body onload="onpageload()">
+    <div class="container line1">
+        * पाण्डुरङ्ग जय पाण्डुरङ्ग *
+    </div>
+    <div class="container white line1">
+        * पाण्डुरङ्ग जय पाण्डुरङ्ग *
+    </div>
+
+    <div class="container line2">
+        * पाण्डुरङ्ग जय पाण्डुरङ्ग *
+    </div>
+    <div class="container white line2">
+        * पाण्डुरङ्ग जय पाण्डुरङ्ग *
+    </div>
+
+    <div class="container line3">
+        पुण्डरीकप्रिय पुण्डरीकाक्ष
+    </div>
+    <div class="container white line3">
+        पुण्डरीकप्रिय पुण्डरीकाक्ष
+    </div>
+
+    <div class="container line4">
+        पण्डरीनाथ पाण्डुरङ्ग ॥1॥
+    </div>
+    <div class="container white line4">
+        पण्डरीनाथ पाण्डुरङ्ग ॥1॥
+    </div>
+</body>
+
+</html>
