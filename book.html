@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sa">
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -1167,8 +1167,6 @@
                 }
             }
 
-            console.log(booklist.value, booklist.selectedIndex)
-
             onchange_book()
         }
 
@@ -1198,7 +1196,7 @@
             for (const link of myLinks) {
                 link.onclick = (e) => {
                     e.preventDefault();
-                    chapter = e.target.getAttribute("data-index");
+                    chapter = parseInt(e.target.getAttribute("data-index"));
                     getData()
                     closeNav()
                 };
@@ -1207,10 +1205,39 @@
             getData()
         }
 
+        var lastKeyPressed = Date.now()
+        var retry = 0
+        window.addEventListener('keyup', (event)=> {
+            if ( event.key === 'ArrowDown' ){
+                if ((window.innerHeight + Math.ceil(window.pageYOffset)) >= document.body.offsetHeight) {
+                    if ( Date.now() - lastKeyPressed < 200 ) {
+                        ++retry
+                        if ( retry > 1 ) {
+                            moveChapter(1)
+                        }
+                    } else {
+                        retry=0
+                    }
+                    lastKeyPressed = Date.now()
+                }
+            } else if ( event.key === 'ArrowUp' ){
+                if (window.pageYOffset == 0 ) {
+                    if ( Date.now() - lastKeyPressed < 200 ) {
+                        ++retry
+                        if ( retry > 1 ) {
+                            moveChapter(-1)
+                        }
+                    } else {
+                        retry=0
+                    }
+                    lastKeyPressed = Date.now()
+                }
+            }
+        });
+
         function getData() {
             const pageId = booklistIndex[booklist.selectedIndex][chapter]['key']
             document.getElementById('title_text').innerText = booklistIndex[booklist.selectedIndex][chapter]['value'] + " " + bookTitle[booklist.selectedIndex]
-            console.log(pageId);
             if (typeof (Storage) !== "undefined") {
                 localStorage.setItem(storage_var[booklist.selectedIndex], chapter);
             }
