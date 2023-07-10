@@ -1210,7 +1210,7 @@
         window.addEventListener('keyup', (event)=> {
             if ( event.key === 'ArrowDown' ){
                 if ((window.innerHeight + Math.ceil(window.pageYOffset)) >= document.body.offsetHeight) {
-                    if ( Date.now() - lastKeyPressed < 200 ) {
+                    if ( Date.now() - lastKeyPressed < 250 ) {
                         ++retry
                         if ( retry > 1 ) {
                             moveChapter(1)
@@ -1222,7 +1222,7 @@
                 }
             } else if ( event.key === 'ArrowUp' ){
                 if (window.pageYOffset == 0 ) {
-                    if ( Date.now() - lastKeyPressed < 200 ) {
+                    if ( Date.now() - lastKeyPressed < 250 ) {
                         ++retry
                         if ( retry > 1 ) {
                             moveChapter(-1)
