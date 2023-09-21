@@ -1,7 +1,29 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body {
+            font-family: Arial;
+            font-size: 3vh;
+            padding: 0px
+        }
+
+        td,
+        th {
+            font-family: Arial;
+            font-size: 3vh;
+            vertical-align: top;
+            border: 1px solid silver;
+        }
+
+        .header {
+            background: #ebebeb;
+            font-size: 4vh;
+            position: fixed;
+            top: 0;
+        }
+    </style>
     <script>
         var jsonWishesList = JSON.parse(`[
 {"month": 1, "date": 3, "wish": "Rajaraman ji and Srinath ji appa Birthday"},
@@ -133,67 +155,80 @@
 {"month": 12, "date": 28, "wish": "Narayanan ji (Sengkang) Birthday"}
 ]`);
         var currentDate = new Date();
-        var todayAgenda = null;
-        for (i = 0; i < jsonWishesList.length; ++i) {
-            if (
-                jsonWishesList[i].month == currentDate.getMonth() + 1 &&
-                jsonWishesList[i].date == currentDate.getDate()
-            ) {
-                if (todayAgenda == null) {
-                    todayAgenda = "";
-                } else {
-                    todayAgenda += "; ";
+        var nextFour = -1;
+        var visibleRow = null
+
+        function onpageload() {
+            // Get the header
+            var contentElement = document.getElementById('content')
+            var table = document.createElement('table')
+            table.cellSpacing = 0
+            contentElement.appendChild(table)
+            row = document.createElement('tr')
+            table.appendChild(row)
+            col = document.createElement('th')
+            col.innerText = 'm/d'
+            row.appendChild(col)
+            col = document.createElement('th')
+            col.innerText = 'Celebrate'
+            row.appendChild(col)
+            for (i = 0; i < jsonWishesList.length; ++i) {
+                var color = "white";
+                if (
+                    nextFour == -1 &&
+                    (
+                        (jsonWishesList[i].month > currentDate.getMonth() + 1)
+                        ||
+                        (jsonWishesList[i].month == currentDate.getMonth() + 1 && jsonWishesList[i].date >= currentDate.getDate())
+                    )
+                ) {
+                    nextFour = 0;
                 }
-                todayAgenda += jsonWishesList[i].wish
-                    .replace("Birthday", "Happy Birthday")
-                    .replace("Wedding", "Happy Wedding");
+                if (nextFour != -1 && nextFour < 4) {
+                    color = "#00EB00";
+                    ++nextFour;
+                } else {
+                    color = 'white'
+                }
+                row = document.createElement('tr')
+                if (nextFour == 1) {
+                    visibleRow = row
+                }
+                row.bgColor = color
+                table.appendChild(row)
+                col = document.createElement('td')
+                col.innerText = jsonWishesList[i].month + "/" + jsonWishesList[i].date
+                row.appendChild(col)
+                col = document.createElement('td')
+                if (
+                    jsonWishesList[i].month == currentDate.getMonth() + 1 &&
+                    jsonWishesList[i].date == currentDate.getDate()
+                ) {
+                    wish = document.createElement('a')
+                    wish.href = "https://api.whatsapp.com/send?text=" + "Radhekrishna!%20" + jsonWishesList[i].wish.replace("Birthday", "Happy%20Birthday%F0%9F%8E%82").replace("Wedding Anniversary", "Happy%20Wedding%20Anniversary%F0%9F%92%90")
+                    wish.innerText = jsonWishesList[i].wish
+                    col.appendChild(wish)
+                } else {
+                    col.innerText = jsonWishesList[i].wish
+                }
+                row.appendChild(col)
             }
-        }
-        if (todayAgenda != null) {
-            document.write(
-                "<a href='https://wa.me/?text=Radhekrishna! " +
-                todayAgenda +
-                "'>" +
-                todayAgenda +
-                "</a>"
-            );
-        } else {
-            document.write("Today no wishes to be made");
+
+            setTimeout(scrollToElement, 10)
         }
 
-        var nextFour = -1;
-        document.write(
-            "<table style='font-size: 2vw'><tr><th>On (mm/dd)</th><th>Celebrate</th></tr>"
-        );
-        for (i = 0; i < jsonWishesList.length; ++i) {
-            var color = "white";
-            if (
-                nextFour == -1 &&
-                (jsonWishesList[i].month > currentDate.getMonth() + 1) ||
-                (jsonWishesList[i].month == currentDate.getMonth() + 1 && jsonWishesList[i].date >= currentDate.getDate())
-            ) {
-                nextFour = 0;
+        function scrollToElement() {
+            if (visibleRow != null) {
+                visibleRow.scrollIntoView({ behavior: "instant" })
+            } else {
+                console.log('visibleRow is null')
             }
-            if (nextFour != -1 && nextFour < 4) {
-                color = "#00EB00";
-                ++nextFour;
-            }
-            document.write(
-                "<tr bgcolor='" +
-                color +
-                "'><td>" +
-                jsonWishesList[i].month +
-                "/" +
-                jsonWishesList[i].date +
-                "</td><td>" +
-                jsonWishesList[i].wish +
-                "</td></tr>"
-            );
         }
-        document.write("</table>");
     </script>
 </head>
 
-<body style="font-family: Arial; font-size: 6vw"></body>
+<body onload="onpageload()">
+    <div class="content" id="content"></div>
+</body>
 
 </html>
