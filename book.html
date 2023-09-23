@@ -70,16 +70,6 @@
             display: block
         }
 
-        .sticky {
-            position: fixed;
-            top: 0;
-            width: 100%;
-        }
-
-        .sticky+.content {
-            padding-top: 102px;
-        }
-
         .header {
             background: black;
             padding: 10px;
@@ -87,7 +77,6 @@
 
         .title_style {
             cursor: pointer;
-            white-space: nowrap;
         }
 
         body {
@@ -103,11 +92,9 @@
     </style>
 
     <script>
-        window.onscroll = function () { stickHeader() };
         var chapter = 0
 
         var header = null
-        var sticky = null
         var booklist = null
 
         const ramayanamIndex = [
@@ -648,7 +635,6 @@
             { "key": "07-yuddha-130.txt", "value": "130 युद्धकाण्डः - भरतसमागमः | yuddha kandam" },
             { "key": "07-yuddha-131.txt", "value": "131 युद्धकाण्डः - श्रीरामपट्टाभिषेकः | yuddha kandam" }
         ]
-
         const bhagavathamIndex = [
             { "key": "canto01/chapter00.txt", "value": "00 canto01" },
             { "key": "canto01/chapter01.txt", "value": "01 canto01" },
@@ -987,7 +973,6 @@
             { "key": "canto12/chapter12.txt", "value": "12 canto12" },
             { "key": "canto12/chapter13.txt", "value": "13 canto12" }
         ]
-
         const narayaneeyamIndex = [
             { "key": "narayaneeyam-001.txt", "value": "dashakam 001"},
             { "key": "narayaneeyam-002.txt", "value": "dashakam 002"},
@@ -1090,7 +1075,6 @@
             { "key": "narayaneeyam-099.txt", "value": "dashakam 099"},
             { "key": "narayaneeyam-100.txt", "value": "dashakam1001"}
         ]
-
         const vaishnavaSamhitaIndex = [
             { "key": "vaishnava-samhita-sanskirt-01.txt", "value": "volume 01"},
             { "key": "vaishnava-samhita-sanskirt-02.txt", "value": "volume 02"},
@@ -1103,7 +1087,6 @@
             { "key": "vaishnava-samhita-sanskirt-09.txt", "value": "volume 09"},
             { "key": "vaishnava-samhita-sanskirt-10.txt", "value": "volume 10"}
         ]
-
         const radhikaShathakamIndex = [
             { "key": "rs000-sanskrit.txt", "value": "000 - Dhyana Slokam" },
             { "key": "rs001-sanskrit.txt", "value": "001 - Jayathi Jayathi Srimad Vrajarajadhani | Kunthalavarali - Kanda Chapu" },
@@ -1207,8 +1190,7 @@
             { "key": "rs099-sanskrit.txt", "value": "099 - Samyojaya maam | Begada - Adi" },
             { "key": "rs100-sanskrit.txt", "value": "100 - Mangalam | Madhyamavathi - Adi" }
     ]
-
-    const govindaShathakamIndex = [
+        const govindaShathakamIndex = [
             { "key": "gs001-sanskrit.txt", "value": "001 - Dhyana Slokam & Jaya Jaya Deva | Shankarabharanam - Adi" },
             { "key": "gs002-sanskrit.txt", "value": "002 - Naradam Pranamami | Kedaram - Adi" },
             { "key": "gs003-sanskrit.txt", "value": "003 - Bhajare Vyasadevam | Begada - Adi" },
@@ -1311,7 +1293,6 @@
             { "key": "gs100-sanskrit.txt", "value": "100 - Vandanamastu te | Asaveri - Adi" },
             { "key": "gs101-sanskrit.txt", "value": "101 - Gopikaramanaya | Punnagavarali - Jampa" }
         ]
-
         const raghavaShathakamIndex = [
             { "key": "rgs001-sanskrit.txt", "value": "001 - Dhyana Slokam & Prachethasamaham | Kedaram - Adi" },
             { "key": "rgs002-sanskrit.txt", "value": "002 - Bhajare mananasa | Kalyani - Adi" },
@@ -1414,19 +1395,9 @@
             { "key": "rgs099-sanskrit.txt", "value": "099 - Janamani janmani | Sahana - Adi" },
             { "key": "rgs100-sanskrit.txt", "value": "100 - Jaya Mangalam | Punnagavarali - Chaapu" }
         ]
-
-
         const storage_var = ["ramayanam.chapter", "bhagavatham.chapter", "narayaneeyam.chapter", "vaishnava-samhita.chapter", "radhikashathakam.chapter", "govindashathakam.chapter", "raghavashathakam.chapter"]
         const booklistIndex = [ramayanamIndex, bhagavathamIndex, narayaneeyamIndex, vaishnavaSamhitaIndex, radhikaShathakamIndex, govindaShathakamIndex, raghavaShathakamIndex]
         const bookTitle = ["श्रीमाद्वाल्मीकिरामायणम् | Srimad Ramayanam", "श्रीमद्भागवतं | Srimad Bhagavatham", "Narayaneeyam", "Vaishnava Samhita", "Radhika Shathakam", "Govinda Shathakam", "Raghava Shathakam"]
-
-        function stickHeader() {
-            if (window.pageYOffset > sticky) {
-                header.classList.add("sticky");
-            } else {
-                header.classList.remove("sticky");
-            }
-        }
 
         function openNav() {
             document.getElementById("mySidenav").style.width = "100%";
@@ -1470,7 +1441,6 @@
             }
 
             header = document.getElementById("myHeader");
-            sticky = header.offsetTop;
             booklist = document.getElementById("booklist")
 
             if (typeof (Storage) !== "undefined") {
