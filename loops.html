@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Web Tambura</title>
+    <style>
+        div.container {
+            width: 100%
+        }
+
+        .element {
+            width: 100%;
+        }
+
+        body,
+        select,
+        button {
+            font-size: 4vh
+        }
+
+        .slidecontainer {
+            width: 100%;
+            /* Width of the outside container */
+        }
+
+        /* The slider itself */
+        .slider {
+            -webkit-appearance: none;
+            /* Override default CSS styles */
+            appearance: none;
+            width: 100%;
+            /* Full-width */
+            height: 25px;
+            /* Specified height */
+            background: #d3d3d3;
+            /* Grey background */
+            outline: none;
+            /* Remove outline */
+            opacity: 0.7;
+            /* Set transparency (for mouse-over effects on hover) */
+            -webkit-transition: .2s;
+            /* 0.2 seconds transition on hover */
+            transition: opacity .2s;
+        }
+
+        /* Mouse-over effects */
+        .slider:hover {
+            opacity: 1;
+            /* Fully shown on mouse-over */
+        }
+
+        /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            /* Override default look */
+            appearance: none;
+            width: 25px;
+            /* Set a specific slider handle width */
+            height: 25px;
+            /* Slider handle height */
+            background: #4CAF50;
+            /* Green background */
+            cursor: pointer;
+            /* Cursor on hover */
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            /* Set a specific slider handle width */
+            height: 25px;
+            /* Slider handle height */
+            background: #4CAF50;
+            /* Green background */
+            cursor: pointer;
+            /* Cursor on hover */
+        }
+    </style>
+    <script type="text/javascript">
+        var source = null, gainNode = null, context = null;
+
+        function onPageLoad() {
+            if (typeof (Storage) !== "undefined") {
+                if (localStorage.getItem("loops.loopListValue") != null) {
+                    document.getElementById('loopList').selectedIndex = localStorage.getItem("loops.loopListValue");
+                }
+                if (localStorage.getItem("loops.volume") != null) {
+                    document.getElementById("myRange").value = localStorage.getItem("loops.volume");
+                    onGainChange();
+                }
+            }
+        }
+
+        function onGainChange() {
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("loops.volume", document.getElementById("myRange").value);
+            }
+            document.getElementById('volumeLevel').innerText = document.getElementById("myRange").value + "%";
+            if (gainNode != null) {
+                gainNode.gain.value = document.getElementById("myRange").value / 100
+            }
+        }
+
+        function onchangeloop() {
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("loops.loopListValue", document.getElementById("loopList").selectedIndex);
+                console.log(localStorage.getItem("loops.loopListValue"))
+            }
+            if (document.getElementById('playButton').innerText == "Stop Loop") {
+                toggleLoop() // to stop the loop playing
+                toggleLoop() // start the new loop
+            }
+        }
+
+        function toggleLoop() {
+            if (document.getElementById('playButton').innerText == "Loading...") {
+                return
+            }
+            if (document.getElementById('playButton').innerText == "Stop Loop") {
+                if (source != null) {
+                    source.stop(0);
+                    source = null;
+                }
+                document.getElementById('playButton').innerText = "Play Loop"
+                return;
+            }
+
+            var url = document.getElementById('loopList').value;
+
+            //create the context
+            if (context == null) {
+                context = new AudioContext();
+                gainNode = context.createGain();
+                gainNode.gain.value = document.getElementById("myRange").value / 100
+            }
+
+            //and the source
+            source = context.createBufferSource();
+
+            //connect it to the destination so you can hear it.
+            source.connect(gainNode).connect(context.destination);
+
+            // load buffer
+            var request = new XMLHttpRequest();
+
+            //open the request
+            request.open('GET', url, true);
+
+            //webaudio paramaters
+            request.responseType = 'arraybuffer';
+
+            //Once the request has completed... do this
+            request.onload = function () {
+                context.decodeAudioData(request.response, function (response) {
+                    // --- play the sound AFTER the buffer loaded
+                    //set the buffer to the response we just received
+                    source.buffer = response;
+                    //start(0) should play asap.
+                    source.start(0);
+                    source.loop = true;
+                    document.getElementById('playButton').innerText = "Stop Loop"
+                }, function () { console.error('The request failed.'); });
+            }
+
+            document.getElementById('playButton').innerText = "Loading..."
+            //Now that the request has been defined, actually make the request. (send it)
+            request.send();
+        }
+    </script>
+</head>
+
+<body onload="onPageLoad()">
+    <div class="w3-container w3-teal">
+        <h3>Loop Player</h3>
+    </div>
+    <div id="mainScreen">
+        <h3>Volume: <span id="volumeLevel"></span></h3>
+        <div class="slidecontainer">
+            <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
+        </div>
+
+        <div class="element">
+            <select id="loopList" class="element" onchange="onchangeloop()">
+                <option value="https://www.mythilirajaraman.com/loops/harerama.wav">HareRama-Music</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Hamsadwani.wav">HareRama-Hamsadwani</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-AnnaTune.wav">HareRama-AnnaTune</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-SindhuBhairavi.wav">HareRama-SindhuBhairavi</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Sivaranjani.wav">HareRama-Sivaranjani</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Ahiri-Neelambari.wav">HareRama-Ahiri-Neelambari</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-AnnaTune2.wav">HareRama-AnnaTune2</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Iskon.wav">HareRama-Iskon</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Neelamega.wav">HareRama-Neelamega</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Valaji.wav">HareRama-Valaji</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Hamsanandi.wav">HareRama-Hamsanandi</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Panthuvarali.wav">HareRama-Panthuvarali</option>
+                <option value="https://www.mythilirajaraman.com/loops/HareRama-Aarathi.wav">HareRama-Aarathi</option>
+            </select>
+        </div>
+        <div class="element">
+            <button id="playButton" onclick="toggleLoop()" class="element">Play Loop</button>
+        </div>
+    </div>
+</body>
+
+</html>
