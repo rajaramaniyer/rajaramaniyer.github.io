@@ -113,6 +113,25 @@
             }
         }
 
+        function toggleStartStop(){
+            const play_stop = document.getElementById('play_stop')
+            if ( play_stop.innerText == 'Start' ) {
+                startScroll()
+                play_stop.innerText = 'Stop'
+            } else {
+                stopScroll()
+                play_stop.innerText = 'Start'
+            }
+        }
+
+        window.onkeydown = function (event) {
+            if (event.key == ' ') {
+                toggleStartStop();
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+
         var font_size=5
         function setSize(direction) {
             font_size+=direction
@@ -131,8 +150,7 @@
 <body onload="setvar()">
     <div id="navbar">
         <a class="active" href="#Home">Home</a>
-        <a href="javascript:startScroll()">Start</a>
-        <a href="javascript:stopScroll()">Stop</a>
+        <a id="play_stop" href="javascript:toggleStartStop()">Start</a>
         <a href="javascript:setSize(-1)">Font-</a>
         <a id="showsize"></a>
         <a href="javascript:setSize(1)">Font+</a>
