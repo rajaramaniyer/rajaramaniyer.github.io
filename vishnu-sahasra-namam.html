@@ -48,6 +48,7 @@
         }
 
         .content {
+            font-size: 3vh;
             padding: 16px;
         }
 
@@ -69,7 +70,6 @@
         }
 
         td {
-            font-size: 3vw;
             word-wrap: break-word;
             vertical-align: text-top;
             border-right: 3px solid silver;
@@ -85,12 +85,14 @@
         function setvar() {
             navbar = document.getElementById("navbar");
             sticky = navbar.offsetTop;
+            setSize(0)
+            setSpeed(0)
         }
 
         function pageScroll() {
             window.scrollBy(0, 1);
             if (autoScroll) {
-                scrolldelay = setTimeout(pageScroll, 20);
+                scrolldelay = setTimeout(pageScroll, scroll_speed);
             }
         }
         function startScroll() {
@@ -110,6 +112,19 @@
                 navbar.classList.remove("sticky");
             }
         }
+
+        var font_size=5
+        function setSize(direction) {
+            font_size+=direction
+            document.getElementById('showbook').style.setProperty('font-size', font_size+'vh');
+            document.getElementById('showsize').innerText = font_size
+        }
+
+        var scroll_speed=32
+        function setSpeed(direction){
+            scroll_speed+=direction
+            document.getElementById('showspeed').innerText = scroll_speed
+        }
     </script>
 </head>
 
@@ -118,11 +133,17 @@
         <a class="active" href="#Home">Home</a>
         <a href="javascript:startScroll()">Start</a>
         <a href="javascript:stopScroll()">Stop</a>
+        <a href="javascript:setSize(-1)">Font-</a>
+        <a id="showsize"></a>
+        <a href="javascript:setSize(1)">Font+</a>
+        <a href="javascript:setSpeed(1)">Speed-</a>
+        <a id="showspeed"></a>
+        <a href="javascript:setSpeed(-1)">Speed+</a>
     </div>
-    <table class="content" width="100%" cellspacing="0">
+    <table id="showbook" class="content" width="100%" cellspacing="0">
         <tr>
-            <td class='sa' width="45%">॥ श्री विष्णु सहस्रनाम स्तोत्रम् ॥</td>
-            <td class='ta' width="55%">॥ ஸ்ரீ விஷ்ணு ஸஹஸ்ரநாம ஸ்தோத்ரம் ॥</td>
+            <td class='sa'>॥ श्री विष्णु सहस्रनाम स्तोत्रम् ॥</td>
+            <td class='ta'>॥ ஸ்ரீ விஷ்ணு ஸஹஸ்ரநாம ஸ்தோத்ரம் ॥</td>
         </tr>
 
         <tr><td colspan='2'><hr></td></tr>
