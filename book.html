@@ -1417,9 +1417,44 @@
             { "key": "rama-poojai-tamil.txt",                "value": "Rama poojai tamil" },
             { "key": "rama-dolothsavam-tamil.txt",           "value": "Rama dolothsavam tamil" },
         ]
-        const storage_var = ["ramayanam.chapter", "bhagavatham.chapter", "narayaneeyam.chapter", "vaishnava-samhita.chapter", "radhikashathakam.chapter", "govindashathakam.chapter", "raghavashathakam.chapter", "nithyothsavam.chapter"]
-        const booklistIndex = [ramayanamIndex, bhagavathamIndex, narayaneeyamIndex, vaishnavaSamhitaIndex, radhikaShathakamIndex, govindaShathakamIndex, raghavaShathakamIndex, nithyothsavamIndex]
-        const bookTitle = ["श्रीमाद्वाल्मीकिरामायणम् | Srimad Ramayanam", "श्रीमद्भागवतं | Srimad Bhagavatham", "Narayaneeyam", "Vaishnava Samhita", "Radhika Shathakam", "Govinda Shathakam", "Raghava Shathakam", "Nithyothsavam"]
+        const premikaStutiIndex = [
+            { "key": "01-karunai-uruvai.txt", "value": "01-karunai-uruvai" },
+            { "key": "02-nenjaga-kovilil.txt", "value": "02-nenjaga-kovilil" },
+            { "key": "03-ellail-vaguthuthaan.txt", "value": "03-ellail-vaguthuthaan" },
+            { "key": "04-navajeevanam-thandaai.txt", "value": "04-navajeevanam-thandaai" },
+            { "key": "05-madagaja-gamana.txt", "value": "05-madagaja-gamana" },
+            { "key": "06-paralanda-padma-tiruvadi.txt", "value": "06-paralanda-padma-tiruvadi" },
+            { "key": "07-sadguru-malaradi.txt", "value": "07-sadguru-malaradi" },
+            { "key": "08-maththagaja-gathiyil.txt", "value": "08-maththagaja-gathiyil" },
+            { "key": "09-manakkovil-kudi-konda.txt", "value": "09-manakkovil-kudi-konda" },
+            { "key": "10-kodipiravi-innum.txt", "value": "10-kodipiravi-innum" },
+            { "key": "11-polladha-manam-ingu.txt", "value": "11-polladha-manam-ingu" },
+            { "key": "12-kavalaigal-ini-namakkedu.txt", "value": "12-kavalaigal-ini-namakkedu" },
+            { "key": "13-enakum-ivarkum.txt", "value": "13-enakum-ivarkum" },
+            { "key": "14-jaya-vijayeebhava-sanskrit.txt", "value": "14-jaya-vijayeebhava-sanskrit" },
+            { "key": "14-jaya-vijayeebhava-tamil.txt", "value": "14-jaya-vijayeebhava-tamil" },
+            { "key": "15-kalayati-mayi-krupaam-sanksrit.txt", "value": "15-kalayati-mayi-krupaam-sanksrit" },
+            { "key": "15-kalayati-mayi-krupaam-tamil.txt", "value": "15-kalayati-mayi-krupaam-tamil" },
+            { "key": "16-sri-guru-bhagavantam-sanskrit.txt", "value": "16-sri-guru-bhagavantam-sanskrit" },
+            { "key": "16-sri-guru-bhagavantam-tamil.txt", "value": "16-sri-guru-bhagavantam-tamil" },
+            { "key": "17-parama-krupalayena-sanskrit.txt", "value": "17-parama-krupalayena-sanskrit" },
+            { "key": "17-parama-krupalayena-tamil.txt", "value": "17-parama-krupalayena-tamil" },
+            { "key": "18-mangalaalayaya-begada-sanskrit.txt", "value": "18-mangalaalayaya-begada-sanskrit" },
+            { "key": "18-mangalaalayaya-begada-tamil.txt", "value": "18-mangalaalayaya-begada-tamil" },
+            { "key": "19-sadgurupremika-kalyani-sanskrit.txt", "value": "19-sadgurupremika-kalyani-sanskrit" },
+            { "key": "19-sadgurupremika-kalyani-tamil.txt", "value": "19-sadgurupremika-kalyani-tamil" },
+            { "key": "padukashtakam-sanskrit.txt", "value": "padukashtakam-sanskrit" },
+            { "key": "padukashtakam-tamil.txt", "value": "padukashtakam-tamil" },
+            { "key": "premika-ashtotram-sanskrit.txt", "value": "premika-ashtotram-sanskrit" },
+            { "key": "premika-ashtotram-tamil.txt", "value": "premika-ashtotram-tamil" },
+            { "key": "premikendra-guru-ashtakam-tamil.txt", "value": "premikendra-guru-ashtakam-tamil" },
+            { "key": "premikendra-guru-ashtakam.txt", "value": "premikendra-guru-ashtakam" },
+            { "key": "srisrianna-1008-namavali-sanskrit.txt", "value": "srisrianna-1008-namavali-sanskrit" },
+            { "key": "srisrianna-1008-namavali-tamil.txt", "value": "srisrianna-1008-namavali-tamil" },
+        ]
+        const storage_var = ["ramayanam.chapter", "bhagavatham.chapter", "narayaneeyam.chapter", "vaishnava-samhita.chapter", "radhikashathakam.chapter", "govindashathakam.chapter", "raghavashathakam.chapter", "nithyothsavam.chapter", "premikendrastuti.chapter"]
+        const booklistIndex = [ramayanamIndex, bhagavathamIndex, narayaneeyamIndex, vaishnavaSamhitaIndex, radhikaShathakamIndex, govindaShathakamIndex, raghavaShathakamIndex, nithyothsavamIndex, premikaStutiIndex]
+        const bookTitle = ["श्रीमाद्वाल्मीकिरामायणम् | Srimad Ramayanam", "श्रीमद्भागवतं | Srimad Bhagavatham", "Narayaneeyam", "Vaishnava Samhita", "Radhika Shathakam", "Govinda Shathakam", "Raghava Shathakam", "Nithyothsavam", "Premikendra Guru Stuti"]
 
         function openNav() {
             document.getElementById("mySidenav").style.width = "100%";
@@ -1593,7 +1628,9 @@
                     Raghava shathakam</option>
                 <option value='https://raw.githubusercontent.com/rajaramanmythili/books/main/srisrianna/nithyothsavam/'>
                     Nithyothsavam</option>
-            </select>
+                <option value='https://raw.githubusercontent.com/rajaramanmythili/books/main/srisrianna/premikendra-sadguru-stuti/'>
+                    Premikendra Guru Stuti</option>
+                </select>
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <input type="text" id="myInput" onkeyup="search_index()" placeholder="Search" title="Type to search">
             <ul id="myUL">Loaded dynamically</ul>
