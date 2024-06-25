@@ -1,0 +1,66 @@
+<html>
+
+<head>
+    <style>
+        .mymarquee {
+            background-color: #55007f;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 42vh;
+            vertical-align: middle;
+            text-align: center;
+            height: 100vh;
+        }
+    </style>
+    <script>
+        var todayString = ""
+        function pullData() {
+            var apiUrl = 'https://sheets.googleapis.com/v4/spreadsheets/1bgg-43DyUbP1PZITnxZbz89C14pC3RIrgGrF_lJkicc/values/Sheet1?alt=json&key=AIzaSyDr58mLD6Gyn_l3P4wYl6bW-EbwRfXyZ9I'
+            fetch(apiUrl).then(response => {
+                return response.json()
+            }).then(data => {
+                var row=1
+                var col=0
+                todayString = data['values'][row][col]
+                updateMarqueue()
+            }).catch(err => {
+                console.error('Failed to pull data', err);
+            });
+        }
+
+        function updateMarqueue() {
+            var template = "Canto 4<br>Chapter 31"
+            var marqueeObject = document.getElementById("mymarquee")
+            const searchParams = new URLSearchParams(location.search);
+            if ( searchParams.has('fulltext') ) {
+                template=searchParams.get('fulltext')
+            } else {
+                if ( searchParams.has('todaytext') ) {
+                    todayString=searchParams.get('todaytext')
+                    template=template.replaceAll("%today%", todayString)
+                } else {
+                    template=template.replaceAll("%today%", todayString)
+                }
+            }
+            marqueeObject.innerHTML = template
+
+            if ( searchParams.has('bgcolor') ) {
+                marqueeObject.style.backgroundColor = searchParams.get('bgcolor')
+            }
+            if ( searchParams.has('color') ) {
+                marqueeObject.style.color = searchParams.get('color')
+            }
+        }
+
+        function onpageload() {
+            pullData()
+            updateMarqueue()
+        }
+    </script>
+</head>
+
+<body onload="onpageload()" style="margin: 0; padding: 0">
+    <div id="mymarquee" class="mymarquee"></div>
+</body>
+
+</html>
