@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gayatri Japam Counter</title>
+</head>
+<body>
+    <audio id="myAudio" controls>
+        <source src="gayatri.wav" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    <p>Loop count: <span id="loopCounter">0</span></p>
+
+    <script>
+        // Get references to the audio and counter elements
+        const audio = document.getElementById('myAudio');
+        const loopCounter = document.getElementById('loopCounter');
+
+        // Initialize the counter
+        let count = 0;
+
+        // Add an event listener for the 'ended' event
+        audio.addEventListener('ended', () => {
+            // Increment the counter
+            count++;
+            // Update the counter display
+            loopCounter.textContent = count;
+
+            // Use a timeout to restart the audio after a short delay
+            setTimeout(() => {
+                if (audio.readyState >= 2) { // Check if the audio is ready to play
+                    audio.currentTime = 0;
+                    audio.play().catch(error => {
+                        console.log('Playback failed:', error);
+                    });
+                }
+            }, 100); // Delay in milliseconds
+        });
+    </script>
+</body>
+</html>
