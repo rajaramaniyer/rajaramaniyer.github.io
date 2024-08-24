@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Loop Counter</title>
 </head>
-<body>œ
+<body>
     <audio id="myAudio" controls>
         <source src="gayatri.wav" type="audio/wav">
         Your browser does not support the audio element.
@@ -16,6 +16,8 @@
         // Get references to the audio and counter elements
         const audio = document.getElementById('myAudio');
         const loopCounter = document.getElementById('loopCounter');
+        const bell = new Audio("bell.wav")
+        const tick = new Audio("tick.wav")
 
         // Initialize the counter
         let count = 0;
@@ -26,6 +28,13 @@
             count++;
             // Update the counter display
             loopCounter.textContent = count;
+
+            if ( count % 100 == 0 ) {
+                bell.play()
+            }
+            else if ( count % 10 == 0 ) {
+                tick.play()
+            }
 
             // Restart the audio
             audio.currentTime = 0;
