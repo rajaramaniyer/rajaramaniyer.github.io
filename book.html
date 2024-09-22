@@ -1592,6 +1592,7 @@
                 })
                 .then((text) => {
                     document.getElementById("showbook").innerText = text;
+                    window.scrollTo(0,0);
                 })
                 .catch((error) => {
                     document.getElementById("showbook").innerText = `Error: ${error.message}`;
