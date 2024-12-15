@@ -1,0 +1,99 @@
+[
+    {
+        "listName": "Hare Rama Loops",
+        "listUrls": [
+            {
+                "value": "https://www.mythilirajaraman.com/loops/harerama.wav",
+                "name": "HareRama-Music"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Hamsadwani.wav",
+                "name": "HareRama-Hamsadwani"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-AnnaTune.wav",
+                "name": "HareRama-AnnaTune"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-SindhuBhairavi.wav",
+                "name": "HareRama-SindhuBhairavi"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Sivaranjani.wav",
+                "name": "HareRama-Sivaranjani"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Ahiri-Neelambari.wav",
+                "name": "HareRama-Ahiri-Neelambari"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-AnnaTune2.wav",
+                "name": "HareRama-AnnaTune2"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Iskon.wav",
+                "name": "HareRama-Iskon"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Neelamega.wav",
+                "name": "HareRama-Neelamega"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Valaji.wav",
+                "name": "HareRama-Valaji"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Hamsanandi.wav",
+                "name": "HareRama-Hamsanandi"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Panthuvarali.wav",
+                "name": "HareRama-Panthuvarali"
+            },
+            {
+                "value": "https://www.mythilirajaraman.com/loops/HareRama-Aarathi.wav",
+                "name": "HareRama-Aarathi"
+            }
+        ]
+    },
+    {
+        "listName": "Pancharatnam 1 - A# - 70bpm",
+        "listUrls": [
+            { "name": "Pallavi01", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Pallavi01.wav" },
+            { "name": "Pallavi02", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Pallavi02.wav" },
+            { "name": "Pallavi03", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Pallavi03.wav" },
+            { "name": "Pallavi04", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Pallavi04.wav" },
+            { "name": "Pallavi05", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Pallavi05.wav" },
+            { "name": "Pallavi06", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Pallavi06.wav" },
+            { "name": "Pallavi07", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Pallavi07.wav" },
+            { "name": "Pallavi08", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Pallavi08.wav" },
+            { "name": "AnuPallavi01", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/AnuPallavi01.wav" },
+            { "name": "AnuPallavi02", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/AnuPallavi02.wav" },
+            { "name": "AnuPallavi03", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/AnuPallavi03.wav" },
+            { "name": "AnuPallavi04", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/AnuPallavi04.wav" },
+            { "name": "AnuPallavi05", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/AnuPallavi05.wav" },
+            { "name": "AnuPallavi06", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/AnuPallavi06.wav" },
+            { "name": "Swaram01", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram01.wav" },
+            { "name": "Sahityam01", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam01.wav" },
+            { "name": "Swaram02", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram02.wav" },
+            { "name": "Sahityam02", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam02.wav" },
+            { "name": "Swaram03", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram03.wav" },
+            { "name": "Sahityam03", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam03.wav" },
+            { "name": "Swaram04", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram04.wav" },
+            { "name": "Sahityam04", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam04.wav" },
+            { "name": "Swaram05", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram05.wav" },
+            { "name": "Sahityam05", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam05.wav" },
+            { "name": "Swaram06", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram06.wav" },
+            { "name": "Sahityam06", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam06.wav" },
+            { "name": "Swaram07", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram07.wav" },
+            { "name": "Sahityam07", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam07.wav" },
+            { "name": "Swaram08", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram08.wav" },
+            { "name": "Sahityam08", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam08.wav" },
+            { "name": "Swaram09", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram09.wav" },
+            { "name": "Sahityam09", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam09.wav" },
+            { "name": "Swaram10", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Swaram10.wav" },
+            { "name": "Sahityam10", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Sahityam10.wav" },
+            { "name": "Conclusion", "value": "https://github.com/rajaramaniyer/loops/raw/refs/heads/main/Pancharatnam01/Conclusion.wav" }
+        ]
+    }
+]

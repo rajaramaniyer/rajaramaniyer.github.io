@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <title>Web Tambura</title>
+    <title>Loop Player</title>
     <style>
         div.container {
             width: 100%
@@ -12,6 +12,10 @@
 
         .element {
             width: 100%;
+        }
+
+        .ctrlButton {
+            width: 30%;
         }
 
         body,
@@ -79,17 +83,23 @@
     </style>
     <script type="text/javascript">
         var source = null, gainNode = null, context = null;
+        var listNameValue = 0
+        var listName = null, loopList = null
 
         function onPageLoad() {
             if (typeof (Storage) !== "undefined") {
-                if (localStorage.getItem("loops.loopListValue") != null) {
-                    document.getElementById('loopList').selectedIndex = localStorage.getItem("loops.loopListValue");
+                if (localStorage.getItem("loops.listNameValue") != null) {
+                    listNameValue = localStorage.getItem("loops.listNameValue")
                 }
                 if (localStorage.getItem("loops.volume") != null) {
                     document.getElementById("myRange").value = localStorage.getItem("loops.volume");
                     onGainChange();
                 }
             }
+
+            listName = document.getElementById('listName')
+            loopList = document.getElementById('loopList')
+            getData()
         }
 
         function onGainChange() {
@@ -103,14 +113,27 @@
         }
 
         function onchangeloop() {
-            if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("loops.loopListValue", document.getElementById("loopList").selectedIndex);
-                console.log(localStorage.getItem("loops.loopListValue"))
-            }
             if (document.getElementById('playButton').innerText == "Stop Loop") {
                 toggleLoop() // to stop the loop playing
                 toggleLoop() // start the new loop
             }
+        }
+
+        function onchangelist() {
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("loops.listNameValue", listName.selectedIndex);
+            }
+            while (loopList.options.length > 0) {
+                loopList.remove(0);
+            }
+            jsonData[listName.selectedIndex]['listUrls'].forEach(element => {
+                var option = document.createElement("option");
+                option.text = element['name'];
+                option.value = element['value'];
+                loopList.add(option)
+            });
+            loopList.selectedIndex = 0
+            onchangeloop()
         }
 
         function toggleLoop() {
@@ -167,6 +190,47 @@
             //Now that the request has been defined, actually make the request. (send it)
             request.send();
         }
+
+        function moveTrack(direction){
+            if ( loopList.selectedIndex + direction > -1 && loopList.selectedIndex + direction < loopList.options.length ) {
+                loopList.selectedIndex += direction
+                onchangeloop()
+            }
+        }
+
+        function getData() {
+            const apiUrl = '/loop-db.json'
+
+            fetch(apiUrl)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error, status = ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then((text) => {
+                    jsonData = JSON.parse(text)
+                    buildPage()
+                })
+                .catch((error) => {
+                    jsonData = '[{"listName": "Error '+error+'", "listUrls": []}]'
+                    buildPage();
+                });
+        }
+
+        function buildPage() {
+            if (jsonData == null) {
+                return;
+            }
+            jsonData.forEach(element => {
+                var option = document.createElement("option");
+                option.text = element['listName'];
+                listName.add(option)
+            });
+
+            listName.selectedIndex = listNameValue
+            onchangelist()
+        }
     </script>
 </head>
 
@@ -175,31 +239,25 @@
         <h3>Loop Player</h3>
     </div>
     <div id="mainScreen">
-        <h3>Volume: <span id="volumeLevel"></span></h3>
+        <h2>Volume: <span id="volumeLevel"></span></h2>
         <div class="slidecontainer">
             <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
         </div>
 
         <div class="element">
-            <select id="loopList" class="element" onchange="onchangeloop()">
-                <option value="https://www.mythilirajaraman.com/loops/harerama.wav">HareRama-Music</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Hamsadwani.wav">HareRama-Hamsadwani</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-AnnaTune.wav">HareRama-AnnaTune</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-SindhuBhairavi.wav">HareRama-SindhuBhairavi</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Sivaranjani.wav">HareRama-Sivaranjani</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Ahiri-Neelambari.wav">HareRama-Ahiri-Neelambari</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-AnnaTune2.wav">HareRama-AnnaTune2</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Iskon.wav">HareRama-Iskon</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Neelamega.wav">HareRama-Neelamega</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Valaji.wav">HareRama-Valaji</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Hamsanandi.wav">HareRama-Hamsanandi</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Panthuvarali.wav">HareRama-Panthuvarali</option>
-                <option value="https://www.mythilirajaraman.com/loops/HareRama-Aarathi.wav">HareRama-Aarathi</option>
-            </select>
+            <h2>List Name:</h2>
+            <select id="listName" class="element" onchange="onchangelist()"></select>
         </div>
+
         <div class="element">
-            <button id="playButton" onclick="toggleLoop()" class="element">Play Loop</button>
+            <h2>List Parts:</h2>
+            <select id="loopList" class="element" onchange="onchangeloop()"></select>
         </div>
+        <div class="element"><center>
+            <button id="rewindButton" onclick="moveTrack(-1)" class="ctrlButton">Previous</button>
+            <button id="playButton" onclick="toggleLoop()" class="ctrlButton">Play Loop</button>
+            <button id="forwardButton" onclick="moveTrack(1)" class="ctrlButton">Next</button>
+        </center></div>
     </div>
 </body>
 
