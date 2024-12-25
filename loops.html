@@ -4,6 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Loop Player</title>
     <style>
         div.container {
@@ -93,8 +94,8 @@
                 }
                 if (localStorage.getItem("loops.volume") != null) {
                     document.getElementById("myRange").value = localStorage.getItem("loops.volume");
-                    onGainChange();
                 }
+                onGainChange();
             }
 
             listName = document.getElementById('listName')
@@ -113,7 +114,7 @@
         }
 
         function onchangeloop() {
-            if (document.getElementById('playButton').innerText == "Stop Loop") {
+            if (document.getElementById('playButton').innerHTML == '<i class="fa fa-stop"></i>') {
                 toggleLoop() // to stop the loop playing
                 toggleLoop() // start the new loop
             }
@@ -137,15 +138,15 @@
         }
 
         function toggleLoop() {
-            if (document.getElementById('playButton').innerText == "Loading...") {
+            if (document.getElementById('playButton').innerHTML == '<i class="fa fa-hand-stop-o"></i>') {
                 return
             }
-            if (document.getElementById('playButton').innerText == "Stop Loop") {
+            if (document.getElementById('playButton').innerHTML == '<i class="fa fa-stop"></i>') {
                 if (source != null) {
                     source.stop(0);
                     source = null;
                 }
-                document.getElementById('playButton').innerText = "Play Loop"
+                document.getElementById('playButton').innerHTML = '<i class="fa fa-play"></i>'
                 return;
             }
 
@@ -182,11 +183,11 @@
                     //start(0) should play asap.
                     source.start(0);
                     source.loop = true;
-                    document.getElementById('playButton').innerText = "Stop Loop"
+                    document.getElementById('playButton').innerHTML = '<i class="fa fa-stop"></i>'
                 }, function () { console.error('The request failed.'); });
             }
 
-            document.getElementById('playButton').innerText = "Loading..."
+            document.getElementById('playButton').innerHTML = '<i class="fa fa-hand-stop-o"></i>'
             //Now that the request has been defined, actually make the request. (send it)
             request.send();
         }
@@ -254,9 +255,9 @@
             <select id="loopList" class="element" onchange="onchangeloop()"></select>
         </div>
         <div class="element"><center>
-            <button id="rewindButton" onclick="moveTrack(-1)" class="ctrlButton">Previous</button>
-            <button id="playButton" onclick="toggleLoop()" class="ctrlButton">Play Loop</button>
-            <button id="forwardButton" onclick="moveTrack(1)" class="ctrlButton">Next</button>
+            <button id="rewindButton" onclick="moveTrack(-1)" class="ctrlButton"><i class="fa fa-backward"></i></button>
+            <button id="playButton" onclick="toggleLoop()" class="ctrlButton"><i class="fa fa-play"></i></button>
+            <button id="forwardButton" onclick="moveTrack(1)" class="ctrlButton"><i class="fa fa-forward"></i></button>
         </center></div>
     </div>
 </body>
