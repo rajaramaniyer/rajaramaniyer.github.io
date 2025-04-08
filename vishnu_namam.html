@@ -2150,18 +2150,18 @@
             }
         }
         function startAutoScroll() {
-            if (document.getElementById('startScroll').value == "Start") {
-                document.getElementById('startScroll').value = "Stop";
+            if (document.getElementById('startScroll').value == "▶") {
+                document.getElementById('startScroll').value = "⏹";
                 scrollState = true
                 currentLine = -1
                 autoScroll();
             } else {
-                document.getElementById('startScroll').value = "Start";
+                document.getElementById('startScroll').value = "▶";
                 scrollState = false
             }
         }
         function resetScroll() {
-            document.getElementById('startScroll').value = "Start";
+            document.getElementById('startScroll').value = "▶";
             currentPage = 0
             scrollState = false
             showPage();
@@ -2271,7 +2271,7 @@
             <tr>
                 <td width="20%"><input class=tallbutton type="button" value="↓" onclick="movePage(1)" /></td>
                 <td width="20%"><input class=tallbutton type="button" value="↑" onclick="movePage(-1)" /></td>
-                <td width="20%"><input class=tallbutton type="button" value="Start" id="startScroll" onclick="startAutoScroll()" /></td>
+                <td width="20%"><input class=tallbutton type="button" value="▶" id="startScroll" onclick="startAutoScroll()" /></td>
                 <td width="20%"><input class=tallbutton type="button" value="+" onclick="changeFontSize(1)" /></td>
                 <td width="20%"><input class=tallbutton type="button" value="-" onclick="changeFontSize(-1)" /></td>
             </tr>
