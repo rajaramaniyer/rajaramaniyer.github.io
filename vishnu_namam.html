@@ -36,14 +36,17 @@
             width: 100%;
         }
 
+        .tallbutton {
+            font-size: 5vh
+        }
+
         #navbar div,
         span {
             display: block;
             color: #f2f2f2;
             background-color: #333;
             text-align: center;
-            text-decoration: none;
-            font-size: 5vh
+            text-decoration: none
         }
 
         /* The sticky class is added to the navbar with JS when it reaches its scroll position */
@@ -2266,7 +2269,7 @@
     <div id="navbar">
         <table width="100%">
             <tr>
-                <td width="20%"><input type="button" value="↓" onclick="movePage(1)" /></td>
+                <td width="20%"><input class=tallbutton type="button" value="↓" onclick="movePage(1)" /></td>
                 <td width="20%"><input type="button" value="↑" onclick="movePage(-1)" /></td>
                 <td width="20%"><input type="button" value="Start" id="startScroll" onclick="startAutoScroll()" /></td>
                 <td width="20%"><input type="button" value="+" onclick="changeFontSize(1)" /></td>
