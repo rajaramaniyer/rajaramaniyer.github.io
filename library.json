@@ -1,0 +1,41 @@
+{
+    "version": "1.0",
+    "lastUpdated": "2024-01-01T00:00:00Z",
+    "books": [
+        {
+            "id": "nt",
+            "name": "Sri Sri Anna's Nithyothsavam",
+            "bookName": "nithyothsavam",
+            "url": "https://rajaramaniyer.github.io/nithyothsavam.json",
+            "assetPath": "assets/nithyothsavam.json"
+        },
+        {
+            "id": "gs",
+            "name": "Sri Sri Anna's Govinda Shathakam",
+            "bookName": "govinda shatakam",
+            "url": "https://rajaramaniyer.github.io/govindashathakam.json",
+            "assetPath": "assets/govindashathakam.json"
+        },
+        {
+            "id": "rs",
+            "name": "Sri Sri Anna's Radhika Shathakam",
+            "bookName": "radhika shatakam",
+            "url": "https://rajaramaniyer.github.io/radhikashathakam.json",
+            "assetPath": "assets/radhikashathakam.json"
+        },
+        {
+            "id": "ys",
+            "name": "Sri Sri Anna's Yugala Shathakam",
+            "bookName": "yugala shatakam",
+            "url": "https://rajaramaniyer.github.io/yugalashathakam.json",
+            "assetPath": "assets/yugalashathakam.json"
+        },
+        {
+            "id": "rgs",
+            "name": "Sri Sri Anna's Raghava Shathakam",
+            "bookName": "raghava shatakam",
+            "url": "https://rajaramaniyer.github.io/raghavashathakam.json",
+            "assetPath": "assets/raghavashathakam.json"
+        }
+    ]
+}
