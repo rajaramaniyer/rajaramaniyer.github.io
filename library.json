@@ -1,5 +1,5 @@
 {
-    "version": "1.1",
+    "version": "1.2",
     "lastUpdated": "2025-10-04T00:00:00Z",
     "books": [
         {
@@ -41,6 +41,12 @@
             "id": "vp",
             "name": "Sri Sri Anna's Vijaya Panchakam",
             "bookName": "vijayapanchakam",
+            "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
+        },
+        {
+            "id": "dw",
+            "name": "Sri Sri Anna's Dwadasha Nama Keerthanams",
+            "bookName": "dwadasha nama keerthanams",
             "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
         }
     ]
