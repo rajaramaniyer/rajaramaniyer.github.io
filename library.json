@@ -36,6 +36,12 @@
             "bookName": "raghava shatakam",
             "url": "https://rajaramaniyer.github.io/raghavashathakam.json",
             "assetPath": "assets/raghavashathakam.json"
+        },
+        {
+            "id": "vp",
+            "name": "Sri Sri Anna's Vijaya Panchakam",
+            "bookName": "vijayapanchakam",
+            "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
         }
     ]
 }
