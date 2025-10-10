@@ -1,52 +1,100 @@
 {
-    "version": "1.2",
-    "lastUpdated": "2025-10-04T00:00:00Z",
     "books": [
         {
             "id": "nt",
-            "name": "Sri Sri Anna's Nithyothsavam",
-            "bookName": "nithyothsavam",
+            "name": "Nithyothsavam",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
+            "bookName": [
+                {
+                    "displayName": "Pratasmaranam",
+                    "filterName": "pratasmaranam - nithyothsavam"
+                },
+                {
+                    "displayName": "Jaya mangala keerthanam",
+                    "filterName": "jaya mangala keerthanam - nithyothsavam"
+                },
+                {
+                    "displayName": "Prabhodhanam",
+                    "filterName": "prabhodhanam - nithyothsavam"
+                },
+                {
+                    "displayName": "Rama prabhodhanam",
+                    "filterName": "rama prabhodhanam - nithyothsavam"
+                },
+                {
+                    "displayName": "Sringaram",
+                    "filterName": "sringaram - nithyothsavam"
+                },
+                {
+                    "displayName": "Poojai",
+                    "filterName": "poojai - nithyothsavam"
+                },
+                {
+                    "displayName": "Rama poojai",
+                    "filterName": "rama poojai - nithyothsavam"
+                },
+                {
+                    "displayName": "Vishramanam",
+                    "filterName": "vishramanam - nithyothsavam"
+                },
+                {
+                    "displayName": "Dolothsavam",
+                    "filterName": "dolothsavam - nithyothsavam"
+                },
+                {
+                    "displayName": "Rama dolothsavam",
+                    "filterName": "rama dolothsavam - nithyothsavam"
+                }
+            ],
             "url": "https://rajaramaniyer.github.io/nithyothsavam.json",
             "assetPath": "assets/nithyothsavam.json"
         },
         {
             "id": "gs",
-            "name": "Sri Sri Anna's Govinda Shathakam",
+            "name": "Govinda Shathakam",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "govinda shatakam",
             "url": "https://rajaramaniyer.github.io/govindashathakam.json",
             "assetPath": "assets/govindashathakam.json"
         },
         {
             "id": "rs",
-            "name": "Sri Sri Anna's Radhika Shathakam",
+            "name": "Radhika Shathakam",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "radhika shatakam",
             "url": "https://rajaramaniyer.github.io/radhikashathakam.json",
             "assetPath": "assets/radhikashathakam.json"
         },
         {
             "id": "ys",
-            "name": "Sri Sri Anna's Yugala Shathakam",
+            "name": "Yugala Shathakam",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "yugala shatakam",
             "url": "https://rajaramaniyer.github.io/yugalashathakam.json",
             "assetPath": "assets/yugalashathakam.json"
         },
         {
             "id": "rgs",
-            "name": "Sri Sri Anna's Raghava Shathakam",
+            "name": "Raghava Shathakam",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "raghava shatakam",
             "url": "https://rajaramaniyer.github.io/raghavashathakam.json",
             "assetPath": "assets/raghavashathakam.json"
         },
         {
-            "id": "vp",
-            "name": "Sri Sri Anna's Vijaya Panchakam",
-            "bookName": "vijayapanchakam",
-            "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
-        },
-        {
-            "id": "dw",
-            "name": "Sri Sri Anna's Dwadasha Nama Keerthanams",
-            "bookName": "dwadasha nama keerthanams",
+            "id": "bs",
+            "name": "Bhajana Sangraham",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
+            "bookName": [
+                {
+                    "displayName": "Vijaya Panchakam",
+                    "filterName": "vijayapanchakam"
+                },
+                {
+                    "displayName": "Dwadasha Nama Keerthanams",
+                    "filterName": "dwadasha nama keerthanams"
+                }
+            ],
             "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
         }
     ]
