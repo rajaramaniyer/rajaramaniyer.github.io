@@ -82,19 +82,17 @@
             "assetPath": "assets/raghavashathakam.json"
         },
         {
-            "id": "bs",
-            "name": "Bhajana Sangraham",
+            "id": "vp",
+            "name": "Vijaya Panchakam",
             "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": [
-                {
-                    "displayName": "Vijaya Panchakam",
-                    "filterName": "vijayapanchakam"
-                },
-                {
-                    "displayName": "Dwadasha Nama Keerthanams",
-                    "filterName": "dwadasha nama keerthanams"
-                }
-            ],
+            "bookName": "vijayapanchakam",
+            "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
+        },
+        {
+            "id": "dw",
+            "name": "Dwadasha Nama Keerthanams",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
+            "bookName": "dwadasha nama keerthanams",
             "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
         }
     ]
