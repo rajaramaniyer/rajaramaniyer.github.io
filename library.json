@@ -94,6 +94,13 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "dwadasha nama keerthanams",
             "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
+        },
+        {
+            "id": "ashtapadi",
+            "name": "Ashtapadi",
+            "artistName": "Jayadevar",
+            "bookName": "ashtapadi",
+            "url": "https://rajaramaniyer.github.io/ashtapadhi.json"
         }
     ]
 }
