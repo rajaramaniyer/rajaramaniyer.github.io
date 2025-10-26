@@ -82,6 +82,13 @@
             "assetPath": "assets/raghavashathakam.json"
         },
         {
+            "id": "ge",
+            "name": "Geethavali",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
+            "bookName": "geethavali",
+            "url": "https://rajaramaniyer.github.io/geethavali.json"
+        },
+        {
             "id": "vp",
             "name": "Vijaya Panchakam",
             "artistName": "Sri Sri Krisnnapremi Swamigal",
