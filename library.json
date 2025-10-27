@@ -50,6 +50,28 @@
             "assetPath": "assets/nithyothsavam.json"
         },
         {
+            "id": "vp",
+            "name": "Vijaya Panchakam",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
+            "bookName": "vijayapanchakam",
+            "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
+        },
+        {
+            "id": "ge",
+            "name": "Geethavali",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
+            "bookName": "geethavali",
+            "url": "https://rajaramaniyer.github.io/geethavali.json"
+        },
+        {
+            "id": "rgs",
+            "name": "Raghava Shathakam",
+            "artistName": "Sri Sri Krisnnapremi Swamigal",
+            "bookName": "raghava shatakam",
+            "url": "https://rajaramaniyer.github.io/raghavashathakam.json",
+            "assetPath": "assets/raghavashathakam.json"
+        },
+        {
             "id": "gs",
             "name": "Govinda Shathakam",
             "artistName": "Sri Sri Krisnnapremi Swamigal",
@@ -72,28 +94,6 @@
             "bookName": "yugala shatakam",
             "url": "https://rajaramaniyer.github.io/yugalashathakam.json",
             "assetPath": "assets/yugalashathakam.json"
-        },
-        {
-            "id": "rgs",
-            "name": "Raghava Shathakam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "raghava shatakam",
-            "url": "https://rajaramaniyer.github.io/raghavashathakam.json",
-            "assetPath": "assets/raghavashathakam.json"
-        },
-        {
-            "id": "ge",
-            "name": "Geethavali",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "geethavali",
-            "url": "https://rajaramaniyer.github.io/geethavali.json"
-        },
-        {
-            "id": "vp",
-            "name": "Vijaya Panchakam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "vijayapanchakam",
-            "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
         },
         {
             "id": "dw",
