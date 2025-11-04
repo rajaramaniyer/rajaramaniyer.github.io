@@ -62,7 +62,7 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "geethavali",
             "url": "https://rajaramaniyer.github.io/geethavali.json",
-            "isPremium": true
+            "entitlement_key": "shathakams"
         },
         {
             "id": "rgs",
