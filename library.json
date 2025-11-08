@@ -54,7 +54,8 @@
             "name": "Vijaya Panchakam",
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "vijayapanchakam",
-            "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
+            "url": "https://rajaramaniyer.github.io/vijayapanchakam.json",
+            "assetPath": "assets/vijayapanchakam.json"
         },
         {
             "id": "ge",
@@ -70,7 +71,7 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "raghava shatakam",
             "url": "https://rajaramaniyer.github.io/raghavashathakam.json",
-            "assetPath": "assets/raghavashathakam.json"
+            "entitlement_key": "shathakams"
         },
         {
             "id": "gs",
@@ -78,7 +79,7 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "govinda shatakam",
             "url": "https://rajaramaniyer.github.io/govindashathakam.json",
-            "assetPath": "assets/govindashathakam.json"
+            "entitlement_key": "shathakams"
         },
         {
             "id": "rs",
@@ -86,7 +87,7 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "radhika shatakam",
             "url": "https://rajaramaniyer.github.io/radhikashathakam.json",
-            "assetPath": "assets/radhikashathakam.json"
+            "entitlement_key": "shathakams"
         },
         {
             "id": "ys",
@@ -94,14 +95,15 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "yugala shatakam",
             "url": "https://rajaramaniyer.github.io/yugalashathakam.json",
-            "assetPath": "assets/yugalashathakam.json"
+            "entitlement_key": "shathakams"
         },
         {
             "id": "dw",
             "name": "Dwadasha Nama Keerthanams",
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "dwadasha nama keerthanams",
-            "url": "https://rajaramaniyer.github.io/bhajanasangraham.json"
+            "url": "https://rajaramaniyer.github.io/dwadashanamakrithi.json",
+            "entitlement_key": "shathakams"
         },
         {
             "id": "ashtapadi",
