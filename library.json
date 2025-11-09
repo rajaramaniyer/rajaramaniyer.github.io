@@ -63,7 +63,7 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "geethavali",
             "url": "https://rajaramaniyer.github.io/geethavali.json",
-            "entitlement_key": "shathakams"
+            "entitlement_key": "geethavali"
         },
         {
             "id": "rgs",
@@ -71,7 +71,7 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "raghava shatakam",
             "url": "https://rajaramaniyer.github.io/raghavashathakam.json",
-            "entitlement_key": "shathakams"
+            "entitlement_key": "raghavashathakam"
         },
         {
             "id": "gs",
@@ -79,7 +79,7 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "govinda shatakam",
             "url": "https://rajaramaniyer.github.io/govindashathakam.json",
-            "entitlement_key": "shathakams"
+            "entitlement_key": "govindashathakam"
         },
         {
             "id": "rs",
@@ -87,7 +87,7 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "radhika shatakam",
             "url": "https://rajaramaniyer.github.io/radhikashathakam.json",
-            "entitlement_key": "shathakams"
+            "entitlement_key": "radhikashathakam"
         },
         {
             "id": "ys",
@@ -95,15 +95,14 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "yugala shatakam",
             "url": "https://rajaramaniyer.github.io/yugalashathakam.json",
-            "entitlement_key": "shathakams"
+            "entitlement_key": "yugalashathakam"
         },
         {
             "id": "dw",
             "name": "Dwadasha Nama Keerthanams",
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "dwadasha nama keerthanams",
-            "url": "https://rajaramaniyer.github.io/dwadashanamakrithi.json",
-            "entitlement_key": "shathakams"
+            "url": "https://rajaramaniyer.github.io/dwadashanamakrithi.json"
         },
         {
             "id": "ashtapadi",
