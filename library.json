@@ -38,6 +38,10 @@
                     "filterName": "vishramanam - nithyothsavam"
                 },
                 {
+                    "displayName": "Divyanamam",
+                    "filterName": "divyanamam - nithyothsavam"
+                },
+                {
                     "displayName": "Dolothsavam",
                     "filterName": "dolothsavam - nithyothsavam"
                 },
@@ -103,13 +107,6 @@
             "artistName": "Sri Sri Krisnnapremi Swamigal",
             "bookName": "dwadasha nama keerthanams",
             "url": "https://rajaramaniyer.github.io/dwadashanamakrithi.json"
-        },
-        {
-            "id": "pd",
-            "name": "Premika Divyanamam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "premikadivyanamam",
-            "url": "https://rajaramaniyer.github.io/premikadivyanamam.json"
         },
         {
             "id": "ashtapadi",
