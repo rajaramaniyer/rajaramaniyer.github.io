@@ -1,119 +1,119 @@
 {
-    "books": [
+  "books": [
+    {
+      "id": "nt",
+      "name": "Nithyothsavam",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": [
         {
-            "id": "nt",
-            "name": "Nithyothsavam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": [
-                {
-                    "displayName": "Pratasmaranam",
-                    "filterName": "pratasmaranam - nithyothsavam"
-                },
-                {
-                    "displayName": "Jaya mangala keerthanam",
-                    "filterName": "jaya mangala keerthanam - nithyothsavam"
-                },
-                {
-                    "displayName": "Prabhodhanam",
-                    "filterName": "prabhodhanam - nithyothsavam"
-                },
-                {
-                    "displayName": "Rama prabhodhanam",
-                    "filterName": "rama prabhodhanam - nithyothsavam"
-                },
-                {
-                    "displayName": "Sringaram",
-                    "filterName": "sringaram - nithyothsavam"
-                },
-                {
-                    "displayName": "Poojai",
-                    "filterName": "poojai - nithyothsavam"
-                },
-                {
-                    "displayName": "Rama poojai",
-                    "filterName": "rama poojai - nithyothsavam"
-                },
-                {
-                    "displayName": "Vishramanam",
-                    "filterName": "vishramanam - nithyothsavam"
-                },
-                {
-                    "displayName": "Divyanamam",
-                    "filterName": "divyanamam - nithyothsavam"
-                },
-                {
-                    "displayName": "Dolothsavam",
-                    "filterName": "dolothsavam - nithyothsavam"
-                },
-                {
-                    "displayName": "Rama dolothsavam",
-                    "filterName": "rama dolothsavam - nithyothsavam"
-                }
-            ],
-            "url": "https://rajaramaniyer.github.io/encrypted/nithyothsavam.json",
-            "assetPath": "assets/nithyothsavam.json"
+          "displayName": "Pratasmaranam",
+          "filterName": "pratasmaranam - nithyothsavam"
         },
         {
-            "id": "vp",
-            "name": "Vijaya Panchakam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "vijayapanchakam",
-            "url": "https://rajaramaniyer.github.io/encrypted/vijayapanchakam.json",
-            "assetPath": "assets/vijayapanchakam.json"
+          "displayName": "Jaya mangala keerthanam",
+          "filterName": "jaya mangala keerthanam - nithyothsavam"
         },
         {
-            "id": "ge",
-            "name": "Geethavali",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "geethavali",
-            "url": "https://rajaramaniyer.github.io/encrypted/geethavali.json",
-            "entitlement_key": "geethavali"
+          "displayName": "Prabhodhanam",
+          "filterName": "prabhodhanam - nithyothsavam"
         },
         {
-            "id": "rgs",
-            "name": "Raghava Shathakam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "raghava shatakam",
-            "url": "https://rajaramaniyer.github.io/encrypted/raghavashathakam.json",
-            "entitlement_key": "raghavashathakam"
+          "displayName": "Rama prabhodhanam",
+          "filterName": "rama prabhodhanam - nithyothsavam"
         },
         {
-            "id": "gs",
-            "name": "Govinda Shathakam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "govinda shatakam",
-            "url": "https://rajaramaniyer.github.io/encrypted/govindashathakam.json",
-            "entitlement_key": "govindashathakam"
+          "displayName": "Sringaram",
+          "filterName": "sringaram - nithyothsavam"
         },
         {
-            "id": "rs",
-            "name": "Radhika Shathakam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "radhika shatakam",
-            "url": "https://rajaramaniyer.github.io/encrypted/radhikashathakam.json",
-            "entitlement_key": "radhikashathakam"
+          "displayName": "Poojai",
+          "filterName": "poojai - nithyothsavam"
         },
         {
-            "id": "ys",
-            "name": "Yugala Shathakam",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "yugala shatakam",
-            "url": "https://rajaramaniyer.github.io/encrypted/yugalashathakam.json",
-            "entitlement_key": "yugalashathakam"
+          "displayName": "Rama poojai",
+          "filterName": "rama poojai - nithyothsavam"
         },
         {
-            "id": "dw",
-            "name": "Dwadasha Nama Keerthanams",
-            "artistName": "Sri Sri Krisnnapremi Swamigal",
-            "bookName": "dwadasha nama keerthanams",
-            "url": "https://rajaramaniyer.github.io/encrypted/dwadashanamakrithi.json"
+          "displayName": "Vishramanam",
+          "filterName": "vishramanam - nithyothsavam"
         },
         {
-            "id": "ashtapadi",
-            "name": "Ashtapadi",
-            "artistName": "Jayadevar",
-            "bookName": "ashtapadi",
-            "url": "https://rajaramaniyer.github.io/encrypted/ashtapadhi.json"
+          "displayName": "Divyanamam",
+          "filterName": "divyanamam - nithyothsavam"
+        },
+        {
+          "displayName": "Dolothsavam",
+          "filterName": "dolothsavam - nithyothsavam"
+        },
+        {
+          "displayName": "Rama dolothsavam",
+          "filterName": "rama dolothsavam - nithyothsavam"
         }
-    ]
+      ],
+      "url": "https://rajaramaniyer.github.io/encrypted/nithyothsavam.json",
+      "assetPath": "assets/nithyothsavam.json"
+    },
+    {
+      "id": "vp",
+      "name": "Vijaya Panchakam",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "vijayapanchakam",
+      "url": "https://rajaramaniyer.github.io/encrypted/vijayapanchakam.json",
+      "assetPath": "assets/vijayapanchakam.json"
+    },
+    {
+      "id": "ge",
+      "name": "Geethavali",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "geethavali",
+      "url": "https://rajaramaniyer.github.io/encrypted/geethavali.json",
+      "entitlement_key": "geethavali"
+    },
+    {
+      "id": "rgs",
+      "name": "Raghava Shathakam",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "raghava shatakam",
+      "url": "https://rajaramaniyer.github.io/encrypted/raghavashathakam.json",
+      "entitlement_key": "raghavashathakam"
+    },
+    {
+      "id": "gs",
+      "name": "Govinda Shathakam",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "govinda shatakam",
+      "url": "https://rajaramaniyer.github.io/encrypted/govindashathakam.json",
+      "entitlement_key": "govindashathakam"
+    },
+    {
+      "id": "rs",
+      "name": "Radhika Shathakam",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "radhika shatakam",
+      "url": "https://rajaramaniyer.github.io/encrypted/radhikashathakam.json",
+      "entitlement_key": "radhikashathakam"
+    },
+    {
+      "id": "ys",
+      "name": "Yugala Shathakam",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "yugala shatakam",
+      "url": "https://rajaramaniyer.github.io/encrypted/yugalashathakam.json",
+      "entitlement_key": "yugalashathakam"
+    },
+    {
+      "id": "dw",
+      "name": "Dwadasha Nama Keerthanams",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "dwadasha nama keerthanams",
+      "url": "https://rajaramaniyer.github.io/encrypted/dwadashanamakrithi.json"
+    },
+    {
+      "id": "ashtapadi",
+      "name": "Ashtapadi",
+      "artistName": "Jayadevar",
+      "bookName": "ashtapadi",
+      "url": "https://rajaramaniyer.github.io/encrypted/ashtapadhi.json"
+    }
+  ]
 }
