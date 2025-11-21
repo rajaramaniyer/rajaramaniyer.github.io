@@ -50,7 +50,7 @@
           "filterName": "rama dolothsavam - nithyothsavam"
         }
       ],
-      "url": "https://rajaramaniyer.github.io/encrypted/nithyothsavam.json",
+      "url": "https://rajaramaniyer.github.io/nithyothsavam.json",
       "assetPath": "assets/nithyothsavam.json"
     },
     {
@@ -58,7 +58,7 @@
       "name": "Vijaya Panchakam",
       "artistName": "Sri Sri Krisnnapremi Swamigal",
       "bookName": "vijayapanchakam",
-      "url": "https://rajaramaniyer.github.io/encrypted/vijayapanchakam.json",
+      "url": "https://rajaramaniyer.github.io/vijayapanchakam.json",
       "assetPath": "assets/vijayapanchakam.json"
     },
     {
@@ -106,14 +106,14 @@
       "name": "Dwadasha Nama Keerthanams",
       "artistName": "Sri Sri Krisnnapremi Swamigal",
       "bookName": "dwadasha nama keerthanams",
-      "url": "https://rajaramaniyer.github.io/encrypted/dwadashanamakrithi.json"
+      "url": "https://rajaramaniyer.github.io/dwadashanamakrithi.json"
     },
     {
       "id": "ashtapadi",
       "name": "Ashtapadi",
       "artistName": "Jayadevar",
       "bookName": "ashtapadi",
-      "url": "https://rajaramaniyer.github.io/encrypted/ashtapadhi.json"
+      "url": "https://rajaramaniyer.github.io/ashtapadhi.json"
     }
   ]
 }
