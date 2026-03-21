@@ -102,6 +102,14 @@
       "entitlement_key": "yugalashathakam"
     },
     {
+      "id": "rns",
+      "name": "Ranga Shathakam",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "ranga shatakam",
+      "url": "https://rajaramaniyer.github.io/encrypted/rangashathakam.json",
+      "entitlement_key": "yugalashathakam"
+    },
+    {
       "id": "dw",
       "name": "Dwadasha Nama Keerthanams",
       "artistName": "Sri Sri Krisnnapremi Swamigal",
