@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Web Tambura</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3758220358268980" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3758220358268980"
+        crossorigin="anonymous"></script>
     <style>
         .slidecontainer {
             width: 100%;
@@ -124,6 +125,55 @@
         .fancycheckbox.round:before {
             border-radius: 50%;
         }
+
+        /* ── 3-Column Ad Layout ─────────────────────────────────── */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .center-content {
+            flex: 0 0 auto;
+            width: 100%;
+            max-width: 700px;
+            min-width: 0;
+            box-sizing: border-box;
+            background-color: #ebebeb;
+        }
+
+        .ad-column {
+            flex: 0 0 160px;
+            width: 160px;
+            min-height: 1px;
+        }
+
+        .ad-sticky {
+            position: sticky;
+            top: 10px;
+            display: flex;
+            justify-content: center;
+            padding: 4px 0;
+        }
+
+        @media (max-width: 1100px) {
+            .ad-column {
+                display: none;
+            }
+
+            .center-content {
+                max-width: 100%;
+            }
+        }
+
+        /* ─────────────────────────────────────────────────────────── */
 
         /* ***************Radio Button*************** */
         /* The container */
@@ -255,106 +305,160 @@
 </head>
 
 <body onload="onPageLoad()">
-    <div class="w3-container w3-teal">
-        <h3>Web Tambura</h3>
-    </div>
-    <div id="mainScreen">
-        <h3>Volume: <span id="volumeLevel"></span></h3>
-        <div class="slidecontainer">
-            <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
+    <!-- ── 3-Column Page Layout ───────────────────────────────────── -->
+    <div class="page-wrapper">
+
+        <!-- LEFT AD COLUMN — delete this block to remove left ad -->
+        <div class="ad-column">
+            <div class="ad-sticky">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3758220358268980"
+                    data-ad-slot="4252269065" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
         </div>
 
-        <h3>Madhyam Shruthi</h3>
-        <label class="switch">
-            <input type="checkbox" value="m" id="madhyam" onclick="changePitch()">
-            <span class="fancycheckbox round"></span>
-        </label>
+        <!-- CENTER CONTENT — original page, untouched -->
+        <div class="center-content">
 
-        <h3>Select Pitch</h3>
+            <div class="w3-container w3-teal">
+                <h3>Web Tambura</h3>
+            </div>
+            <div class="w3-container">
 
-        <table width="100%" style="border: 1px solid teal">
-            <tr width="100%">
-                <td width="25%">
-                    <center>
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="b">
-                            <div class="checkmark w3-button w3-block">B</div>
-                        </label>
-                        <br />
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="c"
-                                checked="checked">
-                            <div class="checkmark w3-button w3-block">C</div>
-                        </label>
-                        <br />
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="cs">
-                            <div class="checkmark w3-button w3-block">C#</div>
-                        </label>
-                    </center>
-                </td>
-                <td width="25%">
-                    <center>
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="d">
-                            <div class="checkmark w3-button w3-block">D</div>
-                        </label>
-                        <br />
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="ds">
-                            <div class="checkmark w3-button w3-block">D#</div>
-                        </label>
-                        <br />
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="e">
-                            <div class="checkmark w3-button w3-block">E</div>
-                        </label>
-                    </center>
-                </td>
-                <td width="25%">
-                    <center>
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="f">
-                            <div class="checkmark w3-button w3-block">F</div>
-                        </label>
-                        <br />
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="fs">
-                            <div class="checkmark w3-button w3-block">F#</div>
-                        </label>
-                        <br />
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="g">
-                            <div class="checkmark w3-button w3-block">G</div>
-                        </label>
-                    </center>
-                </td>
-                <td width="25%">
-                    <center>
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="gs">
-                            <div class="checkmark w3-button w3-block">G#</div>
-                        </label>
-                        <br />
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="a">
-                            <div class="checkmark w3-button w3-block">A</div>
-                        </label>
-                        <br />
-                        <label class="container">
-                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch" value="as">
-                            <div class="checkmark w3-button w3-block">A#</div>
-                        </label>
-                    </center>
-                </td>
-            </tr>
-        </table>
+                <div class="w3-container w3-card w3-white">
+                    <h3 class="w3-color w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
+                    <div class="slidecontainer">
+                        <input type="range" min="1" max="100" value="30" class="slider" id="myRange"
+                            onchange="onGainChange()">
+                    </div>
+                </div>
+                <hr>
 
-        <center>
-            <p><button class="w3-button w3-green" id="PlayStop" onclick="onClickPlay()">Play</button></p>
-        </center>
-    </div>
+                <div class="w3-container w3-card w3-white">
+                    <h3 class="w3-color w3-blue-gray w3-center">
+                        <span class="w3-left-align">Madhyam Shruthi</span>
+                        <span class="w3-right-align">
+                            <label class="switch">
+                                <input id="madhyam" type="checkbox" value="m" onclick="changePitch()">
+                                <span class="fancycheckbox round"></span>
+                            </label>
+                        </span>
+                    </h3>
+                </div>
+                <hr>
 
+                <div class="w3-container w3-card w3-white">
+                    <h3 class="w3-color w3-blue-gray w3-center">Select Pitch</h3>
+
+                    <div>
+                        <table width="100%" style="border: 1px solid teal">
+                            <tr width="100%">
+                                <td width="25%">
+                                    <center>
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="b">
+                                            <div class="checkmark w3-button w3-block">B</div>
+                                        </label>
+                                        <br />
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="c" checked="checked">
+                                            <div class="checkmark w3-button w3-block">C</div>
+                                        </label>
+                                        <br />
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="cs">
+                                            <div class="checkmark w3-button w3-block">C#</div>
+                                        </label>
+                                    </center>
+                                </td>
+                                <td width="25%">
+                                    <center>
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="d">
+                                            <div class="checkmark w3-button w3-block">D</div>
+                                        </label>
+                                        <br />
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="ds">
+                                            <div class="checkmark w3-button w3-block">D#</div>
+                                        </label>
+                                        <br />
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="e">
+                                            <div class="checkmark w3-button w3-block">E</div>
+                                        </label>
+                                    </center>
+                                </td>
+                                <td width="25%">
+                                    <center>
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="f">
+                                            <div class="checkmark w3-button w3-block">F</div>
+                                        </label>
+                                        <br />
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="fs">
+                                            <div class="checkmark w3-button w3-block">F#</div>
+                                        </label>
+                                        <br />
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="g">
+                                            <div class="checkmark w3-button w3-block">G</div>
+                                        </label>
+                                    </center>
+                                </td>
+                                <td width="25%">
+                                    <center>
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="gs">
+                                            <div class="checkmark w3-button w3-block">G#</div>
+                                        </label>
+                                        <br />
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="a">
+                                            <div class="checkmark w3-button w3-block">A</div>
+                                        </label>
+                                        <br />
+                                        <label class="container">
+                                            <input type="radio" onclick="changePitch()" id="pitch" name="pitch"
+                                                value="as">
+                                            <div class="checkmark w3-button w3-block">A#</div>
+                                        </label>
+                                    </center>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <center>
+                    <p><button class="w3-button w3-green w3-block" id="PlayStop" onclick="onClickPlay()">Play</button></p>
+                </center>
+            </div>
+
+        </div><!-- end .center-content -->
+
+        <!-- RIGHT AD COLUMN — delete this block to remove right ad -->
+        <div class="ad-column">
+            <div class="ad-sticky">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3758220358268980"
+                    data-ad-slot="3724807997" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+    </div><!-- end .page-wrapper -->
 </body>
 
 </html>

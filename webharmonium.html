@@ -22,7 +22,8 @@
     <link rel="apple-touch-icon" href="images/icons/webharmonium_152.png" />
     <link rel="apple-touch-icon" href="images/icons/webharmonium_192.png" />
     <link rel="apple-touch-icon" href="images/icons/webharmonium_512.png" />
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3758220358268980" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3758220358268980"
+        crossorigin="anonymous"></script>
 
     <style>
         .white {
@@ -173,6 +174,65 @@
         .toggle.round:before {
             border-radius: 50%;
         }
+
+        /* ── 3-Column Ad Layout ─────────────────────────────────── */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Outer wrapper: left-ad | center | right-ad */
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Center column — all your existing content lives here */
+        .center-content {
+            flex: 0 0 auto;
+            /* don't grow or shrink */
+            width: 100%;
+            max-width: 700px;
+            /* cap width so sidebars have room */
+            min-width: 0;
+            box-sizing: border-box;
+            background-color: #EBEBEB
+        }
+
+        /* Ad column — shared styles */
+        .ad-column {
+            flex: 0 0 160px;
+            /* exactly 160px wide (fits Wide Skyscraper) */
+            width: 160px;
+            min-height: 1px;
+        }
+
+        /* Sticky ad unit inside each column */
+        .ad-sticky {
+            position: sticky;
+            top: 10px;
+            /* stays 10px from top when scrolling */
+            display: flex;
+            justify-content: center;
+            padding: 4px 0;
+        }
+
+        /* ── Responsive: hide side ads on smaller screens ───────── */
+        /* Only show ads when viewport is wide enough for 2×160 + content */
+        @media (max-width: 1100px) {
+            .ad-column {
+                display: none;
+            }
+
+            .center-content {
+                max-width: 100%;
+            }
+        }
+
+        /* ─────────────────────────────────────────────────────────── */
     </style>
     <title>Web Harmonium - developed by Rajaraman Iyer</title>
     <script>
@@ -189,65 +249,65 @@
         var sourceNodes = new Array();
         var sourceNodeState = new Array();
         var keyboardMap = {
-            "s": 53,   "S": 53,
-            "a": 54,   "A": 54,
-            "`": 55,   
-            "1": 56,   
-            "q": 57,   "Q": 57,
-            "2": 58,   
-            "w": 59,   "W": 59,
-            "e": 60,   "E": 60,
-            "4": 61,   
-            "r": 62,   "R": 62,
-            "5": 63,   
-            "t": 64,   "T": 64,
-            "y": 65,   "Y": 65,
-            "7": 66,   
-            "u": 67,   "U": 67,
-            "8": 68,   
-            "i": 69,   "I": 69,
-            "9": 70,   
-            "o": 71,   "O": 71,
-            "p": 72,   "P": 72,
-            "-": 73,   
-            "[": 74,   
-            "=": 75,   
-            "]": 76,   
-            "\\": 77,  
-            "'": 78,   
+            "s": 53, "S": 53,
+            "a": 54, "A": 54,
+            "`": 55,
+            "1": 56,
+            "q": 57, "Q": 57,
+            "2": 58,
+            "w": 59, "W": 59,
+            "e": 60, "E": 60,
+            "4": 61,
+            "r": 62, "R": 62,
+            "5": 63,
+            "t": 64, "T": 64,
+            "y": 65, "Y": 65,
+            "7": 66,
+            "u": 67, "U": 67,
+            "8": 68,
+            "i": 69, "I": 69,
+            "9": 70,
+            "o": 71, "O": 71,
+            "p": 72, "P": 72,
+            "-": 73,
+            "[": 74,
+            "=": 75,
+            "]": 76,
+            "\\": 77,
+            "'": 78,
             ";": 79
         }
         var swaramMap = {
-            "s": "Ṃ",  "S": "Ṃ",
-            "a": "Ṃ",  "A": "Ṃ",
-            "`": "P̣",  
-            "1": "Ḍ",  
-            "q": "Ḍ",  "Q": "Ḍ",
-            "2": "Ṇ",  
-            "w": "Ṇ",  "W": "Ṇ",
-            "e": "S",  "E": "S",
-            "4": "R",  
-            "r": "R",  "R": "R",
-            "5": "G",  
-            "t": "G",  "T": "G",
-            "y": "M",  "Y": "M",
-            "7": "M",  "7": "M",
-            "u": "P",  "U": "P",
-            "8": "D",  
-            "i": "D",  "I": "D",
-            "9": "N",  
-            "o": "N",  "O": "N",
-            "p": "Ṡ",  "P": "Ṡ",
-            "-": "Ṙ",  
-            "[": "Ṙ",  
-            "=": "Ġ",  
-            "]": "Ġ",  
-            "\\": "Ṁ", 
-            "'": "Ṁ",  
-            ";": "Ṗ",  
-            ",": ","  
+            "s": "Ṃ", "S": "Ṃ",
+            "a": "Ṃ", "A": "Ṃ",
+            "`": "P̣",
+            "1": "Ḍ",
+            "q": "Ḍ", "Q": "Ḍ",
+            "2": "Ṇ",
+            "w": "Ṇ", "W": "Ṇ",
+            "e": "S", "E": "S",
+            "4": "R",
+            "r": "R", "R": "R",
+            "5": "G",
+            "t": "G", "T": "G",
+            "y": "M", "Y": "M",
+            "7": "M", "7": "M",
+            "u": "P", "U": "P",
+            "8": "D",
+            "i": "D", "I": "D",
+            "9": "N",
+            "o": "N", "O": "N",
+            "p": "Ṡ", "P": "Ṡ",
+            "-": "Ṙ",
+            "[": "Ṙ",
+            "=": "Ġ",
+            "]": "Ġ",
+            "\\": "Ṁ",
+            "'": "Ṁ",
+            ";": "Ṗ",
+            ",": ","
         }
-        var notation=""
+        var notation = ""
 
         var loopStart = 0.5,
             loopEnd = 7.5,
@@ -265,7 +325,7 @@
         ];
         var keyNames = new Array();
 
-        function getCharLength (str) {
+        function getCharLength(str) {
             // The string iterator that is used here iterates over characters,
             //  not mere code units
             return [...str].length;
@@ -354,12 +414,12 @@
             }
 
             if (key === "Backspace" && getCharLength(notation) > 0) {
-                notation=notation.substring(0, getCharLength(notation)-1)
+                notation = notation.substring(0, getCharLength(notation) - 1)
             } else if (key === "Delete") {
-                notation=""
+                notation = ""
             } else if (key === "Enter") {
                 console.log(notation)
-                notation=""
+                notation = ""
             } else if (key === "Tab") {
                 notation += ","
             } else if (typeof (swaramMap[key]) != "undefined") {
@@ -463,19 +523,19 @@
                 var midiInfo = document.getElementById('midiInputDevicesInfo');
                 // Start of MIDI
                 if (navigator.requestMIDIAccess) {
-                    if ( midiInfo.innerText.indexOf('Supported!') == -1 ) {
+                    if (midiInfo.innerText.indexOf('Supported!') == -1) {
                         midiInfo.innerText += " Supported! "
                     }
                     if (debug) console.log('This browser supports WebMIDI!');
                     navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
                 } else {
-                    if ( midiInfo.innerText.indexOf('Supported!') == -1 ) {
+                    if (midiInfo.innerText.indexOf('Supported!') == -1) {
                         midiInfo.innerText += " Not Supported! "
                     }
                     if (debug) console.log('WebMIDI is not supported in this browser.');
                 }
             }
-            catch(err) {
+            catch (err) {
                 midiInfo.innerText += " Failed! " + err
             }
         }
@@ -526,8 +586,8 @@
                         noteOff(note);
                         break;
                     case 176: // control
-                        if ( note == 7 ) { // volume
-                            document.getElementById("myRange").value = (100 * velocity)/127;
+                        if (note == 7) { // volume
+                            document.getElementById("myRange").value = (100 * velocity) / 127;
                             onGainChange();
                         }
                         break;
@@ -616,273 +676,309 @@
         }
 
         if ("serviceWorker" in navigator) {
-            window.addEventListener("load", function() {
+            window.addEventListener("load", function () {
                 navigator.serviceWorker
-                .register("/serviceworker.js")
-                .then(res => console.log("service worker registered"))
-                .catch(err => console.log("service worker not registered", err));
+                    .register("/serviceworker.js")
+                    .then(res => console.log("service worker registered"))
+                    .catch(err => console.log("service worker not registered", err));
             });
         }
     </script>
 </head>
 
 <body>
-    <div class="w3-container w3-teal">
-        <h3>Web Harmonium</h3>
-    </div>
 
-    <div id="load" class="w3-container w3-panel">
-        <button class="w3-button w3-block w3-blue-gray"
-            onclick="document.getElementById('load').style.display='none'; load();">Load
-            Module</button>
-    </div>
-    <div id="mainScreen" style="display: none;">
-        <center>
-            <svg width=294 height=110>
-                <polygon points="0,0 14,0 14,50 21,50 21,100 0,100 0,0 " class="white" key="`" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="14,0 28,0 28,50 14,50 14,0 " class="black" key="1" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="21,50 28,50 28,0 35,0 35,50 42,50 42,100 21,100 21,50 " class="white" key="q"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="35,0 49,0 49,50 35,50 35,0 " class="black" key="2" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="42,50 49,50 49,0 63,0 63,100 42,100 42,50 " class="white" key="w"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="63,0 77,0 77,50 84,50 84,100 63,100 63,0 " class="white" key="e"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="77,0 91,0 91,50 77,50 77,0 " class="black" key="4" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="84,50 91,50 91,0 98,0 98,50 105,50 105,100 84,100 84,50 " class="white" key="r"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="98,0 112,0 112,50 98,50 98,0 " class="black" key="5" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="105,50 112,50 112,0 126,0 126,100 105,100 105,50 " class="white" key="t"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="126,0 140,0 140,50 147,50 147,100 126,100 126,0 " class="white" key="y"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="140,0 154,0 154,50 140,50 140,0 " class="black" key="7" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="147,50 154,50 154,0 161,0 161,50 168,50 168,100 147,100 147,50 " class="white" key="u"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="161,0 175,0 175,50 161,50 161,0 " class="black" key="8" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="168,50 175,50 175,0 182,0 182,50 189,50 189,100 168,100 168,50 " class="white" key="i"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="182,0 196,0 196,50 182,50 182,0 " class="black" key="9" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="189,50 196,50 196,0 210,0 210,100 189,100 189,50 " class="white" key="o"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="210,0 224,0 224,50 231,50 231,100 210,100 210,0 " class="white" key="p"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="224,0 238,0 238,50 224,50 224,0 " class="black" key="-" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="231,50 238,50 238,0 245,0 245,50 252,50 252,100 231,100 231,50 " class="white" key="["
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="245,0 259,0 259,50 245,50 245,0 " class="black" key="=" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="252,50 259,50 259,0 273,0 273,100 252,100 252,50 " class="white" key="]"
-                    onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                <polygon points="273,0 294,0 294,100 273,100 273,0 " class="white" key="\" onmousedown="play(this)"
-                    onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                    ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                    ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+    <!-- ── 3-Column Page Layout ───────────────────────────────────── -->
+    <div class="page-wrapper">
 
-                <!--white keys-->
-                <text x="7" y="65" fill="black" font-family="courier new" font-size="14">`</text>
-                <text x="28" y="65" fill="black" font-family="courier new" font-size="14">q</text>
-                <text x="49" y="65" fill="black" font-family="courier new" font-size="14">w</text>
-                <text x="70" y="65" fill="black" font-family="courier new" font-size="14">e</text>
-                <text x="91" y="65" fill="black" font-family="courier new" font-size="14">r</text>
-                <text x="112" y="65" fill="black" font-family="courier new" font-size="14">t</text>
-                <text x="133" y="65" fill="black" font-family="courier new" font-size="14">y</text>
-                <text x="154" y="65" fill="black" font-family="courier new" font-size="14">u</text>
-                <text x="175" y="65" fill="black" font-family="courier new" font-size="14">i</text>
-                <text x="196" y="65" fill="black" font-family="courier new" font-size="14">o</text>
-                <text x="217" y="65" fill="black" font-family="courier new" font-size="14">p</text>
-                <text x="238" y="65" fill="black" font-family="courier new" font-size="14">[</text>
-                <text x="259" y="65" fill="black" font-family="courier new" font-size="14">]</text>
-                <text x="280" y="65" fill="black" font-family="courier new" font-size="14">\</text>
-
-                <!--black keys-->
-                <text x="16" y="30" fill="white" font-family="courier new" font-size="14">1</text>
-                <text x="37" y="30" fill="white" font-family="courier new" font-size="14">2</text>
-                <text x="79" y="30" fill="white" font-family="courier new" font-size="14">4</text>
-                <text x="100" y="30" fill="white" font-family="courier new" font-size="14">5</text>
-                <text x="142" y="30" fill="white" font-family="courier new" font-size="14">7</text>
-                <text x="163" y="30" fill="white" font-family="courier new" font-size="14">8</text>
-                <text x="184" y="30" fill="white" font-family="courier new" font-size="14">9</text>
-                <text x="226" y="30" fill="white" font-family="courier new" font-size="14">-</text>
-                <text x="247" y="30" fill="white" font-family="courier new" font-size="14">=</text>
-
-                <text x="70" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">C</text>
-                <text x="91" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">D</text>
-                <text x="112" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">E</text>
-                <text x="133" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">F</text>
-                <text x="154" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">G</text>
-                <text x="175" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">A</text>
-                <text x="196" y="90" fill="blue" font-family="courier new" font-weight=bold font-size="14">B</text>
-
-            </svg>
-        </center>
-
-        <div class="w3-container">
-
-            <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
-                <div class="slidecontainer">
-                    <input type="range" min="1" max="100" value="30" class="slider" id="myRange"
-                        onchange="onGainChange()">
-                </div>
+        <!-- LEFT AD COLUMN -->
+        <div class="ad-column">
+            <div class="ad-sticky">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3758220358268980"
+                    data-ad-slot="4252269065" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
-            <hr>
-
-            <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">
-                    <span class="w3-left-align">Reverb</span>
-                    <span class="w3-right-align">
-                        <label class="switch">
-                            <input id="useReverb" type="checkbox" onclick="updateReverbState(this.checked)">
-                            <span class="toggle round"></span>
-                        </label>
-                    </span>
-                </h3>
-            </div>
-            <hr>
-
-            <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">
-                    <table width="100%">
-                        <tbody>
-                            <tr>
-                                <td width="10%">&nbsp;</td>
-                                <td width="80%"><span id="midiInputDevicesInfo">MIDI Keyboard</span></td>
-                                <td align=right width="10%"><button onclick="requestMIDIAccess()"><i
-                                            class="fa fa-refresh" style="font-size:36px;"></i></button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </h3>
-                <div class="w3-center" width="100%">
-                    <select id="midiInputDevices" width="100%"></select>
-                </div>
-            </div>
-            <hr>
-
-            <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">Transpose - <span id='rootNote'>C</span></h3>
-
-                <table width="100%">
-                    <tbody>
-                        <tr>
-                            <td class="w3-center" width="10%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftSemitone(-1)">-</a>
-                            </td>
-                            <td class="w3-center" width="80%">
-                                <h4><span id='transpose'>0</span></h4>
-                            </td>
-                            <td class="w3-center" width="10%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftSemitone(1)">+</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <hr>
-
-            <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">Current Octave</h3>
-
-                <table width="100%">
-                    <tbody>
-                        <tr>
-                            <td class="w3-center" width="10%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftOctave(-1)">-</a>
-                            </td>
-                            <td class="w3-center" width="80%">
-                                <h4 id='octave'>4</h4>
-                            </td>
-                            <td class="w3-center" width="10%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:shiftOctave(1)">+</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <hr>
-
-            <div class="w3-container w3-card">
-                <h3 class="w3-color w3-blue-gray w3-center">Additional Reeds</h3>
-
-                <table width="100%">
-                    <tbody>
-                        <tr>
-                            <td class="w3-center" width="10%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:changeStack(-1)">-</a>
-                            </td>
-                            <td class="w3-center" width="80%">
-                                <h4 id='stack'>0</h4>
-                            </td>
-                            <td class="w3-center" width="10%">
-                                <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                    onclick="javascript:changeStack(1)">+</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
         </div>
-    </div>
+
+        <!-- CENTER CONTENT — your original page, untouched -->
+        <div class="center-content">
+
+            <div class="w3-container w3-teal">
+                <h3>Web Harmonium</h3>
+            </div>
+
+            <div id="load" class="w3-container w3-panel">
+                <button class="w3-button w3-block w3-blue-gray"
+                    onclick="document.getElementById('load').style.display='none'; load();">Load
+                    Module</button>
+            </div>
+            <div id="mainScreen" style="display: none;">
+                <center>
+                    <svg width=294 height=110>
+                        <polygon points="0,0 14,0 14,50 21,50 21,100 0,100 0,0 " class="white" key="`"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="14,0 28,0 28,50 14,50 14,0 " class="black" key="1" onmousedown="play(this)"
+                            onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                            ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="21,50 28,50 28,0 35,0 35,50 42,50 42,100 21,100 21,50 " class="white" key="q"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="35,0 49,0 49,50 35,50 35,0 " class="black" key="2" onmousedown="play(this)"
+                            onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                            ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="42,50 49,50 49,0 63,0 63,100 42,100 42,50 " class="white" key="w"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="63,0 77,0 77,50 84,50 84,100 63,100 63,0 " class="white" key="e"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="77,0 91,0 91,50 77,50 77,0 " class="black" key="4" onmousedown="play(this)"
+                            onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                            ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="84,50 91,50 91,0 98,0 98,50 105,50 105,100 84,100 84,50 " class="white" key="r"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="98,0 112,0 112,50 98,50 98,0 " class="black" key="5" onmousedown="play(this)"
+                            onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
+                            ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="105,50 112,50 112,0 126,0 126,100 105,100 105,50 " class="white" key="t"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="126,0 140,0 140,50 147,50 147,100 126,100 126,0 " class="white" key="y"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="140,0 154,0 154,50 140,50 140,0 " class="black" key="7"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="147,50 154,50 154,0 161,0 161,50 168,50 168,100 147,100 147,50 " class="white"
+                            key="u" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="161,0 175,0 175,50 161,50 161,0 " class="black" key="8"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="168,50 175,50 175,0 182,0 182,50 189,50 189,100 168,100 168,50 " class="white"
+                            key="i" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="182,0 196,0 196,50 182,50 182,0 " class="black" key="9"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="189,50 196,50 196,0 210,0 210,100 189,100 189,50 " class="white" key="o"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="210,0 224,0 224,50 231,50 231,100 210,100 210,0 " class="white" key="p"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="224,0 238,0 238,50 224,50 224,0 " class="black" key="-"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="231,50 238,50 238,0 245,0 245,50 252,50 252,100 231,100 231,50 " class="white"
+                            key="[" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="245,0 259,0 259,50 245,50 245,0 " class="black" key="="
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="252,50 259,50 259,0 273,0 273,100 252,100 252,50 " class="white" key="]"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+                        <polygon points="273,0 294,0 294,100 273,100 273,0 " class="white" key="\"
+                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
+                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
+                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
+
+                        <!--white keys-->
+                        <text x="7" y="65" fill="black" font-family="courier new" font-size="14">`</text>
+                        <text x="28" y="65" fill="black" font-family="courier new" font-size="14">q</text>
+                        <text x="49" y="65" fill="black" font-family="courier new" font-size="14">w</text>
+                        <text x="70" y="65" fill="black" font-family="courier new" font-size="14">e</text>
+                        <text x="91" y="65" fill="black" font-family="courier new" font-size="14">r</text>
+                        <text x="112" y="65" fill="black" font-family="courier new" font-size="14">t</text>
+                        <text x="133" y="65" fill="black" font-family="courier new" font-size="14">y</text>
+                        <text x="154" y="65" fill="black" font-family="courier new" font-size="14">u</text>
+                        <text x="175" y="65" fill="black" font-family="courier new" font-size="14">i</text>
+                        <text x="196" y="65" fill="black" font-family="courier new" font-size="14">o</text>
+                        <text x="217" y="65" fill="black" font-family="courier new" font-size="14">p</text>
+                        <text x="238" y="65" fill="black" font-family="courier new" font-size="14">[</text>
+                        <text x="259" y="65" fill="black" font-family="courier new" font-size="14">]</text>
+                        <text x="280" y="65" fill="black" font-family="courier new" font-size="14">\</text>
+
+                        <!--black keys-->
+                        <text x="16" y="30" fill="white" font-family="courier new" font-size="14">1</text>
+                        <text x="37" y="30" fill="white" font-family="courier new" font-size="14">2</text>
+                        <text x="79" y="30" fill="white" font-family="courier new" font-size="14">4</text>
+                        <text x="100" y="30" fill="white" font-family="courier new" font-size="14">5</text>
+                        <text x="142" y="30" fill="white" font-family="courier new" font-size="14">7</text>
+                        <text x="163" y="30" fill="white" font-family="courier new" font-size="14">8</text>
+                        <text x="184" y="30" fill="white" font-family="courier new" font-size="14">9</text>
+                        <text x="226" y="30" fill="white" font-family="courier new" font-size="14">-</text>
+                        <text x="247" y="30" fill="white" font-family="courier new" font-size="14">=</text>
+
+                        <text x="70" y="90" fill="blue" font-family="courier new" font-weight=bold
+                            font-size="14">C</text>
+                        <text x="91" y="90" fill="blue" font-family="courier new" font-weight=bold
+                            font-size="14">D</text>
+                        <text x="112" y="90" fill="blue" font-family="courier new" font-weight=bold
+                            font-size="14">E</text>
+                        <text x="133" y="90" fill="blue" font-family="courier new" font-weight=bold
+                            font-size="14">F</text>
+                        <text x="154" y="90" fill="blue" font-family="courier new" font-weight=bold
+                            font-size="14">G</text>
+                        <text x="175" y="90" fill="blue" font-family="courier new" font-weight=bold
+                            font-size="14">A</text>
+                        <text x="196" y="90" fill="blue" font-family="courier new" font-weight=bold
+                            font-size="14">B</text>
+
+                    </svg>
+                </center>
+
+                <div class="w3-container">
+
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-color w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
+                        <div class="slidecontainer">
+                            <input type="range" min="1" max="100" value="30" class="slider" id="myRange"
+                                onchange="onGainChange()">
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-color w3-blue-gray w3-center">
+                            <span class="w3-left-align">Reverb</span>
+                            <span class="w3-right-align">
+                                <label class="switch">
+                                    <input id="useReverb" type="checkbox" onclick="updateReverbState(this.checked)">
+                                    <span class="toggle round"></span>
+                                </label>
+                            </span>
+                        </h3>
+                    </div>
+                    <hr>
+
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-color w3-blue-gray w3-center">
+                            <table width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td width="10%">&nbsp;</td>
+                                        <td width="80%"><span id="midiInputDevicesInfo">MIDI Keyboard</span></td>
+                                        <td align=right width="10%"><button onclick="requestMIDIAccess()"><i
+                                                    class="fa fa-refresh" style="font-size:36px;"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </h3>
+                        <div class="w3-center" width="100%">
+                            <select id="midiInputDevices" width="100%"></select>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-color w3-blue-gray w3-center">Transpose - <span id='rootNote'>C</span></h3>
+
+                        <table width="100%">
+                            <tbody>
+                                <tr>
+                                    <td class="w3-center" width="10%">
+                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                            onclick="javascript:shiftSemitone(-1)">-</a>
+                                    </td>
+                                    <td class="w3-center" width="80%">
+                                        <h4><span id='transpose'>0</span></h4>
+                                    </td>
+                                    <td class="w3-center" width="10%">
+                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                            onclick="javascript:shiftSemitone(1)">+</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-color w3-blue-gray w3-center">Current Octave</h3>
+
+                        <table width="100%">
+                            <tbody>
+                                <tr>
+                                    <td class="w3-center" width="10%">
+                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                            onclick="javascript:shiftOctave(-1)">-</a>
+                                    </td>
+                                    <td class="w3-center" width="80%">
+                                        <h4 id='octave'>4</h4>
+                                    </td>
+                                    <td class="w3-center" width="10%">
+                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                            onclick="javascript:shiftOctave(1)">+</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-color w3-blue-gray w3-center">Additional Reeds</h3>
+
+                        <table width="100%">
+                            <tbody>
+                                <tr>
+                                    <td class="w3-center" width="10%">
+                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                            onclick="javascript:changeStack(-1)">-</a>
+                                    </td>
+                                    <td class="w3-center" width="80%">
+                                        <h4 id='stack'>0</h4>
+                                    </td>
+                                    <td class="w3-center" width="10%">
+                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
+                                            onclick="javascript:changeStack(1)">+</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div><!-- end .center-content -->
+
+        <!-- RIGHT AD COLUMN -->
+        <div class="ad-column">
+            <div class="ad-sticky">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3758220358268980"
+                    data-ad-slot="3724807997" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+    </div><!-- end .page-wrapper -->
 </body>
 
 </html>
