@@ -684,10 +684,20 @@
 
         if ("serviceWorker" in navigator) {
             window.addEventListener("load", function () {
-                navigator.serviceWorker
-                    .register("/serviceworker.js")
-                    .then(res => console.log("service worker registered"))
-                    .catch(err => console.log("service worker not registered", err));
+                navigator.serviceWorker.register("/serviceworker.js").then(reg => {
+                    console.log("Service worker registered");
+
+                    // Check if there is an updated worker waiting to take over
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // This forces the page to reload once the new worker is active
+                                window.location.reload();
+                            }
+                        };
+                    };
+                });
             });
         }
     </script>
