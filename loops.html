@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Loop Player</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3758220358268980"
+        crossorigin="anonymous"></script>
     <style>
         div.container {
             width: 100%
@@ -27,60 +29,98 @@
 
         .slidecontainer {
             width: 100%;
-            /* Width of the outside container */
         }
 
         /* The slider itself */
         .slider {
             -webkit-appearance: none;
-            /* Override default CSS styles */
             appearance: none;
             width: 100%;
-            /* Full-width */
             height: 25px;
-            /* Specified height */
             background: #d3d3d3;
-            /* Grey background */
             outline: none;
-            /* Remove outline */
             opacity: 0.7;
-            /* Set transparency (for mouse-over effects on hover) */
             -webkit-transition: .2s;
-            /* 0.2 seconds transition on hover */
             transition: opacity .2s;
         }
 
-        /* Mouse-over effects */
         .slider:hover {
             opacity: 1;
-            /* Fully shown on mouse-over */
         }
 
-        /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            /* Override default look */
             appearance: none;
             width: 25px;
-            /* Set a specific slider handle width */
             height: 25px;
-            /* Slider handle height */
             background: #4CAF50;
-            /* Green background */
             cursor: pointer;
-            /* Cursor on hover */
         }
 
         .slider::-moz-range-thumb {
             width: 25px;
-            /* Set a specific slider handle width */
             height: 25px;
-            /* Slider handle height */
             background: #4CAF50;
-            /* Green background */
             cursor: pointer;
-            /* Cursor on hover */
         }
+
+        /* ── 3-Column Ad Layout ─────────────────────────────────── */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .center-content {
+            flex: 0 0 auto;
+            width: 100%;
+            max-width: 500px;
+            min-width: 0;
+            box-sizing: border-box;
+            background-color: #ebebeb;
+        }
+
+        .ad-column {
+            flex: 0 0 160px;
+            width: 160px;
+            min-height: 600px;
+            display: block;
+            overflow: hidden;
+        }
+
+        @media (min-width: 1200px) {
+            .ad-column {
+                flex: 0 0 300px;
+                width: 300px;
+            }
+        }
+
+        .ad-sticky {
+            position: sticky;
+            top: 10px;
+            display: flex;
+            justify-content: center;
+            padding: 4px 0;
+            width: 100%;
+        }
+
+        @media (max-width: 820px) {
+            .ad-column {
+                display: none !important;
+            }
+
+            .ad-column .adsbygoogle {
+                display: none !important;
+            }
+        }
+        /* ─────────────────────────────────────────────────────────── */
     </style>
     <script type="text/javascript">
         var source = null, gainNode = null, context = null;
@@ -152,35 +192,22 @@
 
             var url = document.getElementById('loopList').value;
 
-            //create the context
             if (context == null) {
                 context = new AudioContext();
                 gainNode = context.createGain();
                 gainNode.gain.value = document.getElementById("myRange").value / 100
             }
 
-            //and the source
             source = context.createBufferSource();
-
-            //connect it to the destination so you can hear it.
             source.connect(gainNode).connect(context.destination);
 
-            // load buffer
             var request = new XMLHttpRequest();
-
-            //open the request
             request.open('GET', url, true);
-
-            //webaudio paramaters
             request.responseType = 'arraybuffer';
 
-            //Once the request has completed... do this
             request.onload = function () {
                 context.decodeAudioData(request.response, function (response) {
-                    // --- play the sound AFTER the buffer loaded
-                    //set the buffer to the response we just received
                     source.buffer = response;
-                    //start(0) should play asap.
                     source.start(0);
                     source.loop = true;
                     document.getElementById('playButton').innerHTML = '<i class="fa fa-stop"></i>'
@@ -188,7 +215,6 @@
             }
 
             document.getElementById('playButton').innerHTML = '<i class="fa fa-hand-stop-o"></i>'
-            //Now that the request has been defined, actually make the request. (send it)
             request.send();
         }
 
@@ -236,30 +262,67 @@
 </head>
 
 <body onload="onPageLoad()">
-    <div class="w3-container w3-teal">
-        <h3>Loop Player</h3>
-    </div>
-    <div id="mainScreen">
-        <h2>Volume: <span id="volumeLevel"></span></h2>
-        <div class="slidecontainer">
-            <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
+    <!-- ── 3-Column Page Layout ───────────────────────────────────── -->
+    <div class="page-wrapper">
+
+        <!-- LEFT AD COLUMN — delete this block to remove left ad -->
+        <div class="ad-column">
+            <div class="ad-sticky">
+                <ins class="adsbygoogle" style="display:block; min-width:160px; max-width:300px; min-height:600px;"
+                    data-ad-client="ca-pub-3758220358268980" data-ad-slot="4252269065" data-ad-format="auto"
+                    data-full-width-responsive="false"></ins>
+                <script>
+                    const adColumn = document.querySelector('.ad-column');
+                    if (adColumn && window.getComputedStyle(adColumn).display !== 'none') {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    }
+                </script>
+            </div>
         </div>
 
-        <div class="element">
-            <h2>List Name:</h2>
-            <select id="listName" class="element" onchange="onchangelist()"></select>
+        <!-- CENTER CONTENT -->
+        <div class="center-content">
+            <div class="w3-container w3-teal">
+                <h3>Loop Player</h3>
+            </div>
+            <div id="mainScreen" class="w3-container">
+                <h2>Volume: <span id="volumeLevel"></span></h2>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="100" value="30" class="slider" id="myRange" onchange="onGainChange()">
+                </div>
+
+                <div class="element">
+                    <h2>List Name:</h2>
+                    <select id="listName" class="element" onchange="onchangelist()"></select>
+                </div>
+
+                <div class="element">
+                    <h2>List Parts:</h2>
+                    <select id="loopList" class="element" onchange="onchangeloop()"></select>
+                </div>
+                <div class="element"><center>
+                    <button id="rewindButton" onclick="moveTrack(-1)" class="ctrlButton"><i class="fa fa-backward"></i></button>
+                    <button id="playButton" onclick="toggleLoop()" class="ctrlButton"><i class="fa fa-play"></i></button>
+                    <button id="forwardButton" onclick="moveTrack(1)" class="ctrlButton"><i class="fa fa-forward"></i></button>
+                </center></div>
+            </div>
+        </div><!-- end .center-content -->
+
+        <!-- RIGHT AD COLUMN — delete this block to remove right ad -->
+        <div class="ad-column">
+            <div class="ad-sticky">
+                <ins class="adsbygoogle" style="display:block; min-width:160px; max-width:300px; min-height:600px;"
+                    data-ad-client="ca-pub-3758220358268980" data-ad-slot="3724807997" data-ad-format="auto"
+                    data-full-width-responsive="false"></ins>
+                <script>
+                    if (adColumn && window.getComputedStyle(adColumn).display !== 'none') {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    }
+                </script>
+            </div>
         </div>
 
-        <div class="element">
-            <h2>List Parts:</h2>
-            <select id="loopList" class="element" onchange="onchangeloop()"></select>
-        </div>
-        <div class="element"><center>
-            <button id="rewindButton" onclick="moveTrack(-1)" class="ctrlButton"><i class="fa fa-backward"></i></button>
-            <button id="playButton" onclick="toggleLoop()" class="ctrlButton"><i class="fa fa-play"></i></button>
-            <button id="forwardButton" onclick="moveTrack(1)" class="ctrlButton"><i class="fa fa-forward"></i></button>
-        </center></div>
-    </div>
+    </div><!-- end .page-wrapper -->
 </body>
 
 </html>
