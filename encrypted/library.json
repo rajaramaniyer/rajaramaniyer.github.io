@@ -62,6 +62,30 @@
       "assetPath": "assets/vijayapanchakam.json"
     },
     {
+      "id": "prem",
+      "name": "Premika Guru Sthuthi",
+      "artistName": "Sri Krishnadas and Smt. Sivakama Sundari",
+      "bookName": [
+        {
+          "displayName": "Tamil Keerthanams",
+          "filterName": "premikagurusthuthi - tamil"
+        },
+        {
+          "displayName": "Jaya mangala keerthanam",
+          "filterName": "premikagurusthuthi - sanskrit"
+        },
+        {
+          "displayName": "Pillai Tamil",
+          "filterName": "premikagurusthuthi - pillai"
+        },
+        {
+          "displayName": "Ashtakams",
+          "filterName": "premikagurusthuthi - ashtakams"
+        }
+      ],
+      "url": "https://rajaramaniyer.github.io/premikagurusthuthi.json"
+    },
+    {
       "id": "ge",
       "name": "Geethavali",
       "artistName": "Sri Sri Krisnnapremi Swamigal",
