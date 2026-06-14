@@ -146,6 +146,38 @@
       "artistName": "Jayadevar",
       "bookName": "ashtapadi",
       "url": "https://rajaramaniyer.github.io/ashtapadhi.json"
-    }
+    },
+    {
+      "id": "ram",
+      "name": "Ramayanam",
+      "artistName": "Maharishi Valmiki",
+      "bookName": [
+        {
+          "displayName": "Bala Kandam",
+          "filterName": "balakandam - ramayanam"
+        },
+        {
+          "displayName": "Ayodya Kandam",
+          "filterName": "ayodyakandam - ramayanam"
+        },
+        {
+          "displayName": "Aranya Kandam",
+          "filterName": "aranyakandam - ramayanam"
+        },
+        {
+          "displayName": "Kishkinda Kandam",
+          "filterName": "kishkindakandam - ramayanam"
+        },
+        {
+          "displayName": "Sundara Kandam",
+          "filterName": "sundarakandam - ramayanam"
+        },
+        {
+          "displayName": "Yuddha Kandam",
+          "filterName": "yuddhakandam - ramayanam"
+        },
+      ],
+      "url": "https://rajaramaniyer.github.io/ramayanam.json"
+    },
   ]
 }

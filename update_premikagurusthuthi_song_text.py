@@ -4,9 +4,50 @@ import json
 import pathlib
 import re
 import sys
+from aksharamukha import transliterate
+import glob
+from pathlib import Path
+import os
 
 TRAILING_COMMA_PATTERN = re.compile(r',\s*(?=[}\]])')
 
+def process_file(input_path, output_path, from_lang="Devanagari", to_lang="Tamil"):
+    """
+    Process a single file: transliterate and handle special characters
+    
+    Args:
+        input_path: Path to input file
+        output_path: Path to output file
+    """
+    try:
+        # Read input file
+        with open(input_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Replace dandas with placeholders to preserve them
+        content = content.replace('॥', '<<<DOUBLE_DANDA>>>')
+        content = content.replace('।', '<<<SINGLE_DANDA>>>')
+        
+        # Transliterate using local library
+        transliterated = transliterate.process(from_lang, to_lang, content)
+        
+        # Restore dandas
+        transliterated = transliterated.replace('<<<DOUBLE_DANDA>>>', '॥')
+        transliterated = transliterated.replace('<<<SINGLE_DANDA>>>', '।')
+        
+        # Remove apostrophes
+        transliterated = transliterated.replace("ʼ", '').replace("꞉", ":")
+        
+        # Write output file
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(transliterated)
+        
+        print(f"✓ Processed: {input_path} -> {output_path}")
+        return True
+        
+    except Exception as e:
+        print(f"Error processing {input_path}: {e}")
+        return False
 
 def load_json(path: pathlib.Path):
     raw = path.read_text(encoding='utf-8')
@@ -43,6 +84,15 @@ def build_song_text(entry: dict, source_dir: pathlib.Path) -> str:
         tamil_text = read_file_content(source_dir, entry['tamilFileName'])
         if tamil_text:
             parts.append('**********<br />Tamil<br />**********<br />' + htmlify(tamil_text))
+    else:
+        if entry.get('sanskritFileName'):
+            sanksrit_file_path = source_dir / entry['sanskritFileName']
+            tamil_filename = entry['sanskritFileName'].replace('sanskrit', 'tamil')
+            tamil_file_path = source_dir / tamil_filename
+            process_file(sanksrit_file_path, tamil_file_path)
+            tamil_text = read_file_content(source_dir, tamil_filename)
+            if tamil_text:
+                parts.append('**********<br />Tamil<br />**********<br />' + htmlify(tamil_text))
     if not parts:
         raise ValueError(f"No Tamil or Sanskrit source file configured for entry id={entry.get('id')}")
     return '<br /><br />'.join(parts) + '<br /><br />*****************<br />End of Song<br />*****************'
@@ -54,7 +104,7 @@ def write_json(path: pathlib.Path, data: dict):
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description='Update premikagurusthuthi.json entries with song_text from source text files.'
+        description='Update song_text from source text files.'
     )
     parser.add_argument(
         '--json', '-j',
