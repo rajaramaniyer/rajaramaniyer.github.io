@@ -155,6 +155,41 @@
       "url": "https://rajaramaniyer.github.io/tarangam.json"
     },
     {
+      "id": "br",
+      "name": "Bhadrachala Ramadasar",
+      "artistName": "Bhadrachala Ramadasar",
+      "bookName": "bhadrachala_ramadasar",
+      "url": "https://rajaramaniyer.github.io/bhadrachala_ramadasar.json"
+    },
+    {
+      "id": "purandara",
+      "name": "Purandaradasar",
+      "artistName": "Purandaradasar",
+      "bookName": "purandaradasar",
+      "url": "https://rajaramaniyer.github.io/purandaradasar.json"
+    },
+    {
+      "id": "sadashiva",
+      "name": "Sadashiva Brahmendral",
+      "artistName": "Sadashiva Brahmendral",
+      "bookName": "sadashiva_brahmendral",
+      "url": "https://rajaramaniyer.github.io/sadashiva_brahmendral.json"
+    },
+    {
+      "id": "gb",
+      "name": "Gopalakrishna Bharathi",
+      "artistName": "Gopalakrishna Bharathi",
+      "bookName": "gopalakrishna_bharathi",
+      "url": "https://rajaramaniyer.github.io/gopalakrishna_bharathi.json"
+    },
+    {
+      "id": "thyaga",
+      "name": "Thyagarajar",
+      "artistName": "Thyagarajar",
+      "bookName": "thyagarajar",
+      "url": "https://rajaramaniyer.github.io/thyagarajar.json"
+    },
+    {
       "id": "ram",
       "name": "Ramayanam",
       "artistName": "Maharishi Valmiki",
