@@ -141,6 +141,27 @@
       "url": "https://rajaramaniyer.github.io/dwadashanamakrithi.json"
     },
     {
+      "id": "tm",
+      "name": "Thodaya Mangalam",
+      "artistName": "Various",
+      "bookName": "thodaya_mangalam",
+      "url": "https://rajaramaniyer.github.io/thodaya_mangalam.json"
+    },
+    {
+      "id": "guru",
+      "name": "Guru Keerthanams",
+      "artistName": "Various",
+      "bookName": "gurukeerthanam",
+      "url": "https://rajaramaniyer.github.io/gurukeerthanam.json"
+    },
+    {
+      "id": "abhang",
+      "name": "Abhang",
+      "artistName": "Various",
+      "bookName": "abhang",
+      "url": "https://rajaramaniyer.github.io/abhang.json"
+    },
+    {
       "id": "ashtapadi",
       "name": "Ashtapadi",
       "artistName": "Jayadevar",
@@ -188,6 +209,41 @@
       "artistName": "Thyagarajar",
       "bookName": "thyagarajar",
       "url": "https://rajaramaniyer.github.io/thyagarajar.json"
+    },
+    {
+      "id": "vijay",
+      "name": "Vijaya Gopala Swami",
+      "artistName": "Vijaya Gopala Swamit",
+      "bookName": "vijay",
+      "url": "https://rajaramaniyer.github.io/vijay.json"
+    },
+    {
+      "id": "oothukkadu",
+      "name": "Oothukkadu",
+      "artistName": "Oothukkadu Venkatasubba Iyer",
+      "bookName": "oothukkadu",
+      "url": "https://rajaramaniyer.github.io/oothukkadu.json"
+    },
+    {
+      "id": "misc",
+      "name": "Misecllaneous",
+      "artistName": "Misecllaneous",
+      "bookName": "misc",
+      "url": "https://rajaramaniyer.github.io/misc.json"
+    },
+    {
+      "id": "kp",
+      "name": "Kalyana Paddhathi",
+      "artistName": "Various",
+      "bookName": "kalyana_paddhathi",
+      "url": "https://rajaramaniyer.github.io/kalyana_paddhathi.json"
+    },
+    {
+      "id": "vk",
+      "name": "Vasantha Kelika",
+      "artistName": "Various",
+      "bookName": "vasantha_kelika",
+      "url": "https://rajaramaniyer.github.io/vasantha_kelika.json"
     },
     {
       "id": "ram",

@@ -66,7 +66,18 @@ def main():
     parser.add_argument(
         "--artistname",
         dest="artistname_value",
-        help="Shortcut for matching the Artistname field.",
+        help=(
+            "Shortcut for matching the Artistname field. "
+            "Can be supplied multiple times, or as a JSON-style list."
+        ),
+    )
+    parser.add_argument(
+        "--artistnames",
+        dest="artistnames_value",
+        help=(
+            "Comma-separated or JSON-style list of Artistname values to match. "
+            "Example: \"Abhang (65),ChOkAmELA (5)\""
+        ),
     )
     parser.add_argument(
         "--contains",
@@ -99,11 +110,19 @@ def main():
 
     if args.artistname_value is not None:
         args.attribute = args.attribute or "Artistname"
-        args.value = args.artistname_value
+        if args.value is None:
+            args.value = args.artistname_value
+        elif isinstance(args.value, list):
+            args.value = args.value + [args.artistname_value]
+
+    if args.artistnames_value is not None:
+        args.attribute = args.attribute or "Artistname"
+        if args.value is None:
+            args.value = args.artistnames_value
 
     if not args.attribute or not args.value:
         parser.error(
-            "Provide --attribute and --value, or use --artistname <value>."
+            "Provide --attribute and --value, or use --artistname/--artistnames."
         )
 
     excluded_attributes = list(DEFAULT_EXCLUDED_ATTRIBUTES)
@@ -128,6 +147,23 @@ def main():
             "The input JSON must be a JSON object with a top-level 'song_list' list."
         )
 
+    def parse_values(raw_value):
+        if isinstance(raw_value, (list, tuple)):
+            return [str(v) for v in raw_value]
+        if isinstance(raw_value, str):
+            stripped = raw_value.strip()
+            if stripped.startswith("[") and stripped.endswith("]"):
+                try:
+                    return [str(v) for v in json.loads(stripped)]
+                except json.JSONDecodeError:
+                    pass
+            if "," in stripped:
+                return [part.strip() for part in stripped.split(",") if part.strip()]
+            return [stripped]
+        return [str(raw_value)]
+
+    target_values = parse_values(args.value)
+
     matches = []
     for item in data["song_list"]:
         if not isinstance(item, dict):
@@ -142,12 +178,11 @@ def main():
             continue
 
         text = str(field_value)
-        target = args.value
 
         if args.contains:
-            matched = target.lower() in text.lower()
+            matched = any(target.lower() in text.lower() for target in target_values)
         else:
-            matched = text == target
+            matched = any(text == target for target in target_values)
 
         if matched:
             matches.append(item)
