@@ -148,6 +148,13 @@
       "url": "https://rajaramaniyer.github.io/ashtapadhi.json"
     },
     {
+      "id": "tarangam",
+      "name": "Tarangam",
+      "artistName": "Narayana Theerthar",
+      "bookName": "tarangam",
+      "url": "https://rajaramaniyer.github.io/tarangam.json"
+    },
+    {
       "id": "ram",
       "name": "Ramayanam",
       "artistName": "Maharishi Valmiki",
