@@ -80,6 +80,8 @@ def build_song_text(entry: dict, source_dir: pathlib.Path) -> str:
         sanskrit_text = read_file_content(source_dir, entry['sanskritFileName'])
         if sanskrit_text:
             parts.append('**********<br />Sanskrit<br />**********<br />' + htmlify(sanskrit_text))
+        if entry.get('tamilFileName'):
+            process_file(source_dir / entry['sanskritFileName'], source_dir / entry['tamilFileName'])
     if entry.get('tamilFileName'):
         tamil_text = read_file_content(source_dir, entry['tamilFileName'])
         if tamil_text:
@@ -108,7 +110,7 @@ def main() -> int:
     )
     parser.add_argument(
         '--json', '-j',
-        default='encrypted/premikagurusthuthi.json',
+        default='premikagurusthuthi.json',
         help='Path to the premikagurusthuthi JSON file.',
     )
     parser.add_argument(
