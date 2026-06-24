@@ -87,6 +87,7 @@ def build_song_text(entry: dict, source_dir: pathlib.Path) -> str:
         if tamil_text:
             parts.append('**********<br />Tamil<br />**********<br />' + htmlify(tamil_text))
     else:
+        # if no tamilFileName is provided, check if we can derive it from the sanskritFileName
         if entry.get('sanskritFileName'):
             sanksrit_file_path = source_dir / entry['sanskritFileName']
             tamil_filename = entry['sanskritFileName'].replace('sanskrit', 'tamil')
