@@ -76,6 +76,8 @@ def htmlify(text: str) -> str:
 
 def build_song_text(entry: dict, source_dir: pathlib.Path) -> str:
     parts = []
+    if not entry.get('sanskritFileName') or not entry.get('tamilFileName'):
+        raise ValueError(f"No source file configured for entry id={entry.get('id')}. Skipping this entry.")
     if entry.get('sanskritFileName'):
         sanskrit_text = read_file_content(source_dir, entry['sanskritFileName'])
         if sanskrit_text:
