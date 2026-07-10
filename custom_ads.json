@@ -1,0 +1,56 @@
+{
+  "ads": [
+    {
+      "id": "ad_001",
+      "title": "Sri Sri Krishnapremi Swamigal",
+      "description": "Premika Sampradaya Founder",
+      "iconUrl": "assets/srisrianna.png",
+      "iconPosition": "right",
+      "actionUrl": "https://srisrianna.com",
+      "startDate": "2025-10-05T10:42:00.000Z",
+      "endDate": "2035-12-31T23:59:59.000Z",
+      "isActive": true,
+      "size": "banner",
+      "mediaType": "image"
+    },
+    {
+      "id": "ad_001_l",
+      "title": "Sri Sri Krishnapremi Swamigal",
+      "description": "Premika Sampradaya Founder",
+      "iconUrl": "assets/srisrianna.png",
+      "iconPosition": "right",
+      "actionUrl": "https://srisrianna.com",
+      "startDate": "2025-10-05T10:42:00.000Z",
+      "endDate": "2035-12-31T23:59:59.000Z",
+      "isActive": true,
+      "size": "leaderboard",
+      "mediaType": "image"
+    },
+    {
+      "id": "ad_002",
+      "title": "Kolahalan Vari",
+      "description": "Villupuram to Paranur - 24th July",
+      "iconUrl": "assets/srisrianna.png",
+      "iconPosition": "right",
+      "actionUrl": "https://srisrianna.com",
+      "startDate": "2026-07-08T00:00:00.000Z",
+      "endDate": "2026-07-25T00:00:00.000Z",
+      "isActive": true,
+      "size": "banner",
+      "mediaType": "image"
+    },
+    {
+      "id": "ad_002_l",
+      "title": "Kolahalan Vari",
+      "description": "Villupuram to Paranur - 24th July",
+      "iconUrl": "assets/srisrianna.png",
+      "iconPosition": "right",
+      "actionUrl": "https://srisrianna.com",
+      "startDate": "2026-07-08T00:00:00.000Z",
+      "endDate": "2026-07-25T00:00:00.000Z",
+      "isActive": true,
+      "size": "leaderboard",
+      "mediaType": "image"
+    }
+  ]
+}
