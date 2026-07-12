@@ -93,6 +93,8 @@ def build_song_text(entry: dict, source_dir: pathlib.Path) -> str:
         if entry.get('sanskritFileName'):
             sanksrit_file_path = source_dir / entry['sanskritFileName']
             tamil_filename = entry['sanskritFileName'].replace('sanskrit', 'tamil')
+            if entry['sanskritFileName'] == tamil_filename:
+                tamil_filename = tamil_filename.replace('.txt', '-tamil.txt')
             tamil_file_path = source_dir / tamil_filename
             process_file(sanksrit_file_path, tamil_file_path)
             tamil_text = read_file_content(source_dir, tamil_filename)
