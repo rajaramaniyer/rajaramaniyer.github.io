@@ -276,6 +276,13 @@
         }
       ],
       "url": "https://rajaramaniyer.github.io/ramayanam.json"
+    },
+    {
+      "id": "narayaneeyam",
+      "name": "Narayaneeyam",
+      "artistName": "Bhattathiri",
+      "bookName": "narayaneeyam",
+      "url": "https://rajaramaniyer.github.io/narayaneeyam.json"
     }
   ]
 }
