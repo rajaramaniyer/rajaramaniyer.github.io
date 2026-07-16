@@ -126,6 +126,14 @@
       "entitlement_key": "yugalashathakam"
     },
     {
+      "id": "lsm",
+      "name": "Laghu Sthotra Mala",
+      "artistName": "Sri Sri Krisnnapremi Swamigal",
+      "bookName": "laghusthotramala",
+      "url": "https://rajaramaniyer.github.io/encrypted/laghusthotramala.json",
+      "entitlement_key": "yugalashathakam"
+    },
+    {
       "id": "rns",
       "name": "Ranga Shathakam",
       "artistName": "Sri Sri Krisnnapremi Swamigal",
