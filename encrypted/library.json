@@ -80,7 +80,7 @@
         },
         {
           "displayName": "Ashtakams",
-          "filterName": "premikagurusthuthi - ashtakams"
+          "filterName": "premikagurusthuthi - ashtakam"
         }
       ],
       "url": "https://rajaramaniyer.github.io/premikagurusthuthi.json"
@@ -284,6 +284,62 @@
         }
       ],
       "url": "https://rajaramaniyer.github.io/ramayanam.json"
+    },
+    {
+      "id": "sb",
+      "name": "Bhagavatham",
+      "artistName": "Veda Vyasa",
+      "bookName": [
+        {
+          "displayName": "Canto 01",
+          "filterName": "canto01 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 02",
+          "filterName": "canto02 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 03",
+          "filterName": "canto03 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 04",
+          "filterName": "canto04 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 05",
+          "filterName": "canto05 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 06",
+          "filterName": "canto06 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 07",
+          "filterName": "canto07 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 08",
+          "filterName": "canto08 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 09",
+          "filterName": "canto09 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 10",
+          "filterName": "canto10 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 11",
+          "filterName": "canto11 - bhagavatham"
+        },
+        {
+          "displayName": "Canto 12",
+          "filterName": "canto12 - bhagavatham"
+        }
+      ],
+      "url": "https://rajaramaniyer.github.io/bhagavatham.json"
     },
     {
       "id": "narayaneeyam",
