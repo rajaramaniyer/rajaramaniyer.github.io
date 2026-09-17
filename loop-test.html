@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Loop Test</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; }
+  button { font-size: 18px; padding: 10px 20px; margin-right: 10px; }
+  canvas { border: 1px solid #999; margin-top: 20px; display: block; }
+  #log { white-space: pre-wrap; font-family: monospace; font-size: 12px;
+         background: #111; color: #0f0; padding: 10px; margin-top: 10px;
+         height: 200px; overflow-y: auto; }
+</style>
+</head>
+<body>
+
+  <h3>Loop Test - c.wav</h3>
+  <p>File: <code>c.wav</code> must sit next to this HTML file.</p>
+
+  <button id="playBtn">Play</button>
+  <button id="stopBtn">Stop</button>
+
+  <p>
+    <label><input type="checkbox" id="useNativeLoop" checked> Use native <code>source.loop = true</code>
+    (uncheck to use manually-chained sources instead)</label>
+  </p>
+
+  <canvas id="scope" width="800" height="200"></canvas>
+
+  <div id="log"></div>
+
+<script>
+  var context = null;
+  var gainNode = null;
+  var analyser = null;
+  var audioBuffer = null;
+  var sourceNode = null;       // used for native-loop mode
+  var activeNodes = [];        // used for manual-chain mode
+  var scheduleTimer = null;
+  var rafId = null;
+
+  function log(msg) {
+    var el = document.getElementById('log');
+    var line = new Date().toISOString().substr(11, 12) + '  ' + msg;
+    el.textContent += line + '\n';
+    el.scrollTop = el.scrollHeight;
+    console.log(msg);
+  }
+
+  function getWavSampleRate(arrayBuffer) {
+    var view = new DataView(arrayBuffer);
+    if (view.getUint32(0, false) !== 0x52494646) return null; // "RIFF"
+    var offset = 12;
+    while (offset + 8 <= view.byteLength) {
+      var id = String.fromCharCode(view.getUint8(offset), view.getUint8(offset+1),
+                                    view.getUint8(offset+2), view.getUint8(offset+3));
+      var size = view.getUint32(offset + 4, true);
+      if (id === 'fmt ') return view.getUint32(offset + 12, true);
+      offset += 8 + size + (size % 2);
+    }
+    return null;
+  }
+
+  function drawScope() {
+    var canvas = document.getElementById('scope');
+    var ctx2d = canvas.getContext('2d');
+    var data = new Uint8Array(analyser.fftSize);
+
+    function frame() {
+      analyser.getByteTimeDomainData(data);
+      ctx2d.fillStyle = '#000';
+      ctx2d.fillRect(0, 0, canvas.width, canvas.height);
+      ctx2d.strokeStyle = '#0f0';
+      ctx2d.beginPath();
+      var sliceWidth = canvas.width / data.length;
+      var x = 0;
+      for (var i = 0; i < data.length; i++) {
+        var v = data[i] / 128.0;
+        var y = v * canvas.height / 2;
+        if (i === 0) ctx2d.moveTo(x, y); else ctx2d.lineTo(x, y);
+        x += sliceWidth;
+      }
+      ctx2d.stroke();
+      rafId = requestAnimationFrame(frame);
+    }
+    frame();
+  }
+
+  function ensureContext(nativeRate) {
+    if (context == null) {
+      context = new AudioContext({ sampleRate: nativeRate || 44100 });
+      log('Created AudioContext sampleRate=' + context.sampleRate);
+      gainNode = context.createGain();
+      gainNode.gain.value = 0.5;
+      analyser = context.createAnalyser();
+      analyser.fftSize = 2048;
+      gainNode.connect(analyser);
+      analyser.connect(context.destination);
+      drawScope();
+    }
+  }
+
+  function stopAll() {
+    if (scheduleTimer != null) { clearTimeout(scheduleTimer); scheduleTimer = null; }
+    if (sourceNode != null) {
+      try { sourceNode.stop(0); } catch (e) {}
+      sourceNode = null;
+    }
+    activeNodes.forEach(function (n) { try { n.stop(0); } catch (e) {} });
+    activeNodes = [];
+    log('Stopped.');
+  }
+
+  function playNativeLoop() {
+    sourceNode = context.createBufferSource();
+    sourceNode.buffer = audioBuffer;
+    sourceNode.loop = true;
+    sourceNode.connect(gainNode);
+    sourceNode.start(0);
+    log('Started NATIVE loop=true playback. buffer.duration=' + audioBuffer.duration.toFixed(6));
+
+    // Fire a log line once we cross the loop boundary, purely for timing reference.
+    setTimeout(function () {
+      log('>>> Expected loop wrap around now (t=' + context.currentTime.toFixed(3) + ') <<<');
+    }, audioBuffer.duration * 1000);
+  }
+
+  function scheduleChainedNode(startTime) {
+    var node = context.createBufferSource();
+    node.buffer = audioBuffer;
+    node.connect(gainNode);
+    node.start(startTime);
+    activeNodes.push(node);
+    node.onended = function () {
+      var idx = activeNodes.indexOf(node);
+      if (idx >= 0) activeNodes.splice(idx, 1);
+    };
+
+    var nextStart = startTime + audioBuffer.duration;
+    log('Scheduled node to start at t=' + startTime.toFixed(3) + ', next chained node planned for t=' + nextStart.toFixed(3));
+
+    var msUntilNext = Math.max(0, (nextStart - context.currentTime - 0.5) * 1000);
+    scheduleTimer = setTimeout(function () {
+      scheduleChainedNode(nextStart);
+    }, msUntilNext);
+  }
+
+  function playChained() {
+    scheduleChainedNode(context.currentTime + 0.05);
+    log('Started MANUALLY-CHAINED playback. buffer.duration=' + audioBuffer.duration.toFixed(6));
+  }
+
+  document.getElementById('playBtn').addEventListener('click', function () {
+    stopAll();
+
+    var req = new XMLHttpRequest();
+    req.open('GET', 'c.wav?_=' + Date.now(), true); // cache-bust
+    req.responseType = 'arraybuffer';
+    req.addEventListener('load', function () {
+      log('Fetched c.wav: status=' + req.status + ' byteLength=' + req.response.byteLength);
+      var nativeRate = getWavSampleRate(req.response);
+      log('WAV header sampleRate=' + nativeRate);
+
+      ensureContext(nativeRate);
+
+      context.decodeAudioData(req.response, function (buffer) {
+        audioBuffer = buffer;
+        log('Decoded: duration=' + buffer.duration.toFixed(6) +
+            ' sampleRate=' + buffer.sampleRate +
+            ' channels=' + buffer.numberOfChannels +
+            ' length=' + buffer.length);
+
+        if (document.getElementById('useNativeLoop').checked) {
+          playNativeLoop();
+        } else {
+          playChained();
+        }
+      }, function (e) {
+        log('DECODE ERROR: ' + e);
+      });
+    });
+    req.send();
+  });
+
+  document.getElementById('stopBtn').addEventListener('click', stopAll);
+</script>
+
+</body>
+</html>

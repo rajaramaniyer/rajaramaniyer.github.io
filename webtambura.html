@@ -242,21 +242,82 @@
 
         var AudioContext = AudioContext || webkitAudioContext,
             context = null,
-            sourceNode = null,
             gainNode = null,
             audioBuffer = null;
 
-        function resetSound() {
-            if (sourceNode != null) {
-                sourceNode.stop(0);
-                sourceNode = null;
+        // Reads the sample rate straight out of a WAV file's "fmt " chunk,
+        // so we can create/recreate the AudioContext at the file's native
+        // rate instead of letting the browser default to the hardware
+        // output rate (which forces decodeAudioData to resample and can
+        // break sample-accurate looping).
+        function getWavSampleRate(arrayBuffer) {
+            try {
+                var view = new DataView(arrayBuffer);
+                if (view.getUint32(0, false) !== 0x52494646 /* "RIFF" */) return null;
+                var offset = 12; // skip "RIFF" size "WAVE"
+                while (offset + 8 <= view.byteLength) {
+                    var chunkId = String.fromCharCode(
+                        view.getUint8(offset), view.getUint8(offset + 1),
+                        view.getUint8(offset + 2), view.getUint8(offset + 3));
+                    var chunkSize = view.getUint32(offset + 4, true);
+                    if (chunkId === 'fmt ') {
+                        return view.getUint32(offset + 12, true); // sampleRate field
+                    }
+                    offset += 8 + chunkSize + (chunkSize % 2); // chunks are word-aligned
+                }
+            } catch (e) {
+                console.error('[webtambura] Could not parse WAV header:', e);
             }
-            sourceNode = context.createBufferSource();
+            return null;
+        }
+
+        var loopScheduleTimer = null;
+        var activeSourceNodes = [];
+
+        // Manually chains buffer sources back-to-back using the audio clock,
+        // instead of relying on AudioBufferSourceNode's native loop=true.
+        // This sidesteps whatever is currently going wrong with Chrome's
+        // internal loop-wrap handling: each node plays exactly once and a
+        // new one is scheduled, sample-accurately, to start the instant the
+        // previous one ends.
+        function stopAllLoopNodes() {
+            if (loopScheduleTimer != null) {
+                clearTimeout(loopScheduleTimer);
+                loopScheduleTimer = null;
+            }
+            activeSourceNodes.forEach(function (node) {
+                try { node.stop(0); } catch (e) { /* already stopped */ }
+            });
+            activeSourceNodes = [];
+        }
+
+        function scheduleLoopNode(startTime) {
+            if (audioBuffer == null) return;
+            var node = context.createBufferSource();
+            node.buffer = audioBuffer;
+            node.connect(gainNode);
+            node.start(startTime);
+            activeSourceNodes.push(node);
+            node.onended = function () {
+                var idx = activeSourceNodes.indexOf(node);
+                if (idx >= 0) activeSourceNodes.splice(idx, 1);
+            };
+
+            var nextStartTime = startTime + audioBuffer.duration;
+            // Schedule the *next* node's creation half a second before it's
+            // actually due to start, so audio-thread scheduling stays ahead
+            // of any main-thread jank.
+            var msUntilNextSchedule = Math.max(0, (nextStartTime - context.currentTime - 0.5) * 1000);
+            loopScheduleTimer = setTimeout(function () {
+                scheduleLoopNode(nextStartTime);
+            }, msUntilNextSchedule);
+        }
+
+        function resetSound() {
+            stopAllLoopNodes();
             gainNode.gain.value = document.getElementById("myRange").value / 100;
-            sourceNode.connect(gainNode).connect(context.destination);
-            sourceNode.buffer = audioBuffer;
-            sourceNode.loop = true;
-            sourceNode.start(0);
+            gainNode.connect(context.destination);
+            scheduleLoopNode(context.currentTime + 0.05);
         }
 
         function changePitch() {
@@ -280,7 +341,8 @@
 
             if (button.innerText == "Play") {
                 if (context == null) {
-                    context = new AudioContext();
+                    context = new AudioContext({ sampleRate: 44100 });
+                    console.log("[webtambura] Created AudioContext at sampleRate:", context.sampleRate);
                     gainNode = context.createGain();
                 }
 
@@ -293,15 +355,32 @@
                 request.responseType = 'arraybuffer';
 
                 request.addEventListener('load', function () {
+                    console.log("[webtambura] Fetch response status:", request.status,
+                        " byteLength:", request.response ? request.response.byteLength : null,
+                        " URL:", madhyamSruthi + pitchSelected + ".wav");
+
+                    var nativeRate = getWavSampleRate(request.response);
+                    console.log("[webtambura] WAV header sampleRate:", nativeRate,
+                        " context.sampleRate:", context.sampleRate);
+                    if (nativeRate && nativeRate !== context.sampleRate) {
+                        console.warn("[webtambura] Mismatch: context is running at", context.sampleRate,
+                            "but file is", nativeRate, "- decodeAudioData will resample this file.");
+                    }
+
                     context.decodeAudioData(
                         request.response,
                         function (buffer) {
+                            console.log("[webtambura] Decoded OK. duration(s):", buffer.duration,
+                                " sampleRate:", buffer.sampleRate,
+                                " numberOfChannels:", buffer.numberOfChannels,
+                                " length(samples):", buffer.length);
                             if (debug) console.log("Got sample. Size ", buffer.length);
                             audioBuffer = buffer;
                             resetSound();
                         },
                         function (e) {
-                            console.error('ERROR: context.decodeAudioData:', e);
+                            console.error('[webtambura] ERROR: context.decodeAudioData:', e,
+                                " responseByteLength:", request.response ? request.response.byteLength : null);
                         }
                     );
                 });
@@ -310,10 +389,7 @@
 
                 button.innerText = "Stop"
             } else {
-                if (sourceNode != null) {
-                    sourceNode.stop(0);
-                    sourceNode = null;
-                }
+                stopAllLoopNodes();
                 button.innerText = "Play"
             }
         }

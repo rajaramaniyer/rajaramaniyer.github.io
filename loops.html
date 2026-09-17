@@ -123,9 +123,12 @@
         /* ─────────────────────────────────────────────────────────── */
     </style>
     <script type="text/javascript">
-        var source = null, gainNode = null, context = null;
+        var gainNode = null, context = null;
         var listNameValue = 0
         var listName = null, loopList = null
+        var activeLoopNodes = [];
+        var loopScheduleTimer = null;
+        var currentAudioBuffer = null;
 
         function onPageLoad() {
             if (typeof (Storage) !== "undefined") {
@@ -177,15 +180,47 @@
             onchangeloop()
         }
 
+        // Manually chains buffer sources back-to-back using the audio clock
+        // instead of relying on AudioBufferSourceNode's native loop=true,
+        // which has a Chrome bug that turns looped playback into a
+        // continuous tone after the first wrap.
+        function stopAllLoopNodes() {
+            if (loopScheduleTimer != null) {
+                clearTimeout(loopScheduleTimer);
+                loopScheduleTimer = null;
+            }
+            activeLoopNodes.forEach(function (node) {
+                try { node.stop(0); } catch (e) { /* already stopped */ }
+            });
+            activeLoopNodes = [];
+        }
+
+        function scheduleLoopNode(startTime) {
+            if (currentAudioBuffer == null) return;
+            var node = context.createBufferSource();
+            node.buffer = currentAudioBuffer;
+            node.connect(gainNode);
+            node.start(startTime);
+            activeLoopNodes.push(node);
+            node.onended = function () {
+                var idx = activeLoopNodes.indexOf(node);
+                if (idx >= 0) activeLoopNodes.splice(idx, 1);
+            };
+
+            var nextStartTime = startTime + currentAudioBuffer.duration;
+            var msUntilNextSchedule = Math.max(0, (nextStartTime - context.currentTime - 0.5) * 1000);
+            loopScheduleTimer = setTimeout(function () {
+                scheduleLoopNode(nextStartTime);
+            }, msUntilNextSchedule);
+        }
+
         function toggleLoop() {
             if (document.getElementById('playButton').innerHTML == '<i class="fa fa-hand-stop-o"></i>') {
                 return
             }
             if (document.getElementById('playButton').innerHTML == '<i class="fa fa-stop"></i>') {
-                if (source != null) {
-                    source.stop(0);
-                    source = null;
-                }
+                stopAllLoopNodes();
+                currentAudioBuffer = null;
                 document.getElementById('playButton').innerHTML = '<i class="fa fa-play"></i>'
                 return;
             }
@@ -196,10 +231,8 @@
                 context = new AudioContext();
                 gainNode = context.createGain();
                 gainNode.gain.value = document.getElementById("myRange").value / 100
+                gainNode.connect(context.destination);
             }
-
-            source = context.createBufferSource();
-            source.connect(gainNode).connect(context.destination);
 
             var request = new XMLHttpRequest();
             request.open('GET', url, true);
@@ -207,9 +240,8 @@
 
             request.onload = function () {
                 context.decodeAudioData(request.response, function (response) {
-                    source.buffer = response;
-                    source.start(0);
-                    source.loop = true;
+                    currentAudioBuffer = response;
+                    scheduleLoopNode(context.currentTime + 0.05);
                     document.getElementById('playButton').innerHTML = '<i class="fa fa-stop"></i>'
                 }, function () { console.error('The request failed.'); });
             }
