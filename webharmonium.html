@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8">
     <link rel="manifest" href="manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -15,106 +16,120 @@
     <meta property="og:image:height" content="675" />
     <meta property="og:url" content="https://rajaramaniyer.github.io/webharmonium.html" />
     <link rel="shortcut icon" href="/images/icons/webharmonium_016.png" />
-    <link rel="apple-touch-icon" href="images/icons/webharmonium_072.png" />
-    <link rel="apple-touch-icon" href="images/icons/webharmonium_096.png" />
-    <link rel="apple-touch-icon" href="images/icons/webharmonium_128.png" />
-    <link rel="apple-touch-icon" href="images/icons/webharmonium_144.png" />
-    <link rel="apple-touch-icon" href="images/icons/webharmonium_152.png" />
-    <link rel="apple-touch-icon" href="images/icons/webharmonium_192.png" />
-    <link rel="apple-touch-icon" href="images/icons/webharmonium_512.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="images/icons/webharmonium_072.png" />
+    <link rel="apple-touch-icon" sizes="96x96" href="images/icons/webharmonium_096.png" />
+    <link rel="apple-touch-icon" sizes="128x128" href="images/icons/webharmonium_128.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="images/icons/webharmonium_144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="images/icons/webharmonium_152.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="images/icons/webharmonium_192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="images/icons/webharmonium_512.png" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3758220358268980"
         crossorigin="anonymous"></script>
 
     <style>
-        .white {
+        [hidden] {
+            display: none !important;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ── Keyboard ───────────────────────────────────────────── */
+        #keyboard {
+            display: block;
+            width: 100%;
+            max-width: 480px;
+            height: auto;
+            margin: 8px auto;
+            touch-action: none;
+            /* no scrolling / zooming while playing */
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #keyboard text {
+            pointer-events: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .key {
+            stroke: black;
+            stroke-width: 1;
+            cursor: pointer;
+        }
+
+        .key.white {
             fill: white;
-            stroke: black;
-            stroke-width: 1;
-            cursor: pointer;
-            margin: 2px;
         }
 
-        .black {
+        .key.black {
             fill: black;
-            stroke: black;
-            stroke-width: 1;
-            cursor: pointer;
-            margin: 2px;
         }
 
-        .white1:hover {
+        @media (hover: hover) {
+            .key.white:hover {
+                fill: #9e9e9e;
+                stroke: lightblue;
+            }
+
+            .key.black:hover {
+                fill: #515151;
+                stroke: lightblue;
+            }
+        }
+
+        /* lit while a note is sounding (from mouse, touch, keyboard or MIDI) */
+        .key.white.active {
             fill: #9e9e9e;
             stroke: lightblue;
-            cursor: pointer;
-            stroke-width: 1;
-
         }
 
-        .black1:hover {
+        .key.black.active {
             fill: #515151;
             stroke: lightblue;
-            stroke-width: 1;
-
         }
 
+        /* ── Slider ─────────────────────────────────────────────── */
         .slidecontainer {
             width: 100%;
-            /* Width of the outside container */
         }
 
-        /* The slider itself */
         .slider {
             -webkit-appearance: none;
-            /* Override default CSS styles */
             appearance: none;
             width: 100%;
-            /* Full-width */
             height: 25px;
-            /* Specified height */
             background: #d3d3d3;
-            /* Grey background */
             outline: none;
-            /* Remove outline */
             opacity: 0.7;
-            /* Set transparency (for mouse-over effects on hover) */
             -webkit-transition: .2s;
-            /* 0.2 seconds transition on hover */
             transition: opacity .2s;
         }
 
-        /* Mouse-over effects */
         .slider:hover {
             opacity: 1;
-            /* Fully shown on mouse-over */
         }
 
-        /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            /* Override default look */
             appearance: none;
             width: 25px;
-            /* Set a specific slider handle width */
             height: 25px;
-            /* Slider handle height */
             background: #4CAF50;
-            /* Green background */
             cursor: pointer;
-            /* Cursor on hover */
         }
 
         .slider::-moz-range-thumb {
             width: 25px;
-            /* Set a specific slider handle width */
             height: 25px;
-            /* Slider handle height */
             background: #4CAF50;
-            /* Green background */
             cursor: pointer;
-            /* Cursor on hover */
         }
 
-        /* CSS for toggle button */
+        /* ── Toggle switch ──────────────────────────────────────── */
         .switch {
             position: relative;
             display: inline-block;
@@ -156,8 +171,13 @@
             background-color: #2196F3;
         }
 
-        input:focus+.toggle {
-            box-shadow: 0 0 1px #2196F3;
+        input:focus-visible+.toggle {
+            box-shadow: 0 0 2px 2px #2196F3;
+        }
+
+        input:disabled+.toggle {
+            opacity: .4;
+            cursor: not-allowed;
         }
 
         input:checked+.toggle:before {
@@ -166,7 +186,6 @@
             transform: translateX(26px);
         }
 
-        /* Rounded sliders */
         .toggle.round {
             border-radius: 34px;
         }
@@ -175,13 +194,47 @@
             border-radius: 50%;
         }
 
-        /* ── 3-Column Ad Layout ─────────────────────────────────── */
-        body {
-            margin: 0;
-            padding: 0;
+        /* ── Control cards ──────────────────────────────────────── */
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 10px 0;
+            /* same white gap above/below as the other card headings */
         }
 
-        /* Outer wrapper: left-ad | center | right-ad */
+        .row h3 {
+            margin: 0;
+            flex: 1;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 0;
+        }
+
+        .stepper button {
+            width: 75px;
+        }
+
+        .stepper h4 {
+            flex: 1;
+            text-align: center;
+            margin: 0;
+        }
+
+        .icon-btn {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        /* ── 3-Column Ad Layout ─────────────────────────────────── */
         .page-wrapper {
             display: flex;
             justify-content: center;
@@ -190,21 +243,16 @@
             box-sizing: border-box;
         }
 
-        /* Center column — all your existing content lives here */
         .center-content {
             flex: 0 0 auto;
-            /* don't grow or shrink */
             width: 100%;
             max-width: 500px;
-            /* cap width so sidebars have room */
             min-width: 0;
             box-sizing: border-box;
-            background-color: #EBEBEB
+            background-color: #EBEBEB;
         }
 
-        /* Ad column — shared styles */
         .ad-column {
-            /* Start with the 160px base */
             flex: 0 0 160px;
             width: 160px;
             min-height: 600px;
@@ -212,7 +260,6 @@
             overflow: hidden;
         }
 
-        /* If the screen is wide enough to support 300px sidebars + 500px center */
         @media (min-width: 1200px) {
             .ad-column {
                 flex: 0 0 300px;
@@ -226,508 +273,36 @@
             display: flex;
             justify-content: center;
             padding: 4px 0;
-            width: 100%; /* Ensures it fills the 160px or 300px column */
+            width: 100%;
         }
 
         @media (max-width: 820px) {
             .ad-column {
                 display: none !important;
             }
-            /* Also explicitly hide the ad inside it to stop the script from trying to fill it */
+
             .ad-column .adsbygoogle {
                 display: none !important;
             }
         }
-
-        /* ─────────────────────────────────────────────────────────── */
     </style>
     <title>Web Harmonium - developed by Rajaraman Iyer</title>
-    <script>
-        var sampleURL = 'harmonium-kannan-orig.wav';
-        var debug = false;
-
-        var AudioContext = AudioContext || webkitAudioContext,
-            context = null;
-
-        var audioBuffer = null;
-        var gainNode = null;
-        var reverbNode = null;
-        var useReverb = false;
-        var sourceNodes = new Array();
-        var sourceNodeState = new Array();
-        var keyboardMap = {
-            "s": 53, "S": 53,
-            "a": 54, "A": 54,
-            "`": 55,
-            "1": 56,
-            "q": 57, "Q": 57,
-            "2": 58,
-            "w": 59, "W": 59,
-            "e": 60, "E": 60,
-            "4": 61,
-            "r": 62, "R": 62,
-            "5": 63,
-            "t": 64, "T": 64,
-            "y": 65, "Y": 65,
-            "7": 66,
-            "u": 67, "U": 67,
-            "8": 68,
-            "i": 69, "I": 69,
-            "9": 70,
-            "o": 71, "O": 71,
-            "p": 72, "P": 72,
-            "-": 73,
-            "[": 74,
-            "=": 75,
-            "]": 76,
-            "\\": 77,
-            "'": 78,
-            ";": 79
-        }
-        var swaramMap = {
-            "s": "Ṃ", "S": "Ṃ",
-            "a": "Ṃ", "A": "Ṃ",
-            "`": "P̣",
-            "1": "Ḍ",
-            "q": "Ḍ", "Q": "Ḍ",
-            "2": "Ṇ",
-            "w": "Ṇ", "W": "Ṇ",
-            "e": "S", "E": "S",
-            "4": "R",
-            "r": "R", "R": "R",
-            "5": "G",
-            "t": "G", "T": "G",
-            "y": "M", "Y": "M",
-            "7": "M", "7": "M",
-            "u": "P", "U": "P",
-            "8": "D",
-            "i": "D", "I": "D",
-            "9": "N",
-            "o": "N", "O": "N",
-            "p": "Ṡ", "P": "Ṡ",
-            "-": "Ṙ",
-            "[": "Ṙ",
-            "=": "Ġ",
-            "]": "Ġ",
-            "\\": "Ṁ",
-            "'": "Ṁ",
-            ";": "Ṗ",
-            ",": ","
-        }
-        var notation = ""
-
-        var loopStart = 0.5,
-            loopEnd = 7.5,
-            loop = true;
-
-        var keyMap = new Array();
-        var baseKeyMap = new Array();
-        var middleC = 60;
-        var rootKey = 62;
-        var currentOctave = 3;
-        var stackCount = 0;
-        var octaveMap = [-36, -24, -12, 0, 12, 24, 36]
-        var baseKeyNames = [
-            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
-        ];
-        var keyNames = new Array();
-
-        function getCharLength(str) {
-            // The string iterator that is used here iterates over characters,
-            //  not mere code units
-            return [...str].length;
-        }
-
-        function init() {
-            var transpose = parseInt(document.getElementById('transpose').innerText)
-
-            var startKey = (middleC - 124) + (rootKey - middleC);
-            for (i = 0; i < 128; ++i) {
-                baseKeyMap[i] = startKey++;
-                keyMap[i] = baseKeyMap[i] + transpose
-            }
-            if (debug) console.log(baseKeyMap)
-            if (debug) console.log(keyMap)
-
-            for (i = 0; i < keyMap.length; ++i) {
-                if (debug) console.log("Building keySound", i, "keyMap", keyMap[i])
-                sourceNodes[i] = null
-                setSourceNode(i)
-            }
-
-            document.getElementById('mainScreen').style.display = 'block'
-        }
-
-        function setSourceNode(i) {
-            if (sourceNodes[i] != null && sourceNodeState[i] == 1) {
-                sourceNodes[i].stop(0);
-            }
-            sourceNodeState[i] = 0
-            sourceNodes[i] = null
-            sourceNodes[i] = context.createBufferSource();
-            sourceNodes[i].connect(gainNode).connect(context.destination);
-            sourceNodes[i].buffer = audioBuffer;
-            sourceNodes[i].loop = loop;
-            sourceNodes[i].loopStart = loopStart;
-            //sourceNodes[i].loopEnd = loopEnd;
-            if (keyMap[i] != 0)
-                sourceNodes[i].detune.value = keyMap[i] * 100;
-        }
-
-        function noteOff(note) {
-            var i = note + octaveMap[currentOctave]
-            if (debug) console.log("noteOff", note, "currentOctave", currentOctave, "i", i)
-            if (i < sourceNodes.length) {
-                setSourceNode(i)
-            }
-            for (c = 1; c <= stackCount; ++c) {
-                i = note + octaveMap[currentOctave + c]
-                if (i < sourceNodes.length) {
-                    setSourceNode(i)
-                }
-            }
-        }
-
-        function noteOn(note) {
-            var i = note + octaveMap[currentOctave]
-            if (debug) console.log("noteOn", note, "currentOctave", currentOctave, "i", i)
-            if (i < sourceNodes.length && sourceNodeState[i] == 0) {
-                sourceNodes[i].start(0);
-                sourceNodeState[i] = 1
-            }
-            for (c = 1; c <= stackCount; ++c) {
-                i = note + octaveMap[currentOctave + c]
-                if (i < sourceNodes.length && sourceNodeState[i] == 0) {
-                    sourceNodes[i].start(0);
-                    sourceNodeState[i] = 1
-                }
-            }
-        }
-
-        window.onkeydown = function (event) {
-            if (!event.repeat) {
-                if (debug) console.log("keyDown", event.key, "keyboardMap", keyboardMap[event.key]);
-                if (typeof (keyboardMap[event.key]) != "undefined") {
-                    noteOn(keyboardMap[event.key]);
-                }
-            }
-        }
-
-        window.onkeyup = function (event) {
-            const key = event.key
-            if (debug) console.log("keyUp", key, "keyboardMap", keyboardMap[key]);
-            if (typeof (keyboardMap[key]) != "undefined") {
-                noteOff(keyboardMap[key]);
-            }
-
-            if (key === "Backspace" && getCharLength(notation) > 0) {
-                notation = notation.substring(0, getCharLength(notation) - 1)
-            } else if (key === "Delete") {
-                notation = ""
-            } else if (key === "Enter") {
-                console.log(notation)
-                notation = ""
-            } else if (key === "Tab") {
-                notation += ","
-            } else if (typeof (swaramMap[key]) != "undefined") {
-                notation += swaramMap[key]
-            }
-        }
-
-        function initReverbNode() {
-            reverbNode = context.createConvolver();
-
-            var request1 = new XMLHttpRequest();
-            request1.open('GET', "reverb.wav", true);
-            request1.responseType = 'arraybuffer';
-
-            request1.addEventListener('load', function () {
-                context.decodeAudioData(
-                    request1.response,
-                    function (buffer) {
-                        if (debug) console.log("Got sample. Size", buffer.length)
-                        reverbNode.buffer = buffer;
-                        reverbNode.connect(context.destination);
-                        updateReverbState(useReverb)
-                    },
-                    function (e) {
-                        console.error('ERROR: context.decodeAudioData:', e);
-                    }
-                );
-            });
-
-            request1.send();
-        }
-        function load() {
-            context = new AudioContext();
-
-            gainNode = context.createGain();
-            gainNode.gain.value = 0.3; // setting it to 30%
-            gainNode.connect(context.destination);
-
-            if (typeof (Storage) !== "undefined") {
-                if (localStorage.getItem("webharmonium.volume") != null) {
-                    document.getElementById("myRange").value = localStorage.getItem("webharmonium.volume");
-                    onGainChange();
-                }
-                if (localStorage.getItem("webharmonium.useReverb") != null) {
-                    useReverb = localStorage.getItem("webharmonium.useReverb") == "true";
-                    document.getElementById("useReverb").checked = useReverb
-                }
-                if (localStorage.getItem("webharmonium.octave") != null) {
-                    currentOctave = localStorage.getItem("webharmonium.octave")
-                    try {
-                        currentOctave = parseInt(currentOctave)
-                    } catch (err) {
-                        currentOctave = 0
-                    }
-                }
-                document.getElementById('octave').innerText = currentOctave;
-                if (localStorage.getItem("webharmonium.transpose") != null) {
-                    document.getElementById('transpose').innerText = localStorage.getItem("webharmonium.transpose");
-                    let currentSemitone = parseInt(document.getElementById('transpose').innerText);
-                    document.getElementById('rootNote').innerText = baseKeyNames[(currentSemitone >= 0) ? currentSemitone % 12 : currentSemitone + 12];
-                }
-                if (localStorage.getItem("webharmonium.stack") != null) {
-                    stackCount = localStorage.getItem("webharmonium.stack")
-                    try {
-                        stackCount = parseInt(stackCount)
-                    } catch (err) {
-                        stackCount = 0
-                    }
-                }
-                document.getElementById('stack').innerText = stackCount;
-            }
-
-            initReverbNode()
-
-            // Fetch the sample
-            var request = new XMLHttpRequest();
-            request.open('GET', sampleURL, true);
-            request.responseType = 'arraybuffer';
-
-            request.addEventListener('load', function () {
-                context.decodeAudioData(
-                    request.response,
-                    function (buffer) {
-                        if (debug) console.log("Got sample. Size", buffer.length)
-                        audioBuffer = buffer;
-                        init();
-                    },
-                    function (e) {
-                        console.error('ERROR: context.decodeAudioData:', e);
-                    }
-                );
-            });
-
-            request.send();
-            requestMIDIAccess();
-        }
-        //End of Fetch the sample
-
-        function requestMIDIAccess() {
-            try {
-                var midiInfo = document.getElementById('midiInputDevicesInfo');
-                // Start of MIDI
-                if (navigator.requestMIDIAccess) {
-                    if (midiInfo.innerText.indexOf('Supported!') == -1) {
-                        midiInfo.innerText += " Supported! "
-                    }
-                    if (debug) console.log('This browser supports WebMIDI!');
-                    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-                } else {
-                    if (midiInfo.innerText.indexOf('Supported!') == -1) {
-                        midiInfo.innerText += " Not Supported! "
-                    }
-                    if (debug) console.log('WebMIDI is not supported in this browser.');
-                }
-            }
-            catch (err) {
-                midiInfo.innerText += " Failed! " + err
-            }
-        }
-
-        var midiAccess = null;
-        function onMIDISuccess(midiAccessReceived) {
-            if (debug) console.log("onMIDISuccess", midiAccessReceived);
-            midiAccess = midiAccessReceived;
-            var midiInputDevices = document.getElementById("midiInputDevices");
-            for (i = 0; i < midiInputDevices.length; ++i) {
-                midiInputDevices.remove(i);
-            }
-            for (var input of midiAccess.inputs.values()) {
-                if (debug) console.log("Input port [type:'" + input.type + "'] id:'" + input.id + "' manufacturer:'" + input.manufacturer + "' name:'" + input.name + "' version:'" + input.version + "'");
-                var option = document.createElement("option");
-                option.id = input.id;
-                option.text = input.name + " by " + input.manufacturer;
-                midiInputDevices.add(option);
-                input.onmidimessage = getMIDIMessage;
-            }
-        }
-
-        function onMIDIFailure(error) {
-            document.getElementById('midiInputDevicesInfo').innerText += " Failed! " + error;
-            if (debug) console.log('Could not access your MIDI devices.', error);
-        }
-
-        function getMIDIMessage(message) {
-            if (debug) console.log(message)
-            var command = message.data[0];
-            var note = message.data[1];
-            var velocity = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
-
-            var midiInputDevices = document.getElementById("midiInputDevices");
-            if (debug) console.log("midiDeviceId", message.target.id)
-            if (debug) console.log("selectedMidi", midiInputDevices.options[midiInputDevices.selectedIndex].id)
-            if (message.target.id == midiInputDevices.options[midiInputDevices.selectedIndex].id) {
-                if (debug) console.log("command", command, "note", note, "velocity", velocity);
-                switch (command) {
-                    case 144: // noteOn
-                        if (velocity > 0) {
-                            noteOn(note, velocity);
-                        } else {
-                            noteOff(note);
-                        }
-                        break;
-                    case 128: // noteOff
-                        noteOff(note);
-                        break;
-                    case 176: // control
-                        if (note == 7) { // volume
-                            document.getElementById("myRange").value = (100 * velocity) / 127;
-                            onGainChange();
-                        }
-                        break;
-                    // we could easily expand this switch statement to cover other types of commands such as controllers or sysex
-                }
-            }
-        }
-
-        // End of MIDI
-
-        function shiftOctave(octave) {
-            if (debug) console.log('currencOctave', currentOctave, 'octave', octave)
-            if (currentOctave + octave >= 0 && currentOctave + octave <= 6) {
-                currentOctave += octave;
-                if (debug) console.log('currencOctave changed as ', currentOctave)
-
-                if (typeof (Storage) !== "undefined") {
-                    localStorage.setItem("webharmonium.octave", currentOctave);
-                }
-            }
-            document.getElementById('octave').innerText = currentOctave
-        }
-
-        function changeStack(stack) {
-            stackCount += stack
-            if (stackCount < 0) {
-                stackCount = 0;
-            } else if (currentOctave + stackCount > 6) {
-                stackCount = 6 - currentOctave
-            }
-            document.getElementById('stack').innerText = stackCount
-
-            if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("webharmonium.stack", stackCount);
-            }
-        }
-
-        function shiftSemitone(semitone) {
-            var currentSemitone = parseInt(document.getElementById('transpose').innerText);
-            if (currentSemitone + semitone >= -11 && currentSemitone + semitone <= 11) {
-                currentSemitone += semitone
-                document.getElementById('transpose').innerText = currentSemitone
-                document.getElementById('rootNote').innerText = baseKeyNames[(currentSemitone >= 0) ? currentSemitone % 12 : currentSemitone + 12];
-            }
-            if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("webharmonium.transpose", document.getElementById('transpose').innerText);
-            }
-            init()
-        }
-
-        var notePlaying = 0;
-        function play(polygon) {
-            notePlaying = keyboardMap[polygon.getAttribute('key')];
-            noteOn(notePlaying)
-        }
-
-        function stop(polygon) {
-            noteOff(notePlaying)
-        }
-
-        function onGainChange() {
-            if (debug) console.log("Inside onGainChange");
-            if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("webharmonium.volume", document.getElementById("myRange").value);
-            }
-            document.getElementById('volumeLevel').innerText = document.getElementById("myRange").value + "%";
-            if (gainNode != null) {
-                gainNode.gain.value = document.getElementById("myRange").value / 100;
-            }
-        }
-
-        function updateReverbState(stateValue) {
-            useReverb = stateValue
-            if (typeof (Storage) !== "undefined") {
-                localStorage.setItem("webharmonium.useReverb", (useReverb ? "true" : "false"));
-            }
-            if (useReverb) {
-                gainNode.connect(reverbNode)
-            } else {
-                try {
-                    gainNode.disconnect(reverbNode)
-                } catch (err) {
-
-                }
-            }
-        }
-
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", function () {
-                navigator.serviceWorker.register("/serviceworker.js").then(reg => {
-                    console.log("Service worker registered");
-
-                    // Check if there is an updated worker waiting to take over
-                    reg.onupdatefound = () => {
-                        const installingWorker = reg.installing;
-                        installingWorker.onstatechange = () => {
-                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                // This forces the page to reload once the new worker is active
-                                window.location.reload();
-                            }
-                        };
-                    };
-                });
-            });
-        }
-    </script>
 </head>
 
 <body>
 
-    <!-- ── 3-Column Page Layout ───────────────────────────────────── -->
     <div class="page-wrapper">
 
         <!-- LEFT AD COLUMN -->
         <div class="ad-column">
             <div class="ad-sticky">
-                <ins class="adsbygoogle"
-                    style="display:block; min-width:160px; max-width:300px; min-height:600px;"
-                    data-ad-client="ca-pub-3758220358268980"
-                    data-ad-slot="4252269065"
-                    data-ad-format="auto"
+                <ins class="adsbygoogle" style="display:block; min-width:160px; max-width:300px; min-height:600px;"
+                    data-ad-client="ca-pub-3758220358268980" data-ad-slot="4252269065" data-ad-format="auto"
                     data-full-width-responsive="false"></ins>
-                <script>
-                    // Check if the container is visible before requesting the ad
-                    const adColumn = document.querySelector('.ad-column');
-                    if (adColumn && window.getComputedStyle(adColumn).display !== 'none') {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    }
-                </script>
             </div>
         </div>
 
-        <!-- CENTER CONTENT — your original page, untouched -->
+        <!-- CENTER CONTENT -->
         <div class="center-content">
 
             <div class="w3-container w3-teal">
@@ -735,260 +310,84 @@
             </div>
 
             <div id="load" class="w3-container w3-panel">
-                <button class="w3-button w3-block w3-blue-gray"
-                    onclick="document.getElementById('load').style.display='none'; load();">Load
-                    Module</button>
+                <button id="loadBtn" type="button" class="w3-button w3-block w3-blue-gray">Load Module</button>
+                <p id="loadMsg" class="w3-small w3-center" role="status"></p>
             </div>
-            <div id="mainScreen" style="display: none;">
-                <center>
-                    <svg width=294 height=110>
-                        <polygon points="0,0 14,0 14,50 21,50 21,100 0,100 0,0 " class="white" key="`"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="14,0 28,0 28,50 14,50 14,0 " class="black" key="1" onmousedown="play(this)"
-                            onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                            ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="21,50 28,50 28,0 35,0 35,50 42,50 42,100 21,100 21,50 " class="white" key="q"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="35,0 49,0 49,50 35,50 35,0 " class="black" key="2" onmousedown="play(this)"
-                            onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                            ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="42,50 49,50 49,0 63,0 63,100 42,100 42,50 " class="white" key="w"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="63,0 77,0 77,50 84,50 84,100 63,100 63,0 " class="white" key="e"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="77,0 91,0 91,50 77,50 77,0 " class="black" key="4" onmousedown="play(this)"
-                            onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                            ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="84,50 91,50 91,0 98,0 98,50 105,50 105,100 84,100 84,50 " class="white" key="r"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="98,0 112,0 112,50 98,50 98,0 " class="black" key="5" onmousedown="play(this)"
-                            onmouseup="stop(this)" ontouchstart="play(this)" ontouchend="stop(this)"
-                            ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="105,50 112,50 112,0 126,0 126,100 105,100 105,50 " class="white" key="t"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="126,0 140,0 140,50 147,50 147,100 126,100 126,0 " class="white" key="y"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="140,0 154,0 154,50 140,50 140,0 " class="black" key="7"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="147,50 154,50 154,0 161,0 161,50 168,50 168,100 147,100 147,50 " class="white"
-                            key="u" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="161,0 175,0 175,50 161,50 161,0 " class="black" key="8"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="168,50 175,50 175,0 182,0 182,50 189,50 189,100 168,100 168,50 " class="white"
-                            key="i" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="182,0 196,0 196,50 182,50 182,0 " class="black" key="9"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="189,50 196,50 196,0 210,0 210,100 189,100 189,50 " class="white" key="o"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="210,0 224,0 224,50 231,50 231,100 210,100 210,0 " class="white" key="p"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="224,0 238,0 238,50 224,50 224,0 " class="black" key="-"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="231,50 238,50 238,0 245,0 245,50 252,50 252,100 231,100 231,50 " class="white"
-                            key="[" onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="245,0 259,0 259,50 245,50 245,0 " class="black" key="="
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="252,50 259,50 259,0 273,0 273,100 252,100 252,50 " class="white" key="]"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
-                        <polygon points="273,0 294,0 294,100 273,100 273,0 " class="white" key="\"
-                            onmousedown="play(this)" onmouseup="stop(this)" ontouchstart="play(this)"
-                            ontouchend="stop(this)" ontouchmove="console.log('touchmove',this.getAttribute('key'))"
-                            ontouchcancel="console.log('touchcancel',this.getAttribute('key'))" />
 
-                        <!--white keys-->
-                        <text x="7" y="65" fill="black" font-family="courier new" font-size="14">`</text>
-                        <text x="28" y="65" fill="black" font-family="courier new" font-size="14">q</text>
-                        <text x="49" y="65" fill="black" font-family="courier new" font-size="14">w</text>
-                        <text x="70" y="65" fill="black" font-family="courier new" font-size="14">e</text>
-                        <text x="91" y="65" fill="black" font-family="courier new" font-size="14">r</text>
-                        <text x="112" y="65" fill="black" font-family="courier new" font-size="14">t</text>
-                        <text x="133" y="65" fill="black" font-family="courier new" font-size="14">y</text>
-                        <text x="154" y="65" fill="black" font-family="courier new" font-size="14">u</text>
-                        <text x="175" y="65" fill="black" font-family="courier new" font-size="14">i</text>
-                        <text x="196" y="65" fill="black" font-family="courier new" font-size="14">o</text>
-                        <text x="217" y="65" fill="black" font-family="courier new" font-size="14">p</text>
-                        <text x="238" y="65" fill="black" font-family="courier new" font-size="14">[</text>
-                        <text x="259" y="65" fill="black" font-family="courier new" font-size="14">]</text>
-                        <text x="280" y="65" fill="black" font-family="courier new" font-size="14">\</text>
-
-                        <!--black keys-->
-                        <text x="16" y="30" fill="white" font-family="courier new" font-size="14">1</text>
-                        <text x="37" y="30" fill="white" font-family="courier new" font-size="14">2</text>
-                        <text x="79" y="30" fill="white" font-family="courier new" font-size="14">4</text>
-                        <text x="100" y="30" fill="white" font-family="courier new" font-size="14">5</text>
-                        <text x="142" y="30" fill="white" font-family="courier new" font-size="14">7</text>
-                        <text x="163" y="30" fill="white" font-family="courier new" font-size="14">8</text>
-                        <text x="184" y="30" fill="white" font-family="courier new" font-size="14">9</text>
-                        <text x="226" y="30" fill="white" font-family="courier new" font-size="14">-</text>
-                        <text x="247" y="30" fill="white" font-family="courier new" font-size="14">=</text>
-
-                        <text x="70" y="90" fill="blue" font-family="courier new" font-weight=bold
-                            font-size="14">C</text>
-                        <text x="91" y="90" fill="blue" font-family="courier new" font-weight=bold
-                            font-size="14">D</text>
-                        <text x="112" y="90" fill="blue" font-family="courier new" font-weight=bold
-                            font-size="14">E</text>
-                        <text x="133" y="90" fill="blue" font-family="courier new" font-weight=bold
-                            font-size="14">F</text>
-                        <text x="154" y="90" fill="blue" font-family="courier new" font-weight=bold
-                            font-size="14">G</text>
-                        <text x="175" y="90" fill="blue" font-family="courier new" font-weight=bold
-                            font-size="14">A</text>
-                        <text x="196" y="90" fill="blue" font-family="courier new" font-weight=bold
-                            font-size="14">B</text>
-
-                    </svg>
-                </center>
+            <div id="mainScreen" hidden>
+                <svg id="keyboard" viewBox="-1 -1 296 102" role="group" aria-label="Harmonium keyboard"></svg>
 
                 <div class="w3-container">
 
                     <div class="w3-container w3-card w3-white">
-                        <h3 class="w3-color w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
+                        <h3 class="w3-blue-gray w3-center">Volume: <span id="volumeLevel"></span></h3>
                         <div class="slidecontainer">
                             <input type="range" min="1" max="100" value="30" class="slider" id="myRange"
-                                onchange="onGainChange()">
+                                aria-label="Volume">
                         </div>
                     </div>
                     <hr>
 
                     <div class="w3-container w3-card w3-white">
-                        <h3 class="w3-color w3-blue-gray w3-center">
-                            <span class="w3-left-align">Reverb</span>
-                            <span class="w3-right-align">
-                                <label class="switch">
-                                    <input id="useReverb" type="checkbox" onclick="updateReverbState(this.checked)">
-                                    <span class="toggle round"></span>
-                                </label>
-                            </span>
-                        </h3>
-                    </div>
-                    <hr>
-
-                    <div class="w3-container w3-card w3-white">
-                        <h3 class="w3-color w3-blue-gray w3-center">
-                            <table width="100%">
-                                <tbody>
-                                    <tr>
-                                        <td width="10%">&nbsp;</td>
-                                        <td width="80%"><span id="midiInputDevicesInfo">MIDI Keyboard</span></td>
-                                        <td align=right width="10%"><button onclick="requestMIDIAccess()"><i
-                                                    class="fa fa-refresh" style="font-size:36px;"></i></button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </h3>
-                        <div class="w3-center" width="100%">
-                            <select id="midiInputDevices" width="100%"></select>
+                        <div class="row w3-blue-gray" style="padding:0 16px;">
+                            <h3>Reverb</h3>
+                            <label class="switch">
+                                <input id="useReverb" type="checkbox" aria-label="Reverb">
+                                <span class="toggle round"></span>
+                            </label>
                         </div>
                     </div>
                     <hr>
 
                     <div class="w3-container w3-card w3-white">
-                        <h3 class="w3-color w3-blue-gray w3-center">Transpose - <span id='rootNote'>C</span></h3>
-
-                        <table width="100%">
-                            <tbody>
-                                <tr>
-                                    <td class="w3-center" width="10%">
-                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                            onclick="javascript:shiftSemitone(-1)">-</a>
-                                    </td>
-                                    <td class="w3-center" width="80%">
-                                        <h4><span id='transpose'>0</span></h4>
-                                    </td>
-                                    <td class="w3-center" width="10%">
-                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                            onclick="javascript:shiftSemitone(1)">+</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="row w3-blue-gray" style="padding:0 16px;">
+                            <h3 class="w3-center">MIDI Keyboard</h3>
+                            <button id="midiRefresh" type="button" class="icon-btn" title="Refresh MIDI devices"
+                                aria-label="Refresh MIDI devices"><i class="fa fa-refresh"
+                                    style="font-size:28px;"></i></button>
+                        </div>
+                        <p id="midiStatus" class="w3-small w3-center" role="status">MIDI not started yet.</p>
+                        <div class="w3-center">
+                            <select id="midiInputDevices" class="w3-select" aria-label="MIDI input device"></select>
+                        </div>
+                        <p id="midiActivity" class="w3-tiny w3-center w3-text-grey" aria-live="off">No MIDI messages
+                            received yet.</p>
                     </div>
                     <hr>
 
                     <div class="w3-container w3-card w3-white">
-                        <h3 class="w3-color w3-blue-gray w3-center">Current Octave</h3>
-
-                        <table width="100%">
-                            <tbody>
-                                <tr>
-                                    <td class="w3-center" width="10%">
-                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                            onclick="javascript:shiftOctave(-1)">-</a>
-                                    </td>
-                                    <td class="w3-center" width="80%">
-                                        <h4 id='octave'>4</h4>
-                                    </td>
-                                    <td class="w3-center" width="10%">
-                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                            onclick="javascript:shiftOctave(1)">+</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h3 class="w3-blue-gray w3-center">Transpose - <span id="rootNote">C</span></h3>
+                        <div class="stepper">
+                            <button type="button" class="w3-btn w3-grey w3-round" data-step="transpose"
+                                data-delta="-1" aria-label="Transpose down one semitone">-</button>
+                            <h4 id="transpose">0</h4>
+                            <button type="button" class="w3-btn w3-grey w3-round" data-step="transpose" data-delta="1"
+                                aria-label="Transpose up one semitone">+</button>
+                        </div>
                     </div>
                     <hr>
 
                     <div class="w3-container w3-card w3-white">
-                        <h3 class="w3-color w3-blue-gray w3-center">Additional Reeds</h3>
+                        <h3 class="w3-blue-gray w3-center">Current Octave</h3>
+                        <div class="stepper">
+                            <button type="button" class="w3-btn w3-grey w3-round" data-step="octave" data-delta="-1"
+                                aria-label="Octave down">-</button>
+                            <h4 id="octave">3</h4>
+                            <button type="button" class="w3-btn w3-grey w3-round" data-step="octave" data-delta="1"
+                                aria-label="Octave up">+</button>
+                        </div>
+                    </div>
+                    <hr>
 
-                        <table width="100%">
-                            <tbody>
-                                <tr>
-                                    <td class="w3-center" width="10%">
-                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                            onclick="javascript:changeStack(-1)">-</a>
-                                    </td>
-                                    <td class="w3-center" width="80%">
-                                        <h4 id='stack'>0</h4>
-                                    </td>
-                                    <td class="w3-center" width="10%">
-                                        <a class="w3-btn w3-grey w3-round" style="width:75px"
-                                            onclick="javascript:changeStack(1)">+</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-blue-gray w3-center">Additional Reeds</h3>
+                        <div class="stepper">
+                            <button type="button" class="w3-btn w3-grey w3-round" data-step="stack" data-delta="-1"
+                                aria-label="Fewer reeds">-</button>
+                            <h4 id="stack">0</h4>
+                            <button type="button" class="w3-btn w3-grey w3-round" data-step="stack" data-delta="1"
+                                aria-label="More reeds">+</button>
+                        </div>
                     </div>
 
                 </div>
@@ -999,22 +398,554 @@
         <!-- RIGHT AD COLUMN -->
         <div class="ad-column">
             <div class="ad-sticky">
-                <ins class="adsbygoogle"
-                    style="display:block; min-width:160px; max-width:300px; min-height:600px;"
-                    data-ad-client="ca-pub-3758220358268980"
-                    data-ad-slot="3724807997"
-                    data-ad-format="auto"
+                <ins class="adsbygoogle" style="display:block; min-width:160px; max-width:300px; min-height:600px;"
+                    data-ad-client="ca-pub-3758220358268980" data-ad-slot="3724807997" data-ad-format="auto"
                     data-full-width-responsive="false"></ins>
-                <script>
-                    // Check if the container is visible before requesting the ad
-                    if (adColumn && window.getComputedStyle(adColumn).display !== 'none') {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    }
-                </script>
             </div>
         </div>
 
     </div><!-- end .page-wrapper -->
+
+    <script>
+        /*
+         * Web Harmonium
+         *
+         * Tip: open the page as webharmonium.html?debug to log every MIDI message
+         * and note event to the browser console.
+         */
+        (function () {
+            'use strict';
+
+            /* ── Configuration ───────────────────────────────────────── */
+            const SAMPLE_URL = 'harmonium-kannan-orig.wav';
+            const REVERB_URL = 'reverb.wav';
+            const SAMPLE_ROOT_KEY = 62;                 // the sample is a D (MIDI note 62)
+            const LOOP_START = 0.5;                     // seconds; the sample loops from here to its end
+            const ATTACK = 0.01;                        // seconds, avoids a click on note start
+            const RELEASE = 0.08;                       // seconds, avoids a click on note end
+            const OCTAVE_OFFSETS = [-36, -24, -12, 0, 12, 24, 36];
+            const MAX_OCTAVE = OCTAVE_OFFSETS.length - 1;
+            const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+            const DEBUG = new URLSearchParams(location.search).has('debug');
+            const log = (...args) => { if (DEBUG) console.log(...args); };
+            const $ = id => document.getElementById(id);
+            const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+            /* Computer keyboard -> MIDI note (layout positions of a QWERTY keyboard) */
+            const KEY_TO_NOTE = {
+                's': 53, 'a': 54, '`': 55, '1': 56, 'q': 57, '2': 58, 'w': 59, 'e': 60,
+                '4': 61, 'r': 62, '5': 63, 't': 64, 'y': 65, '7': 66, 'u': 67, '8': 68,
+                'i': 69, '9': 70, 'o': 71, 'p': 72, '-': 73, '[': 74, '=': 75, ']': 76,
+                '\\': 77, "'": 78, ';': 79
+            };
+
+            /* Computer keyboard -> swaram text, collected for the console (Enter prints it) */
+            const KEY_TO_SWARAM = {
+                's': 'Ṃ', 'a': 'Ṃ', '`': 'P\u0323', '1': 'Ḍ', 'q': 'Ḍ', '2': 'Ṇ', 'w': 'Ṇ',
+                'e': 'S', '4': 'R', 'r': 'R', '5': 'G', 't': 'G', 'y': 'M', '7': 'M',
+                'u': 'P', '8': 'D', 'i': 'D', '9': 'N', 'o': 'N', 'p': 'Ṡ', '-': 'Ṙ',
+                '[': 'Ṙ', '=': 'Ġ', ']': 'Ġ', '\\': 'Ṁ', "'": 'Ṁ', ';': 'Ṗ'
+            };
+
+            /* On-screen keyboard layout: white notes left to right, black notes with their x position */
+            const WHITE_NOTES = [55, 57, 59, 60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77];
+            const BLACK_KEYS = [[56, 14], [58, 35], [61, 77], [63, 98], [66, 140], [68, 161], [70, 182], [73, 224], [75, 245]];
+
+            /* ── Persistent settings ─────────────────────────────────── */
+            const store = {
+                get(key, fallback) {
+                    try {
+                        const v = localStorage.getItem('webharmonium.' + key);
+                        return v === null ? fallback : v;
+                    } catch (e) { return fallback; }
+                },
+                set(key, value) {
+                    try { localStorage.setItem('webharmonium.' + key, String(value)); } catch (e) { /* storage blocked */ }
+                }
+            };
+            const intSetting = (key, lo, hi, dflt) => {
+                const n = parseInt(store.get(key, dflt), 10);
+                return Number.isFinite(n) ? clamp(n, lo, hi) : dflt;
+            };
+
+            const settings = {
+                volume: intSetting('volume', 1, 100, 30),
+                reverb: store.get('useReverb', 'false') === 'true',
+                octave: intSetting('octave', 0, MAX_OCTAVE, 3),
+                transpose: intSetting('transpose', -11, 11, 0),
+                stack: intSetting('stack', 0, MAX_OCTAVE, 0)
+            };
+            settings.stack = Math.min(settings.stack, MAX_OCTAVE - settings.octave);
+
+            /* ── State ───────────────────────────────────────────────── */
+            let ctx = null;                  // AudioContext
+            let master = null;               // master gain
+            let reverbSend = null;           // gain feeding the convolver (0 = reverb off)
+            let sampleBuffer = null;
+            let midiAccess = null;
+            let notation = '';
+
+            const activeNotes = new Map();   // MIDI note -> [{src, env}, ...] currently sounding
+            const heldKeys = new Map();      // KeyboardEvent.code -> note, so key-up always releases the right note
+            const pointerNotes = new Map();  // pointerId -> note (mouse / touch / pen)
+            const keyEls = new Map();        // note -> <rect> on the on-screen keyboard
+
+            /* ── Audio engine ────────────────────────────────────────── */
+            async function loadAudio() {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (!AC) throw new Error('This browser does not support the Web Audio API.');
+
+                if (ctx) { try { ctx.close(); } catch (e) { /* ignore */ } }
+                ctx = new AC();             // created inside the click handler, so it is allowed to run
+                if (ctx.state === 'suspended') ctx.resume().catch(() => { });
+
+                master = ctx.createGain();
+                master.gain.value = settings.volume / 100;
+                master.connect(ctx.destination);
+
+                reverbSend = ctx.createGain();
+                reverbSend.gain.value = settings.reverb ? 1 : 0;
+                master.connect(reverbSend);
+
+                const fetchBuffer = async url => {
+                    const res = await fetch(url);
+                    if (!res.ok) throw new Error(url + ': HTTP ' + res.status);
+                    return ctx.decodeAudioData(await res.arrayBuffer());
+                };
+
+                // reverb is optional: if it fails the rest still works
+                fetchBuffer(REVERB_URL).then(buf => {
+                    const convolver = ctx.createConvolver();
+                    convolver.buffer = buf;
+                    reverbSend.connect(convolver);
+                    convolver.connect(ctx.destination);
+                }).catch(err => {
+                    console.warn('Reverb unavailable:', err);
+                    $('useReverb').disabled = true;
+                    $('useReverb').title = 'Reverb sound file could not be loaded';
+                });
+
+                sampleBuffer = await fetchBuffer(SAMPLE_URL);
+            }
+
+            function startVoice(index) {
+                const t = ctx.currentTime;
+                const src = ctx.createBufferSource();
+                src.buffer = sampleBuffer;
+                src.loop = true;
+                src.loopStart = LOOP_START;
+                src.detune.value = (index - SAMPLE_ROOT_KEY + settings.transpose) * 100;
+
+                const env = ctx.createGain();
+                env.gain.setValueAtTime(0, t);
+                env.gain.linearRampToValueAtTime(1, t + ATTACK);
+
+                src.connect(env);
+                env.connect(master);
+                src.start(t);
+                return { src, env };
+            }
+
+            function stopVoice(voice) {
+                const t = ctx.currentTime;
+                const g = voice.env.gain;
+                g.cancelScheduledValues(t);
+                g.setValueAtTime(g.value, t);
+                g.setTargetAtTime(0, t, RELEASE / 4);
+                voice.src.onended = () => {
+                    voice.src.disconnect();
+                    voice.env.disconnect();
+                };
+                voice.src.stop(t + RELEASE + 0.05);
+            }
+
+            function noteOn(note) {
+                if (!ctx || !sampleBuffer || activeNotes.has(note)) return;
+                if (ctx.state !== 'running') ctx.resume().catch(() => { });
+
+                const voices = [];
+                for (let reed = 0; reed <= settings.stack; reed++) {
+                    const octaveIndex = settings.octave + reed;
+                    if (octaveIndex > MAX_OCTAVE) break;
+                    const index = note + OCTAVE_OFFSETS[octaveIndex];
+                    if (index < 0 || index > 127) continue;
+                    voices.push(startVoice(index));
+                }
+                activeNotes.set(note, voices);
+                setKeyActive(note, true);
+                log('noteOn', note, 'voices', voices.length);
+            }
+
+            function noteOff(note) {
+                const voices = activeNotes.get(note);
+                if (!voices) return;
+                activeNotes.delete(note);
+                voices.forEach(stopVoice);
+                setKeyActive(note, false);
+                log('noteOff', note);
+            }
+
+            function allNotesOff() {
+                Array.from(activeNotes.keys()).forEach(noteOff);
+                heldKeys.clear();
+                pointerNotes.clear();
+            }
+
+            /* ── On-screen keyboard ──────────────────────────────────── */
+            function setKeyActive(note, on) {
+                const el = keyEls.get(note);
+                if (el) el.classList.toggle('active', on);
+            }
+
+            function buildKeyboard() {
+                const svg = $('keyboard');
+                const NS = 'http://www.w3.org/2000/svg';
+                const make = (tag, attrs, text) => {
+                    const n = document.createElementNS(NS, tag);
+                    for (const k in attrs) n.setAttribute(k, attrs[k]);
+                    if (text !== undefined) n.textContent = text;
+                    return n;
+                };
+                const W = 21, BW = 14;
+                const noteToKey = {};
+                for (const k in KEY_TO_NOTE) noteToKey[KEY_TO_NOTE[k]] = k;
+
+                const whiteLayer = make('g', {});
+                const blackLayer = make('g', {});
+                const labelLayer = make('g', {});
+
+                WHITE_NOTES.forEach((note, i) => {
+                    const rect = make('rect', { x: i * W, y: 0, width: W, height: 100, 'class': 'key white', 'data-note': note });
+                    keyEls.set(note, rect);
+                    whiteLayer.appendChild(rect);
+
+                    const cx = i * W + W / 2;
+                    labelLayer.appendChild(make('text', {
+                        x: cx, y: 65, 'text-anchor': 'middle', fill: 'black',
+                        'font-family': 'Courier New, monospace', 'font-size': 14
+                    }, noteToKey[note]));
+                    const middle = note >= 60 && note <= 71;
+                    labelLayer.appendChild(make('text', {
+                        x: cx, y: 90, 'text-anchor': 'middle', fill: middle ? 'blue' : '#777',
+                        'font-family': 'Courier New, monospace', 'font-size': 14,
+                        'font-weight': middle ? 'bold' : 'normal'
+                    }, NOTE_NAMES[note % 12]));
+                });
+
+                BLACK_KEYS.forEach(([note, x]) => {
+                    const rect = make('rect', { x: x, y: 0, width: BW, height: 50, 'class': 'key black', 'data-note': note });
+                    keyEls.set(note, rect);
+                    blackLayer.appendChild(rect);
+                    labelLayer.appendChild(make('text', {
+                        x: x + BW / 2, y: 30, 'text-anchor': 'middle', fill: 'white',
+                        'font-family': 'Courier New, monospace', 'font-size': 14
+                    }, noteToKey[note]));
+                });
+
+                svg.appendChild(whiteLayer);
+                svg.appendChild(blackLayer);
+                svg.appendChild(labelLayer);
+
+                // Pointer events cover mouse, touch and pen, with multi-touch and sliding between keys
+                const noteAt = (x, y) => {
+                    const el = document.elementFromPoint(x, y);
+                    const n = el && el.dataset ? el.dataset.note : undefined;
+                    return n === undefined ? null : Number(n);
+                };
+
+                svg.addEventListener('pointerdown', e => {
+                    if (e.pointerType === 'mouse' && e.button !== 0) return;
+                    e.preventDefault();
+                    if (!sampleBuffer) return;
+                    try { svg.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+                    const note = noteAt(e.clientX, e.clientY);
+                    pointerNotes.set(e.pointerId, note);
+                    if (note !== null) noteOn(note);
+                });
+
+                svg.addEventListener('pointermove', e => {
+                    if (!pointerNotes.has(e.pointerId)) return;
+                    const prev = pointerNotes.get(e.pointerId);
+                    const note = noteAt(e.clientX, e.clientY);
+                    if (note === prev) return;
+                    if (prev !== null) noteOff(prev);
+                    if (note !== null) noteOn(note);
+                    pointerNotes.set(e.pointerId, note);
+                });
+
+                const release = e => {
+                    if (!pointerNotes.has(e.pointerId)) return;
+                    const note = pointerNotes.get(e.pointerId);
+                    pointerNotes.delete(e.pointerId);
+                    if (note !== null) noteOff(note);
+                };
+                svg.addEventListener('pointerup', release);
+                svg.addEventListener('pointercancel', release);
+                svg.addEventListener('lostpointercapture', release);
+            }
+
+            /* ── Computer keyboard ───────────────────────────────────── */
+            const normKey = key => (key.length === 1 ? key.toLowerCase() : key);
+
+            window.addEventListener('keydown', e => {
+                if (!sampleBuffer || e.ctrlKey || e.metaKey || e.altKey) return;
+                const note = KEY_TO_NOTE[normKey(e.key)];
+                if (note === undefined) return;
+                e.preventDefault();         // also stops type-ahead in a focused dropdown
+                if (e.repeat || heldKeys.has(e.code)) return;
+                heldKeys.set(e.code, note);
+                noteOn(note);
+            });
+
+            window.addEventListener('keyup', e => {
+                // Release by physical key, so holding Shift between press and release cannot leave a note stuck
+                if (heldKeys.has(e.code)) {
+                    const note = heldKeys.get(e.code);
+                    heldKeys.delete(e.code);
+                    noteOff(note);
+                }
+                collectNotation(e);
+            });
+
+            function collectNotation(e) {
+                if (e.ctrlKey || e.metaKey || e.altKey) return;
+                const key = normKey(e.key);
+                if (key === 'Backspace') {
+                    notation = Array.from(notation).slice(0, -1).join('');
+                } else if (key === 'Delete') {
+                    notation = '';
+                } else if (key === 'Enter') {
+                    if (notation) console.log(notation);
+                    notation = '';
+                } else if (key === 'Tab') {
+                    notation += ',';
+                } else if (KEY_TO_SWARAM[key] !== undefined) {
+                    notation += KEY_TO_SWARAM[key];
+                }
+            }
+
+            // Never leave notes ringing when the page loses focus
+            window.addEventListener('blur', allNotesOff);
+            document.addEventListener('visibilitychange', () => { if (document.hidden) allNotesOff(); });
+
+            /* ── MIDI ────────────────────────────────────────────────── */
+            const setMidiStatus = text => { $('midiStatus').textContent = text; };
+
+            async function initMIDI() {
+                if (!navigator.requestMIDIAccess) {
+                    setMidiStatus('Web MIDI is not supported in this browser. Try Chrome or Edge.');
+                    return;
+                }
+                setMidiStatus('Requesting MIDI access…');
+                try {
+                    midiAccess = await navigator.requestMIDIAccess();
+                } catch (err) {
+                    midiAccess = null;
+                    setMidiStatus('MIDI access was refused (' + (err.message || err.name) +
+                        '). Allow MIDI for this site using the permission icon in the address bar, then press refresh.');
+                    return;
+                }
+                midiAccess.onstatechange = refreshMidiInputs;   // plug / unplug while the page is open
+                refreshMidiInputs();
+            }
+
+            let refreshing = false, refreshAgain = false;
+            async function refreshMidiInputs() {
+                if (!midiAccess) { initMIDI(); return; }
+                if (refreshing) { refreshAgain = true; return; }
+                refreshing = true;
+                try {
+                    do {
+                        refreshAgain = false;
+                        await rebuildMidiInputList();
+                    } while (refreshAgain);
+                } finally {
+                    refreshing = false;
+                }
+            }
+
+            async function rebuildMidiInputList() {
+                const select = $('midiInputDevices');
+                const previous = select.value;
+                const names = [];
+                const problems = [];
+                const options = [new Option('All inputs', 'all')];
+
+                for (const input of midiAccess.inputs.values()) {
+                    if (input.state === 'disconnected') continue;
+                    const label = input.name + (input.manufacturer ? ' by ' + input.manufacturer : '');
+                    options.push(new Option(label, input.id));
+                    names.push(input.name);
+                    input.onmidimessage = onMIDIMessage;
+                    try {
+                        await input.open();     // fails if another program already owns the port
+                    } catch (err) {
+                        problems.push(input.name);
+                        console.warn('Could not open MIDI input', input.name, err);
+                    }
+                }
+
+                select.length = 0;
+                options.forEach(o => select.add(o));
+                select.value = options.some(o => o.value === previous) ? previous : 'all';
+
+                if (!names.length) {
+                    setMidiStatus('No MIDI keyboard found. Plug it in, then press refresh.');
+                } else if (problems.length) {
+                    setMidiStatus('Found ' + names.join(', ') + ', but could not open ' + problems.join(', ') +
+                        '. Another program or browser tab may be using it: close it, then press refresh.');
+                } else {
+                    setMidiStatus('MIDI ready: ' + names.join(', '));
+                }
+            }
+
+            const MIDI_TYPE_NAMES = {
+                0x80: 'Note Off', 0x90: 'Note On', 0xA0: 'Aftertouch', 0xB0: 'Control Change',
+                0xC0: 'Program Change', 0xD0: 'Pressure', 0xE0: 'Pitch Bend'
+            };
+
+            function onMIDIMessage(event) {
+                const selected = $('midiInputDevices').value;
+                if (selected && selected !== 'all' && event.target.id !== selected) return;
+
+                const data = event.data;
+                const statusByte = data[0];
+                if (statusByte >= 0xF0) return;                 // clock, active sensing and other system messages
+                const type = statusByte & 0xF0;                 // strip the channel so every channel works
+                const channel = (statusByte & 0x0F) + 1;
+                const data1 = data.length > 1 ? data[1] : 0;
+                const data2 = data.length > 2 ? data[2] : 0;
+                log('MIDI', MIDI_TYPE_NAMES[type] || type, 'ch', channel, data1, data2);
+
+                $('midiActivity').textContent = 'Last MIDI message: ' + (MIDI_TYPE_NAMES[type] || ('0x' + type.toString(16))) +
+                    ' · channel ' + channel + ' · ' + data1 + (data.length > 2 ? ' · ' + data2 : '');
+
+                switch (type) {
+                    case 0x90:
+                        if (data2 > 0) noteOn(data1); else noteOff(data1);   // note-on with velocity 0 means note-off
+                        break;
+                    case 0x80:
+                        noteOff(data1);
+                        break;
+                    case 0xB0:
+                        if (data1 === 7) {                      // volume
+                            setVolume(Math.max(1, Math.round((100 * data2) / 127)));
+                        } else if (data1 === 120 || data1 === 123) {   // all sound off / all notes off
+                            allNotesOff();
+                        }
+                        break;
+                }
+            }
+
+            /* ── Controls ────────────────────────────────────────────── */
+            function render() {
+                $('octave').textContent = settings.octave;
+                $('stack').textContent = settings.stack;
+                $('transpose').textContent = settings.transpose;
+                $('rootNote').textContent = NOTE_NAMES[(settings.transpose + 12) % 12];
+                $('myRange').value = settings.volume;
+                $('volumeLevel').textContent = settings.volume + '%';
+                $('useReverb').checked = settings.reverb;
+            }
+
+            function setVolume(v) {
+                settings.volume = clamp(v, 1, 100);
+                store.set('volume', settings.volume);
+                if (master) master.gain.setTargetAtTime(settings.volume / 100, ctx.currentTime, 0.01);
+                render();
+            }
+
+            function shiftOctave(delta) {
+                settings.octave = clamp(settings.octave + delta, 0, MAX_OCTAVE);
+                settings.stack = Math.min(settings.stack, MAX_OCTAVE - settings.octave);
+                store.set('octave', settings.octave);
+                store.set('stack', settings.stack);
+                render();
+            }
+
+            function changeStack(delta) {
+                settings.stack = clamp(settings.stack + delta, 0, MAX_OCTAVE - settings.octave);
+                store.set('stack', settings.stack);
+                render();
+            }
+
+            function shiftSemitone(delta) {
+                settings.transpose = clamp(settings.transpose + delta, -11, 11);
+                store.set('transpose', settings.transpose);
+                render();
+            }
+
+            function wireControls() {
+                const actions = { octave: shiftOctave, stack: changeStack, transpose: shiftSemitone };
+                document.querySelectorAll('[data-step]').forEach(btn => {
+                    btn.addEventListener('click', () => actions[btn.dataset.step](Number(btn.dataset.delta)));
+                });
+
+                $('myRange').addEventListener('input', e => setVolume(Number(e.target.value)));
+
+                $('useReverb').addEventListener('change', e => {
+                    settings.reverb = e.target.checked;
+                    store.set('useReverb', settings.reverb);
+                    if (reverbSend) reverbSend.gain.value = settings.reverb ? 1 : 0;
+                });
+
+                $('midiRefresh').addEventListener('click', refreshMidiInputs);
+                // hand the keyboard back to the instrument after choosing a device
+                $('midiInputDevices').addEventListener('change', e => e.target.blur());
+            }
+
+            /* ── Start-up ────────────────────────────────────────────── */
+            $('loadBtn').addEventListener('click', async () => {
+                const btn = $('loadBtn');
+                const msg = $('loadMsg');
+                btn.disabled = true;
+                msg.textContent = 'Loading…';
+                try {
+                    await loadAudio();
+                } catch (err) {
+                    console.error(err);
+                    msg.textContent = 'Could not load the harmonium sound (' + err.message + '). Please try again.';
+                    btn.disabled = false;
+                    return;
+                }
+                $('load').hidden = true;
+                $('mainScreen').hidden = false;
+                initMIDI();
+            });
+
+            buildKeyboard();
+            wireControls();
+            render();
+
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/serviceworker.js').then(reg => {
+                        reg.onupdatefound = () => {
+                            const installing = reg.installing;
+                            if (!installing) return;
+                            installing.onstatechange = () => {
+                                // reload to pick up the new version, but never in the middle of playing
+                                if (installing.state === 'installed' && navigator.serviceWorker.controller &&
+                                    activeNotes.size === 0) {
+                                    window.location.reload();
+                                }
+                            };
+                        };
+                    }).catch(err => console.warn('Service worker registration failed:', err));
+                });
+            }
+        })();
+    </script>
+
+    <script>
+        // Request ads only for columns that are actually visible
+        document.querySelectorAll('.ad-column').forEach(function (col) {
+            if (window.getComputedStyle(col).display !== 'none') {
+                try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { /* ad blocked */ }
+            }
+        });
+    </script>
 </body>
 
 </html>
