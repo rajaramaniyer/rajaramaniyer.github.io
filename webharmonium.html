@@ -234,6 +234,37 @@
             padding: 4px 8px;
         }
 
+        /* ── Tone / sampler ─────────────────────────────────────── */
+        .param {
+            padding: 6px 0;
+        }
+
+        .param .lbl {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 8px 0;
+        }
+
+        textarea.sampler {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre;
+            overflow: auto;
+            resize: vertical;
+        }
+
+        .help {
+            font-size: 13px;
+            padding-bottom: 8px;
+        }
+
         /* ── 3-Column Ad Layout ─────────────────────────────────── */
         .page-wrapper {
             display: flex;
@@ -390,6 +421,79 @@
                         </div>
                     </div>
 
+                    <hr>
+
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-blue-gray w3-center">Tone</h3>
+                        <div class="param">
+                            <div class="lbl"><span>Attack</span><span id="val-attack"></span></div>
+                            <input type="range" class="slider" data-setting="attack" min="0" max="200" step="1"
+                                aria-label="Attack in milliseconds">
+                        </div>
+                        <div class="param">
+                            <div class="lbl"><span>Release</span><span id="val-release"></span></div>
+                            <input type="range" class="slider" data-setting="release" min="0" max="1000" step="5"
+                                aria-label="Release in milliseconds">
+                        </div>
+                        <h4 class="w3-center">Equaliser</h4>
+                        <div class="param">
+                            <div class="lbl"><span>Bass</span><span id="val-eqLow"></span></div>
+                            <input type="range" class="slider" data-setting="eqLow" min="-12" max="12" step="1"
+                                aria-label="Bass in decibels">
+                        </div>
+                        <div class="param">
+                            <div class="lbl"><span>Mid</span><span id="val-eqMid"></span></div>
+                            <input type="range" class="slider" data-setting="eqMid" min="-12" max="12" step="1"
+                                aria-label="Mid in decibels">
+                        </div>
+                        <div class="param">
+                            <div class="lbl"><span>Treble</span><span id="val-eqHigh"></span></div>
+                            <input type="range" class="slider" data-setting="eqHigh" min="-12" max="12" step="1"
+                                aria-label="Treble in decibels">
+                        </div>
+                        <div class="btn-row">
+                            <button id="toneReset" type="button" class="w3-btn w3-grey w3-round w3-small">Reset
+                                tone</button>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="w3-container w3-card w3-white">
+                        <h3 class="w3-blue-gray w3-center">Sampler</h3>
+                        <p class="help">Play your own samples. Put one per line:
+                            <code>URL note [loopStart] [loopEnd]</code></p>
+                        <textarea id="samplerUrls" class="w3-input w3-border sampler" rows="5" spellcheck="false"
+                            autocapitalize="off" autocomplete="off" aria-label="Sample list"
+                            placeholder="https://example.com/harmonium_C3.wav C3&#10;https://example.com/harmonium_G3.wav G3 0.8"></textarea>
+                        <div class="btn-row">
+                            <button id="samplerApply" type="button" class="w3-btn w3-blue-gray w3-round w3-small">Load
+                                samples</button>
+                            <button id="samplerReset" type="button" class="w3-btn w3-grey w3-round w3-small">Use
+                                built-in</button>
+                        </div>
+                        <label class="help">Or pick files from this device (not remembered):
+                            <input type="file" id="samplerFiles" accept="audio/*" multiple></label>
+                        <p id="samplerStatus" class="w3-small" role="status">Using the built-in harmonium sample.</p>
+                        <details class="help">
+                            <summary>How it works</summary>
+                            <ul>
+                                <li><b>note</b> is the pitch the recording plays, such as <code>D4</code>,
+                                    <code>C#3</code> or a MIDI number (middle C is C4 = 60). Each key plays the nearest
+                                    sample, bent to pitch, so several samples across the range sound more natural than one.
+                                </li>
+                                <li><b>loopStart</b> and <b>loopEnd</b> (seconds) mark the steady part that repeats while
+                                    a key is held. Optional; the default loops from 0.5 s to the end.</li>
+                                <li>The list is saved in this browser and the samples are downloaded into memory again at
+                                    each visit.</li>
+                                <li>The server must allow cross-origin requests (CORS) and use https. Many file-sharing
+                                    pages do not; GitHub Pages and most CDNs do.</li>
+                                <li>Picked files must have the note in the file name, like
+                                    <code>harmonium_D4.wav</code>.</li>
+                                <li>Only use samples you have the right to use.</li>
+                            </ul>
+                        </details>
+                    </div>
+
                 </div>
             </div>
 
@@ -419,12 +523,17 @@
             /* ── Configuration ───────────────────────────────────────── */
             const SAMPLE_URL = 'harmonium-kannan-orig.wav';
             const REVERB_URL = 'reverb.wav';
-            const SAMPLE_ROOT_KEY = 62;                 // the sample is a D (MIDI note 62)
-            const LOOP_START = 0.5;                     // seconds; the sample loops from here to its end
-            const ATTACK = 0.01;                        // seconds, avoids a click on note start
-            const RELEASE = 0.08;                       // seconds, avoids a click on note end
+            const DEFAULT_ROOT_KEY = 62;                // the built-in sample is a D (MIDI note 62)
+            const DEFAULT_LOOP_START = 0.5;             // seconds; looping starts here
+            const DEFAULT_ATTACK_MS = 2;                // near-instant, like the original; user adjustable
+            const DEFAULT_RELEASE_MS = 40;              // short fade-out avoids a click; user adjustable
             const OCTAVE_OFFSETS = [-36, -24, -12, 0, 12, 24, 36];
             const MAX_OCTAVE = OCTAVE_OFFSETS.length - 1;
+            const EQ_BANDS = [
+                { id: 'eqLow', type: 'lowshelf', freq: 200 },
+                { id: 'eqMid', type: 'peaking', freq: 1000, q: 0.8 },
+                { id: 'eqHigh', type: 'highshelf', freq: 3500 }
+            ];
             const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
             const DEBUG = new URLSearchParams(location.search).has('debug');
@@ -474,7 +583,13 @@
                 reverb: store.get('useReverb', 'false') === 'true',
                 octave: intSetting('octave', 0, MAX_OCTAVE, 3),
                 transpose: intSetting('transpose', -11, 11, 0),
-                stack: intSetting('stack', 0, MAX_OCTAVE, 0)
+                stack: intSetting('stack', 0, MAX_OCTAVE, 0),
+                attack: intSetting('attack', 0, 200, DEFAULT_ATTACK_MS),        // milliseconds
+                release: intSetting('release', 0, 1000, DEFAULT_RELEASE_MS),    // milliseconds
+                eqLow: intSetting('eqLow', -12, 12, 0),                         // decibels
+                eqMid: intSetting('eqMid', -12, 12, 0),
+                eqHigh: intSetting('eqHigh', -12, 12, 0),
+                samples: store.get('samples', '')                               // saved sampler list (text)
             };
             settings.stack = Math.min(settings.stack, MAX_OCTAVE - settings.octave);
 
@@ -482,7 +597,7 @@
             let ctx = null;                  // AudioContext
             let master = null;               // master gain
             let reverbSend = null;           // gain feeding the convolver (0 = reverb off)
-            let sampleBuffer = null;
+            let samples = [];                // sound set: [{buffer, root, loopStart, loopEnd}]
             let midiAccess = null;
             let notation = '';
 
@@ -492,6 +607,17 @@
             const keyEls = new Map();        // note -> <rect> on the on-screen keyboard
 
             /* ── Audio engine ────────────────────────────────────────── */
+            const MAX_SAMPLES = 40;
+            const MAX_SAMPLE_BYTES = 300 * 1024 * 1024;     // decoded audio held in memory
+            let eqNodes = [];                // EQ filters in series: voices -> low -> mid -> high -> master
+            let defaultSample = null;
+
+            async function fetchBuffer(url) {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return ctx.decodeAudioData(await res.arrayBuffer());
+            }
+
             async function loadAudio() {
                 const AC = window.AudioContext || window.webkitAudioContext;
                 if (!AC) throw new Error('This browser does not support the Web Audio API.');
@@ -508,11 +634,16 @@
                 reverbSend.gain.value = settings.reverb ? 1 : 0;
                 master.connect(reverbSend);
 
-                const fetchBuffer = async url => {
-                    const res = await fetch(url);
-                    if (!res.ok) throw new Error(url + ': HTTP ' + res.status);
-                    return ctx.decodeAudioData(await res.arrayBuffer());
-                };
+                eqNodes = EQ_BANDS.map(band => {
+                    const f = ctx.createBiquadFilter();
+                    f.type = band.type;
+                    f.frequency.value = band.freq;
+                    if (band.q) f.Q.value = band.q;
+                    f.gain.value = settings[band.id];
+                    return f;
+                });
+                eqNodes.forEach((f, i) => { if (i > 0) eqNodes[i - 1].connect(f); });
+                eqNodes[eqNodes.length - 1].connect(master);
 
                 // reverb is optional: if it fails the rest still works
                 fetchBuffer(REVERB_URL).then(buf => {
@@ -526,42 +657,212 @@
                     $('useReverb').title = 'Reverb sound file could not be loaded';
                 });
 
-                sampleBuffer = await fetchBuffer(SAMPLE_URL);
+                try {
+                    defaultSample = { buffer: await fetchBuffer(SAMPLE_URL), root: DEFAULT_ROOT_KEY, loopStart: DEFAULT_LOOP_START, loopEnd: 0 };
+                } catch (err) {
+                    throw new Error(SAMPLE_URL + ': ' + err.message);
+                }
+                samples = [defaultSample];
+            }
+
+            function applyTone(key) {
+                const i = EQ_BANDS.findIndex(b => b.id === key);
+                if (i >= 0 && eqNodes[i]) eqNodes[i].gain.setTargetAtTime(settings[key], ctx.currentTime, 0.01);
+            }
+
+            /* The sample whose root note is nearest to the pitch wanted */
+            function pickSample(target) {
+                let best = samples[0];
+                for (const s of samples) {
+                    if (Math.abs(s.root - target) < Math.abs(best.root - target)) best = s;
+                }
+                return best;
             }
 
             function startVoice(index) {
                 const t = ctx.currentTime;
+                const target = index + settings.transpose;
+                const s = pickSample(target);
+
                 const src = ctx.createBufferSource();
-                src.buffer = sampleBuffer;
+                src.buffer = s.buffer;
                 src.loop = true;
-                src.loopStart = LOOP_START;
-                src.detune.value = (index - SAMPLE_ROOT_KEY + settings.transpose) * 100;
+                src.loopStart = s.loopStart;
+                if (s.loopEnd > s.loopStart) src.loopEnd = s.loopEnd;
+                src.detune.value = (target - s.root) * 100;
 
                 const env = ctx.createGain();
-                env.gain.setValueAtTime(0, t);
-                env.gain.linearRampToValueAtTime(1, t + ATTACK);
+                const attack = settings.attack / 1000;
+                if (attack > 0) {
+                    env.gain.setValueAtTime(0, t);
+                    env.gain.linearRampToValueAtTime(1, t + attack);
+                } else {
+                    env.gain.setValueAtTime(1, t);
+                }
 
                 src.connect(env);
-                env.connect(master);
+                env.connect(eqNodes[0]);
                 src.start(t);
                 return { src, env };
             }
 
             function stopVoice(voice) {
                 const t = ctx.currentTime;
+                const release = settings.release / 1000;
                 const g = voice.env.gain;
                 g.cancelScheduledValues(t);
                 g.setValueAtTime(g.value, t);
-                g.setTargetAtTime(0, t, RELEASE / 4);
+                if (release > 0) g.setTargetAtTime(0, t, release / 4); else g.setValueAtTime(0, t);
                 voice.src.onended = () => {
                     voice.src.disconnect();
                     voice.env.disconnect();
                 };
-                voice.src.stop(t + RELEASE + 0.05);
+                voice.src.stop(t + release + 0.05);
+            }
+
+            /* ── Sampler: your own samples ───────────────────────────── */
+            const setSamplerStatus = text => { $('samplerStatus').textContent = text; };
+            const sampleBytes = list => list.reduce((n, s) => n + s.buffer.length * s.buffer.numberOfChannels * 4, 0);
+            const describeSet = list => list.length + ' sample' + (list.length === 1 ? '' : 's') + ', ' +
+                Math.max(1, Math.round(sampleBytes(list) / 1048576)) + ' MB in memory';
+
+            /* "D4", "C#3", "Bb2" or a MIDI number -> MIDI note (middle C = C4 = 60), or null */
+            function parseRoot(text) {
+                const t = text.trim();
+                if (/^\d+$/.test(t)) {
+                    const n = parseInt(t, 10);
+                    return n <= 127 ? n : null;
+                }
+                const m = /^([A-Ga-g])([#b]?)(-?\d)$/.exec(t);
+                if (!m) return null;
+                let pc = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1].toUpperCase()];
+                if (m[2] === '#') pc++; else if (m[2] === 'b') pc--;
+                const n = (parseInt(m[3], 10) + 1) * 12 + pc;
+                return n >= 0 && n <= 127 ? n : null;
+            }
+
+            /* One sample per line: URL note [loopStart] [loopEnd]; blank lines and # comments are ignored */
+            function parseSampleList(text) {
+                const entries = [];
+                text.split(/\r?\n/).forEach((raw, i) => {
+                    const line = raw.trim();
+                    if (!line || line.startsWith('#')) return;
+                    const where = 'Line ' + (i + 1) + ': ';
+                    const parts = line.split(/[\s,]+/);
+
+                    let url;
+                    try { url = new URL(parts[0], location.href); } catch (e) { throw new Error(where + 'not a valid URL'); }
+                    if (url.protocol !== 'https:' && url.protocol !== 'http:') throw new Error(where + 'only http(s) addresses are supported');
+
+                    if (parts.length < 2) throw new Error(where + 'add the note this sample plays after the URL, for example D4');
+                    const root = parseRoot(parts[1]);
+                    if (root === null) throw new Error(where + '"' + parts[1] + '" is not a note (try D4, C#3 or a MIDI number)');
+
+                    const loopStart = parts.length > 2 ? parseFloat(parts[2]) : null;
+                    const loopEnd = parts.length > 3 ? parseFloat(parts[3]) : 0;
+                    if ((loopStart !== null && !(loopStart >= 0)) || !(loopEnd >= 0)) throw new Error(where + 'loop times must be seconds, such as 0.8');
+
+                    entries.push({ url: url.href, root, loopStart, loopEnd });
+                });
+                if (entries.length > MAX_SAMPLES) throw new Error('Please use at most ' + MAX_SAMPLES + ' samples.');
+                return entries;
+            }
+
+            function finishSample(buffer, root, loopStart, loopEnd) {
+                if (loopStart === null) loopStart = buffer.duration > 1 ? DEFAULT_LOOP_START : 0;
+                loopStart = Math.min(loopStart, Math.max(0, buffer.duration - 0.05));
+                return { buffer, root, loopStart, loopEnd: loopEnd > loopStart && loopEnd <= buffer.duration ? loopEnd : 0 };
+            }
+
+            function swapSamples(list) {
+                if (sampleBytes(list) > MAX_SAMPLE_BYTES) {
+                    throw new Error('Those samples need more than ' + (MAX_SAMPLE_BYTES / 1048576) + ' MB of memory; use shorter or fewer files.');
+                }
+                allNotesOff();
+                samples = list;
+            }
+
+            async function loadSamplesFromText(text) {
+                const entries = parseSampleList(text);
+                if (!entries.length) throw new Error('the list is empty.');
+                const loaded = await Promise.all(entries.map(async e => {
+                    let buffer;
+                    try {
+                        buffer = await fetchBuffer(e.url);
+                    } catch (err) {
+                        const why = err instanceof TypeError
+                            ? 'could not be downloaded (the host must allow cross-origin requests and use https)'
+                            : err.message;
+                        throw new Error(e.url + ' ' + why);
+                    }
+                    return finishSample(buffer, e.root, e.loopStart, e.loopEnd);
+                }));
+                swapSamples(loaded);
+            }
+
+            async function loadSamplesFromFiles(files) {
+                if (files.length > MAX_SAMPLES) throw new Error('Please pick at most ' + MAX_SAMPLES + ' files.');
+                const loaded = [];
+                for (const f of files) {
+                    const m = /(?:^|[^A-Za-z])([A-Ga-g][#b]?-?\d)(?!\d)/.exec(f.name.replace(/\.[^.]+$/, ''));
+                    const root = m ? parseRoot(m[1]) : null;
+                    if (root === null) throw new Error(f.name + ' has no note in its name; rename it like harmonium_D4.wav.');
+                    let buffer;
+                    try {
+                        buffer = await ctx.decodeAudioData(await f.arrayBuffer());
+                    } catch (err) {
+                        throw new Error(f.name + ' could not be decoded as audio.');
+                    }
+                    loaded.push(finishSample(buffer, root, null, 0));
+                }
+                swapSamples(loaded);
+            }
+
+            async function applySamplerText(text) {
+                text = text.trim();
+                if (!text) { useDefaultSample(); return; }
+                const btn = $('samplerApply');
+                btn.disabled = true;
+                setSamplerStatus('Loading samples…');
+                try {
+                    await loadSamplesFromText(text);
+                    settings.samples = text;
+                    store.set('samples', text);
+                    setSamplerStatus('Loaded ' + describeSet(samples) + '.');
+                } catch (err) {
+                    console.warn('Sampler:', err);
+                    setSamplerStatus('Could not load: ' + err.message + ' Still using ' +
+                        (samples.length === 1 && samples[0] === defaultSample ? 'the built-in sample.' : 'the previous samples.'));
+                } finally {
+                    btn.disabled = false;
+                }
+            }
+
+            async function onSamplerFiles(e) {
+                const files = Array.from(e.target.files || []);
+                e.target.value = '';
+                if (!files.length) return;
+                setSamplerStatus('Loading files…');
+                try {
+                    await loadSamplesFromFiles(files);
+                    setSamplerStatus('Loaded ' + describeSet(samples) + ' from this device (not remembered next visit).');
+                } catch (err) {
+                    console.warn('Sampler:', err);
+                    setSamplerStatus('Could not load: ' + err.message);
+                }
+            }
+
+            function useDefaultSample() {
+                if (!defaultSample) return;
+                allNotesOff();
+                samples = [defaultSample];
+                settings.samples = '';
+                store.set('samples', '');
+                setSamplerStatus('Using the built-in harmonium sample.');
             }
 
             function noteOn(note) {
-                if (!ctx || !sampleBuffer || activeNotes.has(note)) return;
+                if (!ctx || !samples.length || activeNotes.has(note)) return;
                 if (ctx.state !== 'running') ctx.resume().catch(() => { });
 
                 const voices = [];
@@ -657,7 +958,7 @@
                 svg.addEventListener('pointerdown', e => {
                     if (e.pointerType === 'mouse' && e.button !== 0) return;
                     e.preventDefault();
-                    if (!sampleBuffer) return;
+                    if (!samples.length) return;
                     try { svg.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
                     const note = noteAt(e.clientX, e.clientY);
                     pointerNotes.set(e.pointerId, note);
@@ -687,9 +988,12 @@
 
             /* ── Computer keyboard ───────────────────────────────────── */
             const normKey = key => (key.length === 1 ? key.toLowerCase() : key);
+            // typing in the sampler box must not play notes
+            const isTextField = el => !!el && (el.tagName === 'TEXTAREA' ||
+                (el.tagName === 'INPUT' && !/^(range|checkbox|button|file)$/.test(el.type)));
 
             window.addEventListener('keydown', e => {
-                if (!sampleBuffer || e.ctrlKey || e.metaKey || e.altKey) return;
+                if (!samples.length || isTextField(e.target) || e.ctrlKey || e.metaKey || e.altKey) return;
                 const note = KEY_TO_NOTE[normKey(e.key)];
                 if (note === undefined) return;
                 e.preventDefault();         // also stops type-ahead in a focused dropdown
@@ -705,7 +1009,7 @@
                     heldKeys.delete(e.code);
                     noteOff(note);
                 }
-                collectNotation(e);
+                if (!isTextField(e.target)) collectNotation(e);
             });
 
             function collectNotation(e) {
@@ -847,6 +1151,12 @@
                 $('myRange').value = settings.volume;
                 $('volumeLevel').textContent = settings.volume + '%';
                 $('useReverb').checked = settings.reverb;
+                document.querySelectorAll('[data-setting]').forEach(input => {
+                    const key = input.dataset.setting;
+                    const v = settings[key];
+                    input.value = v;
+                    $('val-' + key).textContent = key.startsWith('eq') ? (v > 0 ? '+' : '') + v + ' dB' : v + ' ms';
+                });
             }
 
             function setVolume(v) {
@@ -893,6 +1203,28 @@
                 $('midiRefresh').addEventListener('click', refreshMidiInputs);
                 // hand the keyboard back to the instrument after choosing a device
                 $('midiInputDevices').addEventListener('change', e => e.target.blur());
+
+                // tone: attack, release and equaliser sliders
+                document.querySelectorAll('[data-setting]').forEach(input => {
+                    input.addEventListener('input', () => {
+                        const key = input.dataset.setting;
+                        settings[key] = Number(input.value);
+                        store.set(key, settings[key]);
+                        applyTone(key);
+                        render();
+                    });
+                });
+                $('toneReset').addEventListener('click', () => {
+                    Object.assign(settings, { attack: DEFAULT_ATTACK_MS, release: DEFAULT_RELEASE_MS, eqLow: 0, eqMid: 0, eqHigh: 0 });
+                    ['attack', 'release', 'eqLow', 'eqMid', 'eqHigh'].forEach(k => { store.set(k, settings[k]); applyTone(k); });
+                    render();
+                });
+
+                // sampler
+                $('samplerUrls').value = settings.samples;
+                $('samplerApply').addEventListener('click', () => applySamplerText($('samplerUrls').value));
+                $('samplerReset').addEventListener('click', () => { $('samplerUrls').value = ''; useDefaultSample(); });
+                $('samplerFiles').addEventListener('change', onSamplerFiles);
             }
 
             /* ── Start-up ────────────────────────────────────────────── */
@@ -912,6 +1244,7 @@
                 $('load').hidden = true;
                 $('mainScreen').hidden = false;
                 initMIDI();
+                if (settings.samples.trim()) applySamplerText(settings.samples);
             });
 
             buildKeyboard();
