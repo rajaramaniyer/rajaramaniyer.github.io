@@ -1,5 +1,5 @@
 // 1. Versioning: Change this string every time you update your app!
-const staticDevCoffee = "web-harmonium-v2"; 
+const staticDevCoffee = "web-harmonium-v3"; 
 
 const assets = [
   "/",
