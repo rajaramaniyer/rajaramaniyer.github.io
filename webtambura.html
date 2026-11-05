@@ -240,10 +240,12 @@
             }
         }
 
-        var AudioContext = AudioContext || webkitAudioContext,
+        var AudioContext = window.AudioContext || window.webkitAudioContext,
             context = null,
             gainNode = null,
             audioBuffer = null;
+        var playbackSession = 0;
+        var sampleBuffers = Object.create(null);
 
         // Reads the sample rate straight out of a WAV file's "fmt " chunk,
         // so we can create/recreate the AudioContext at the file's native
@@ -316,7 +318,6 @@
         function resetSound() {
             stopAllLoopNodes();
             gainNode.gain.value = document.getElementById("myRange").value / 100;
-            gainNode.connect(context.destination);
             scheduleLoopNode(context.currentTime + 0.05);
         }
 
@@ -335,62 +336,91 @@
             document.getElementById("PlayStop").focus();
         }
 
-        function onClickPlay() {
-            if (debug) console.log("Inside onClickPlay")
-            var button = document.getElementById("PlayStop");
+        function loadSample(url, playbackContext) {
+            // Keep decoded samples at this context's sample rate. A new context
+            // gets a new cache; older decodes may only populate the old cache.
+            var cache = sampleBuffers;
+            if (cache[url]) return Promise.resolve(cache[url]);
 
-            if (button.innerText == "Play") {
-                if (context == null) {
-                    context = new AudioContext({ sampleRate: 44100 });
-                    console.log("[webtambura] Created AudioContext at sampleRate:", context.sampleRate);
-                    gainNode = context.createGain();
-                }
-
-                var pitchSelected = document.querySelector('input[name="pitch"]:checked').value;
-                var madhyamSruthi = (document.getElementById("madhyam").checked) ? "m" : "";
-
-                // Fetch the sample
+            return new Promise(function (resolve, reject) {
                 var request = new XMLHttpRequest();
-                request.open('GET', madhyamSruthi + pitchSelected + ".wav", true);
+                request.open('GET', url, true);
                 request.responseType = 'arraybuffer';
-
-                request.addEventListener('load', function () {
-                    console.log("[webtambura] Fetch response status:", request.status,
-                        " byteLength:", request.response ? request.response.byteLength : null,
-                        " URL:", madhyamSruthi + pitchSelected + ".wav");
-
-                    var nativeRate = getWavSampleRate(request.response);
-                    console.log("[webtambura] WAV header sampleRate:", nativeRate,
-                        " context.sampleRate:", context.sampleRate);
-                    if (nativeRate && nativeRate !== context.sampleRate) {
-                        console.warn("[webtambura] Mismatch: context is running at", context.sampleRate,
-                            "but file is", nativeRate, "- decodeAudioData will resample this file.");
-                    }
-
-                    context.decodeAudioData(
-                        request.response,
-                        function (buffer) {
-                            console.log("[webtambura] Decoded OK. duration(s):", buffer.duration,
-                                " sampleRate:", buffer.sampleRate,
-                                " numberOfChannels:", buffer.numberOfChannels,
-                                " length(samples):", buffer.length);
-                            if (debug) console.log("Got sample. Size ", buffer.length);
-                            audioBuffer = buffer;
-                            resetSound();
-                        },
-                        function (e) {
-                            console.error('[webtambura] ERROR: context.decodeAudioData:', e,
-                                " responseByteLength:", request.response ? request.response.byteLength : null);
-                        }
-                    );
+                request.timeout = 30000;
+                request.addEventListener('error', function () {
+                    reject(new Error('Could not load ' + url));
                 });
-
+                request.addEventListener('timeout', function () {
+                    reject(new Error('Loading ' + url + ' timed out'));
+                });
+                request.addEventListener('load', function () {
+                    if (request.status < 200 || request.status >= 300 || !request.response) {
+                        reject(new Error('Could not load ' + url + ' (HTTP ' + request.status + ')'));
+                        return;
+                    }
+                    var nativeRate = getWavSampleRate(request.response);
+                    if (nativeRate && nativeRate !== playbackContext.sampleRate) {
+                        console.warn('[webtambura] WAV sample rate differs from context:',
+                            nativeRate, playbackContext.sampleRate);
+                    }
+                    try {
+                        playbackContext.decodeAudioData(request.response, function (buffer) {
+                            cache[url] = buffer;
+                            resolve(buffer);
+                        }, function (error) {
+                            reject(error || new Error('Could not decode ' + url));
+                        });
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
                 request.send();
+            });
+        }
 
-                button.innerText = "Stop"
-            } else {
+        async function onClickPlay() {
+            if (debug) console.log("Inside onClickPlay");
+            var button = document.getElementById("PlayStop");
+            // Invalidate every earlier load/resume, including ones still pending
+            // when Stop is pressed or the pitch is changed.
+            var session = ++playbackSession;
+            if (button.innerText == "Stop") {
                 stopAllLoopNodes();
-                button.innerText = "Play"
+                button.innerText = "Play";
+                return;
+            }
+
+            button.innerText = "Stop";
+            try {
+                if (context == null || context.state === 'closed') {
+                    context = new AudioContext({ sampleRate: 44100 });
+                    gainNode = context.createGain();
+                    gainNode.connect(context.destination);
+                    sampleBuffers = Object.create(null);
+                }
+                var playbackContext = context;
+                // Call resume in the click gesture, before waiting for network
+                // or decoding. This also handles Safari's interrupted state.
+                var resumed = playbackContext.state === 'running'
+                    ? Promise.resolve() : playbackContext.resume();
+                var pitchSelected = document.querySelector('input[name="pitch"]:checked').value;
+                var madhyamSruthi = document.getElementById("madhyam").checked ? "m" : "";
+                var results = await Promise.all([
+                    resumed,
+                    loadSample(madhyamSruthi + pitchSelected + ".wav", playbackContext)
+                ]);
+                if (session !== playbackSession) return;
+                if (playbackContext.state !== 'running') {
+                    throw new Error('Audio context is ' + playbackContext.state);
+                }
+                audioBuffer = results[1];
+                resetSound();
+            } catch (error) {
+                if (session !== playbackSession) return;
+                stopAllLoopNodes();
+                button.innerText = "Play";
+                console.error('[webtambura] Could not start playback:', error);
+                alert('Could not start Tambura playback. Please press Play to try again.');
             }
         }
         function onGainChange() {
