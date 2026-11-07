@@ -605,6 +605,7 @@
             const heldKeys = new Map();      // KeyboardEvent.code -> note, so key-up always releases the right note
             const pointerNotes = new Map();  // pointerId -> note (mouse / touch / pen)
             const keyEls = new Map();        // note -> <rect> on the on-screen keyboard
+            const labelEls = new Map();      // note -> <text> showing the note name under a white key
 
             /* ── Audio engine ────────────────────────────────────────── */
             const MAX_SAMPLES = 40;
@@ -899,6 +900,13 @@
                 if (el) el.classList.toggle('active', on);
             }
 
+            /* Note name shown under a white key = the pitch you hear with the current transpose */
+            function updateKeyLabels() {
+                labelEls.forEach((el, note) => {
+                    el.textContent = NOTE_NAMES[(((note + settings.transpose) % 12) + 12) % 12];
+                });
+            }
+
             function buildKeyboard() {
                 const svg = $('keyboard');
                 const NS = 'http://www.w3.org/2000/svg';
@@ -927,11 +935,13 @@
                         'font-family': 'Courier New, monospace', 'font-size': 14
                     }, noteToKey[note]));
                     const middle = note >= 60 && note <= 71;
-                    labelLayer.appendChild(make('text', {
+                    const nameEl = make('text', {
                         x: cx, y: 90, 'text-anchor': 'middle', fill: middle ? 'blue' : '#777',
                         'font-family': 'Courier New, monospace', 'font-size': 14,
                         'font-weight': middle ? 'bold' : 'normal'
-                    }, NOTE_NAMES[note % 12]));
+                    }, NOTE_NAMES[note % 12]);
+                    labelLayer.appendChild(nameEl);
+                    labelEls.set(note, nameEl);
                 });
 
                 BLACK_KEYS.forEach(([note, x]) => {
@@ -1157,6 +1167,7 @@
                     input.value = v;
                     $('val-' + key).textContent = key.startsWith('eq') ? (v > 0 ? '+' : '') + v + ' dB' : v + ' ms';
                 });
+                updateKeyLabels();
             }
 
             function setVolume(v) {
